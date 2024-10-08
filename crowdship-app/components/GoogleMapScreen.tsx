@@ -112,7 +112,7 @@ const GoogleMapScreen = () => {
       </View>
       <MapView
         ref={mapRef}
-        provider={PROVIDER_GOOGLE}
+        // provider={PROVIDER_GOOGLE}
         style={styles.map}
         region={{
           latitude: 24.842865,
