@@ -12,13 +12,16 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.crowdship-app",
+      "googleMapsApiKey": "AIzaSyBJ9ncuQDRBwkj1EnvsGxVDuhJRrA0s_Fk"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.crowdshipapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
