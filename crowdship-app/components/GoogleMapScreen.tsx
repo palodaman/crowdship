@@ -111,17 +111,7 @@ const GoogleMapScreen = () => {
           />
         </View>
       </View>
-      <MapView
-        ref={mapRef}
-        // provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        region={{
-          latitude: 24.842865,
-          longitude: 67.044405,
-          latitudeDelta: 0.1,
-          longitudeDelta: 0.1,
-        }}
-      >
+      <MapView ref={mapRef} style={[styles.map, !destination && { flex: 1 }]}>
         {origin && <Marker coordinate={origin} />}
 
         {destination && <Marker coordinate={destination} />}
@@ -136,12 +126,14 @@ const GoogleMapScreen = () => {
           />
         )}
       </MapView>
-      <View style={styles.listingsContainer}>
-        <DeliveriesList
-          latitude={destination?.latitude ?? 0}
-          longitude={destination?.longitude ?? 0}
-        />
-      </View>
+      {destination && (
+        <View style={styles.listingsContainer}>
+          <DeliveriesList
+            latitude={destination?.latitude ?? 0}
+            longitude={destination?.longitude ?? 0}
+          />
+        </View>
+      )}
     </View>
   );
 };
