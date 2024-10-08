@@ -1,30 +1,31 @@
 import React, { useRef, useState } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapViewDirections from "react-native-maps-directions";
+import DeliveriesList from "./DeliveriesList";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
   },
   map: {
-    ...StyleSheet.absoluteFillObject,
-    height: 400,
-    width: 400,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    zIndex: 0, // Ensure the map is behind the autocomplete
+    flex: 1, // This will allow the map to take up half of the screen
+    width: "100%",
   },
   autocompleteContainer: {
     position: "absolute",
     top: 10,
+    left: 17,
+    right: 10,
     width: "90%",
     zIndex: 1, // Ensure the autocomplete is on top
     flexDirection: "column",
     flex: 0.5,
+  },
+  listingsContainer: {
+    flex: 1, // Take up remaining space below the map
+    width: "100%",
   },
 });
 
@@ -135,6 +136,12 @@ const GoogleMapScreen = () => {
           />
         )}
       </MapView>
+      <View style={styles.listingsContainer}>
+        <DeliveriesList
+          latitude={destination?.latitude ?? 0}
+          longitude={destination?.longitude ?? 0}
+        />
+      </View>
     </View>
   );
 };
