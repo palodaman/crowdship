@@ -54,11 +54,11 @@ const AcceptDelivery = () => {
           <View style={styles.addressContainer}>
             <View style={styles.individualAddressContainer}>
               <Text style={styles.label}>Pickup From:</Text>
-              <Text style={styles.data}>{listings[1].startingaddress}</Text>
+              <Text style={styles.data}>{listings[0].startingaddress}</Text>
             </View>
             <View style={styles.individualAddressContainer}>
               <Text style={styles.label}>Deliver To:</Text>
-              <Text style={styles.data}>{listings[1].destinationaddress}</Text>
+              <Text style={styles.data}>{listings[0].destinationaddress}</Text>
             </View>
           </View>
           <View style={styles.priceContainer}>
@@ -66,18 +66,18 @@ const AcceptDelivery = () => {
             <Text style={styles.price}>${listings[1].price}</Text>
           </View>
           <View style={styles.addressContainer}>
-            <Text style={styles.itemDescription}>Item Description: {listings[1].itemdescription}</Text>
+            <Text style={styles.itemDescription}>Item Description: {listings[0  ].itemdescription}</Text>
           </View>
         </View>
         <View style={styles.buttonContainer}>
           <View style={styles.views}>
             <Icon name="eye" size={20} color="black"/>
-              <Text style={styles.numViews}>{listings[1].views}</Text>
+              <Text style={styles.numViews}>{listings[0].views}</Text>
             </View>
-          <TouchableOpacity style={[styles.button, {backgroundColor: 'red'}]}>
+          <TouchableOpacity style={[styles.button, {backgroundColor: '#FF6961'}]}>
               <Text style={styles.buttonText}>Decline</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, {backgroundColor: '#1AED60'}]}>
+          <TouchableOpacity style={[styles.button, {backgroundColor: '#6EC175'}]}>
               <Text style={styles.buttonText}>Accept</Text>
           </TouchableOpacity>
         </View> 
