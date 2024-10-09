@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, Button, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, Button, TextInput, SafeAreaView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 export default function HomeScreen() {
@@ -28,41 +28,59 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.greeting}>Hellooooo</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>CrowdShip</Text>
+      </View>
 
-      {/* Display the selected image or a default placeholder */}
-      {selectedImage ? (
-        <Image source={{ uri: selectedImage }} style={styles.profileImage} />
-      ) : (
-        <Text>No profile picture selected</Text>
-      )}
+      <View style={styles.container}>
+        {/* Display the selected image or a default placeholder */}
+        {selectedImage ? (
+          <Image source={{ uri: selectedImage }} style={styles.profileImage} />
+        ) : (
+          <Text>No profile picture selected</Text>
+        )}
 
-      <Button title="Select Profile Picture" onPress={pickImage} />
+        <Button title="Select Profile Picture" onPress={pickImage} />
 
-      {/* TextInput for the item name */}
-      <TextInput
-        style={styles.input}
-        placeholder="Enter item name"
-        value={itemName}
-        onChangeText={setItemName}
-      />
+        {/* TextInput for the item name */}
+        <TextInput
+          style={styles.input}
+          placeholder="Enter item name"
+          value={itemName}
+          onChangeText={setItemName}
+        />
 
-      {/* Display the entered item name */}
-      {itemName ? <Text style={styles.itemName}>Item: {itemName}</Text> : null}
-    </View>
+        {/* Display the entered item name */}
+        {itemName ? <Text style={styles.itemName}>Item: {itemName}</Text> : null}
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    backgroundColor: '#f8f8f8',
+    width: '100%',
+    height: 50, // Increased height
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  headerText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  greeting: {
-    fontSize: 24,
-    marginBottom: 20,
+    paddingHorizontal: 20,
   },
   profileImage: {
     width: 200,
