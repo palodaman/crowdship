@@ -5,6 +5,7 @@ import { Button, Input } from '@rneui/themed'
 import { Session } from '@supabase/supabase-js'
 import { Link } from 'expo-router';
 
+
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true)
   const [username, setUsername] = useState('')

@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, Button, TextInput, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, Image, Button, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-export default function HomeScreen() {
+export default function DeliveryRequest() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [itemName, setItemName] = useState('');
 
   const pickImage = async () => {
-    // Ask the user for permission to access media library
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
@@ -28,22 +27,15 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>CrowdShip</Text>
-      </View>
-
       <View style={styles.container}>
-        {/* Display the selected image or a default placeholder */}
         {selectedImage ? (
-          <Image source={{ uri: selectedImage }} style={styles.profileImage} />
+          <Image source={{ uri: selectedImage }} style={styles.itemImage} />
         ) : (
-          <Text>No profile picture selected</Text>
+          <Text>No item picture selected</Text>
         )}
 
-        <Button title="Select Profile Picture" onPress={pickImage} />
+        <Button title="Upload/Take Item Picture" onPress={pickImage} />
 
-        {/* TextInput for the item name */}
         <TextInput
           style={styles.input}
           placeholder="Enter item name"
@@ -51,41 +43,22 @@ export default function HomeScreen() {
           onChangeText={setItemName}
         />
 
-        {/* Display the entered item name */}
         {itemName ? <Text style={styles.itemName}>Item: {itemName}</Text> : null}
       </View>
-    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  header: {
-    backgroundColor: '#f8f8f8',
-    width: '100%',
-    height: 50, // Increased height
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  headerText: {
-    fontSize: 28,
-    fontWeight: 'bold',
-  },
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
+    flex: 1, // Takes the full height of the screen
+    justifyContent: 'center', // Centers content vertically
+    alignItems: 'center', // Centers content horizontally
+    padding: 20, // Adds some padding around the elements
   },
-  profileImage: {
+  itemImage: {
     width: 200,
     height: 200,
-    marginBottom: 20,  // Adjust spacing
+    marginBottom: 20, // Adds space below the image
   },
   input: {
     height: 40,
@@ -94,7 +67,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginTop: 20,
     marginBottom: 10,
-    width: '80%',   // Width of the TextInput
+    width: '80%',   // Takes 80% of the width of the screen for the input field
     borderRadius: 5,
   },
   itemName: {
