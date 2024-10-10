@@ -17,9 +17,9 @@ export default function App() {
     if (!session || !session.user) return <Auth />
     if (currentPage === 'account') return <Account key={session.user.id} session={session} />
     if (currentPage === 'requestdelivery') return (
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      // <ScrollView contentContainerStyle={styles.scrollContainer}>
         <DeliveryRequest />
-      </ScrollView>
+      // </ScrollView>
     )
     if(currentPage==='acceptdelivery') return (
       <ScrollView contentContainerStyle={styles.scrollContainer}>

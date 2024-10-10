@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, Button, TextInput, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, Image, Button, TextInput, ActivityIndicator, ScrollView } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Entypo from "@expo/vector-icons/Entypo";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -78,99 +78,107 @@ export default function DeliveryRequest() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView 
+      contentContainerStyle={styles.scrollContainer}
+      bounces={false}  // Disable bounce effect on iOS
+      showsVerticalScrollIndicator={false}  // Hide vertical scroll indicator
+    >
       {/* Request Delivery Header */}
-      <Text style={styles.header}>Request Delivery</Text>
+      <View style={styles.container}>
+        <Text style={styles.header}>Request Delivery</Text>
 
-      {itemImageUrl ? (
-        <Image source={{ uri: itemImageUrl }} style={styles.itemImage} />
-      ) : (
-        <Text>No item picture selected</Text>
-      )}
+        {itemImageUrl ? (
+          <Image source={{ uri: itemImageUrl }} style={styles.itemImage} />
+        ) : (
+          <Text>No item picture selected</Text>
+        )}
 
-      <Button title="Upload Item Picture" onPress={pickImage} />
+        <Button title="Upload Item Picture" onPress={pickImage} />
 
-      {/* Item Description Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Enter item description"
-        value={itemDescription}
-        onChangeText={setItemDescription}
-      />
-
-      {/* Pickup Address Input */}
-      <View style={styles.inputRow}>
-        <FontAwesome6 name="location-arrow" size={24} color="black" />
+        {/* Item Description Input */}
         <TextInput
-          style={styles.inputWithIcon}
-          placeholder="Enter starting address"
-          value={startingAddress}
-          onChangeText={setStartingAddress}
+          style={styles.input}
+          placeholder="Enter item description"
+          value={itemDescription}
+          onChangeText={setItemDescription}
         />
-      </View>
 
-      {/* Drop Off Address Input */}
-      <View style={styles.inputRow}>
-        <Entypo name="location-pin" size={24} color="black" />
+        {/* Pickup Address Input */}
+        <View style={styles.inputRow}>
+          <FontAwesome6 name="location-arrow" size={24} color="black" />
+          <TextInput
+            style={styles.inputWithIcon}
+            placeholder="Enter starting address"
+            value={startingAddress}
+            onChangeText={setStartingAddress}
+          />
+        </View>
+
+        {/* Drop Off Address Input */}
+        <View style={styles.inputRow}>
+          <Entypo name="location-pin" size={24} color="black" />
+          <TextInput
+            style={styles.inputWithIcon}
+            placeholder="Enter destination address"
+            value={destinationAddress}
+            onChangeText={setDestinationAddress}
+          />
+        </View>
+
+        {/* Notes Input */}
         <TextInput
-          style={styles.inputWithIcon}
-          placeholder="Enter destination address"
-          value={destinationAddress}
-          onChangeText={setDestinationAddress}
+          style={styles.notesInput}
+          placeholder="Add notes (instructions or extra info)"
+          value={notes}
+          onChangeText={setNotes}
+          multiline  // Allows multi-line input for notes
+          numberOfLines={4}  // Number of lines for the notes input
         />
-      </View>
 
-      {/* Notes Input */}
-      <TextInput
-        style={styles.notesInput}
-        placeholder="Add notes (instructions or extra info)"
-        value={notes}
-        onChangeText={setNotes}
-        multiline  // Allows multi-line input for notes
-        numberOfLines={4}  // Number of lines for the notes input
-      />
+        {/* Price Input */}
+        <View style={styles.inputRow}>
+          <Foundation name="dollar" size={24} color="black" />
+          <TextInput
+            style={styles.inputWithIcon}
+            placeholder="Set price"
+            value={price}
+            onChangeText={setPrice}
+            keyboardType="numeric" // Ensure the keyboard is optimized for entering numbers
+          />
+        </View>
 
-      {/* Price Input */}
-      <View style={styles.inputRow}>
-        <Foundation name="dollar" size={24} color="black" />
-        <TextInput
-          style={styles.inputWithIcon}
-          placeholder="Set price"
-          value={price}
-          onChangeText={setPrice}
-          keyboardType="numeric" // Ensure the keyboard is optimized for entering numbers
+        <Button
+          title="Submit Delivery Request"
+          onPress={handleSubmit}
+          disabled={isLoading}
         />
+
+        {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
+        {message !== "" && <Text style={styles.message}>{message}</Text>}
       </View>
-
-      <Button
-        title="Submit Delivery Request"
-        onPress={handleSubmit}
-        disabled={isLoading}
-      />
-
-      {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
-      {message !== "" && <Text style={styles.message}>{message}</Text>}
-
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,  // Ensures scroll content grows vertically
+    paddingBottom: 80,  // Add space at the bottom so content is not clipped
+    alignItems: 'center',  // Center horizontally
+  },
   container: {
-    flex: 1, // Takes the full height of the screen
-    justifyContent: "center", // Centers content vertically
-    alignItems: "center", // Centers content horizontally
-    padding: 20, // Adds some padding around the elements
+    width: '90%', // Ensures the form takes the full width with some padding
+    alignItems: "center", 
   },
   header: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20, // Space between the header and the rest of the form
+    marginBottom: 20, 
   },
   itemImage: {
     width: 200,
     height: 200,
-    marginBottom: 20, // Adds space below the image
+    marginBottom: 20, 
   },
   input: {
     height: 40,
@@ -179,23 +187,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginTop: 20,
     marginBottom: 10,
-    width: "80%", // Takes 80% of the width of the screen for the input field
+    width: "100%", 
     borderRadius: 100,
   },
   inputRow: {
-    flexDirection: "row", // Align the icon and input in a row
+    flexDirection: "row", 
     alignItems: "center",
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 100,
-    width: "80%",
+    width: "100%",
     paddingHorizontal: 10,
     marginTop: 20,
     marginBottom: 10,
     height: 40,
   },
   inputWithIcon: {
-    flex: 1, // Let the input take the rest of the space
+    flex: 1, 
     paddingHorizontal: 10,
   },
   notesInput: {
@@ -204,10 +212,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginTop: 20,
     marginBottom: 10,
-    width: "80%",
-    height: 60, // Sets the height for multi-line input
+    width: "100%",
+    height: 60, 
     borderRadius: 20,
-    textAlignVertical: "top", // Ensures text starts at the top for multi-line input
+    textAlignVertical: "top", 
   },
   message: {
     marginTop: 20,
