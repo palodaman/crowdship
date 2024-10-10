@@ -4,6 +4,7 @@ import { StyleSheet, View, Alert } from 'react-native'
 import { Button, Input } from '@rneui/themed'
 import { Session } from '@supabase/supabase-js'
 import { Link } from 'expo-router';
+import React from 'react'
 
 
 export default function Account({ session }: { session: Session }) {

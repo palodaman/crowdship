@@ -6,6 +6,7 @@ import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-nati
 import React from 'react'
 import Header from '../components/header'
 import { useSession } from '../hooks/useSession'
+import AcceptDelivery from './acceptdelivery'
 
 export default function App() {
   const session = useSession()
@@ -19,6 +20,11 @@ export default function App() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <DeliveryRequest />
       </ScrollView>
+    )
+    if(currentPage==='acceptdelivery') return (
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <AcceptDelivery />  
+        </ScrollView>
     )
     return <Account key={session.user.id} session={session} />
   }
@@ -37,6 +43,12 @@ export default function App() {
             onPress={() => setCurrentPage('delivery')}
           >
             <Text style={[styles.navButtonText, currentPage === 'delivery' && styles.activeButtonText]}>Request</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.navButton, currentPage === 'acceptdelivery' && styles.activeButton]}
+            onPress={() => setCurrentPage('acceptdelivery')}
+          >
+            <Text style={[styles.navButtonText, currentPage === 'acceptdelivery' && styles.activeButtonText]}>Accept Delivery</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.navButton, currentPage === 'account' && styles.activeButton]}
