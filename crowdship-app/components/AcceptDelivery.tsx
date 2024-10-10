@@ -74,7 +74,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
     console.log("WE got here: "),
     (
       <View style={styles.container}>
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <View style={styles.textContainer}>
             <View style={styles.itemImage}>
               <Text style={styles.itemImageText}>Photo of Item</Text>
@@ -94,8 +94,9 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
               <Text style={styles.price}>${listing?.price}</Text>
             </View>
             <View style={styles.addressContainer}>
+              <Text style={styles.itemDescription}>Item Description:</Text>
               <Text style={styles.itemDescription}>
-                Item Description: {listing?.itemdescription}
+                {listing?.itemdescription}
               </Text>
             </View>
           </View>
@@ -124,36 +125,59 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "absolute",
-  },
-  textContainer: {
+    position: "relative",
+    justifyContent: "center",
     alignItems: "center",
-    // fontFamily: "Avenir",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 0,
+    right: 5,
+    backgroundColor: "red",
+    borderRadius: 15,
+    width: 30,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+  },
+  closeButtonText: {
+    color: "white",
+    fontWeight: "bold",
   },
   itemImage: {
-    width: "90%",
-    height: 250,
+    width: "100%",
+    height: 150,
     backgroundColor: "gray",
     borderRadius: 10,
-    padding: 15,
+    padding: 63,
     marginVertical: 10,
     justifyContent: "center",
     alignItems: "center",
   },
   itemImageText: {
     color: "white",
-    // fontFamily: "Avenir",
     fontWeight: "bold",
     fontSize: 22,
   },
   addressContainer: {
-    width: "90%",
+    width: "100%",
     backgroundColor: "#2C3E50",
     borderRadius: 10,
     padding: 15,
     marginVertical: 10,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start", // Align items to the left
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -166,39 +190,35 @@ const styles = StyleSheet.create({
     padding: 15,
     marginVertical: 10,
     justifyContent: "center",
-    alignItems: "center",
     shadowRadius: 4,
+    alignItems: "flex-start", // Align items to the left
   },
   priceContainer: {
-    width: "90%",
+    width: "100%",
     backgroundColor: "#50C878",
     borderRadius: 10,
     padding: 15,
     marginVertical: 10,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start", // Align items to the left
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
   label: {
-    // fontFamily: "Avenir",
     fontSize: 22,
   },
   data: {
     color: "black",
-    // fontFamily: "Avenir",
     fontSize: 16,
   },
   price: {
     color: "white",
-    // fontFamily: "Avenir",
     fontSize: 20,
   },
   itemDescription: {
     color: "white",
-    // fontFamily: "Avenir",
     fontSize: 18,
   },
   buttonContainer: {
@@ -215,7 +235,6 @@ const styles = StyleSheet.create({
   },
   numViews: {
     color: "black",
-    // fontFamily: "Avenir",
   },
   button: {
     width: "40%",
@@ -232,7 +251,9 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontWeight: "bold",
     fontSize: 16,
-    // fontFamily: "Avenir",
+  },
+  textContainer: {
+    alignItems: "center",
   },
 });
 

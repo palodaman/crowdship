@@ -1,7 +1,45 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { useState, useEffect } from "react";
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Modal,
+} from "react-native";
 import { supabase } from "../lib/supabase";
 import Card from "./Card";
+import AcceptDelivery from "./AcceptDelivery";
+import React from "react";
+
+const modalStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: "90%",
+    height: "90%",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    position: "relative",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+  },
+  closeButtonText: {
+    color: "grey",
+    fontWeight: "bold",
+  },
+});
 
 const styles = StyleSheet.create({
   loadingContainer: {
@@ -50,11 +88,18 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
 }) => {
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [renderAcceptDelivery, setRenderAcceptDelivery] = useState(false);
+  const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const GOOGLE_MAPS_API_KEY = "AIzaSyBJ9ncuQDRBwkj1EnvsGxVDuhJRrA0s_Fk";
 
   useEffect(() => {
     fetchListings(latitude, longitude);
   }, [latitude, longitude]);
+
+  const handlePress = (item: Listing) => {
+    setSelectedListing(item);
+    setRenderAcceptDelivery(true);
+  };
 
   async function fetchListings(latitude: number, longitude: number) {
     try {
@@ -80,7 +125,6 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
           return { ...listing, distance };
         })
       );
-
       // Sort listings by distance
       listingsWithDistances.sort(
         (a, b) => (a.distance ?? 0) - (b.distance ?? 0)
@@ -140,26 +184,52 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
   }
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <FlatList
         style={{ padding: 10 }}
         data={listings}
         keyExtractor={(item) => item.listingid}
         renderItem={({ item }) => (
-          <Card>
-            <View style={styles.item}>
-              <Text style={styles.itemImage}>Pic</Text>
-              <View style={styles.itemDescription}>
-                <Text>Item: {item.itemdescription}</Text>
-                <Text>Price: ${item.price}</Text>
+          <TouchableOpacity onPress={() => handlePress(item)}>
+            <Card>
+              <View style={styles.item}>
+                <Text style={styles.itemImage}>Pic</Text>
+                <View style={styles.itemDescription}>
+                  <Text>Item: {item.itemdescription}</Text>
+                  <Text>Price: ${item.price}</Text>
+                </View>
+                <Text style={styles.itemDistance}>
+                  {item.distance?.toFixed(0)} km
+                </Text>
               </View>
-              <Text style={styles.itemDistance}>
-                {item.distance?.toFixed(0)} km
-              </Text>
-            </View>
-          </Card>
+            </Card>
+          </TouchableOpacity>
         )}
       />
+
+      <Modal
+        visible={renderAcceptDelivery}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setRenderAcceptDelivery(false)}
+      >
+        <View style={modalStyles.modalContainer}>
+          <View style={modalStyles.modalContent}>
+            <TouchableOpacity
+              style={modalStyles.closeButton}
+              onPress={() => setRenderAcceptDelivery(false)}
+            >
+              <Text style={modalStyles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+            {selectedListing && (
+              <AcceptDelivery
+                selectedListing={selectedListing}
+                setRenderAcceptDelivery={setRenderAcceptDelivery}
+              />
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
