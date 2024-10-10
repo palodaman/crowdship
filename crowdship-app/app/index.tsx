@@ -16,7 +16,7 @@ export default function App() {
   const renderPage = () => {
     if (!session || !session.user) return <Auth />
     if (currentPage === 'account') return <Account key={session.user.id} session={session} />
-    if (currentPage === 'delivery') return (
+    if (currentPage === 'requestdelivery') return (
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <DeliveryRequest />
       </ScrollView>
@@ -39,16 +39,16 @@ export default function App() {
         <View style={styles.navBar}>
           {/* Navigation Buttons */}
           <TouchableOpacity
-            style={[styles.navButton, currentPage === 'delivery' && styles.activeButton]}
-            onPress={() => setCurrentPage('delivery')}
+            style={[styles.navButton, currentPage === 'requestdelivery' && styles.activeButton]}
+            onPress={() => setCurrentPage('requestdelivery')}
           >
-            <Text style={[styles.navButtonText, currentPage === 'delivery' && styles.activeButtonText]}>Request</Text>
+            <Text style={[styles.navButtonText, currentPage === 'requestdelivery' && styles.activeButtonText]}>Request</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.navButton, currentPage === 'acceptdelivery' && styles.activeButton]}
             onPress={() => setCurrentPage('acceptdelivery')}
           >
-            <Text style={[styles.navButtonText, currentPage === 'acceptdelivery' && styles.activeButtonText]}>Accept Delivery</Text>
+            <Text style={[styles.navButtonText, currentPage === 'acceptdelivery' && styles.activeButtonText]}> Deliveries</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.navButton, currentPage === 'account' && styles.activeButton]}
