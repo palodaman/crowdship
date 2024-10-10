@@ -1,26 +1,15 @@
-import { useState, useEffect } from 'react'
-import { supabase } from '../lib/supabase'
+import { useState } from 'react'
 import Auth from '../components/Auth'
 import Account from '../components/Account'
 import DeliveryRequest from './deliveryrequest'
-import { View, Button, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native'
-import { Session } from '@supabase/supabase-js'
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native'
 import React from 'react'
 import Header from '../components/header'
+import { useSession } from '../hooks/useSession'
 
 export default function App() {
-  const [session, setSession] = useState<Session | null>(null)
+  const session = useSession()
   const [currentPage, setCurrentPage] = useState<string>('account') // Track the current page
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-    })
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-  }, [])
 
   // Render the selected page based on currentPage state
   const renderPage = () => {
@@ -61,7 +50,7 @@ export default function App() {
   )
 }
 
-// Add some basic styles to position navbar at the bottom and indicate active state
+// Styles remain unchanged
 const styles = StyleSheet.create({
   container: {
     flex: 1,

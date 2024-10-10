@@ -1,24 +1,29 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, Button, TextInput } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import Entypo from '@expo/vector-icons/Entypo';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import Foundation from '@expo/vector-icons/Foundation';
-
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image, Button, TextInput, ActivityIndicator } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import Entypo from "@expo/vector-icons/Entypo";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import Foundation from "@expo/vector-icons/Foundation";
+import { supabase } from '../lib/supabase'; // Make sure to create this file with Supabase client initialization
+import { useSession } from "../hooks/useSession";
 
 export default function DeliveryRequest() {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [itemName, setItemName] = useState('');
-  const [pickupAddress, setPickupAddress] = useState('');
-  const [dropOffAddress, setDropOffAddress] = useState('');
-  const [notes, setNotes] = useState('');
-  const [price, setPrice] = useState('');
+  const [itemDescription, setItemDescription] = useState("");
+  const [startingAddress, setStartingAddress] = useState("");
+  const [destinationAddress, setDestinationAddress] = useState("");
+  const [notes, setNotes] = useState("");
+  const [price, setPrice] = useState("");
+  const [itemImageUrl, setItemImageUrl] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const session  = useSession();
 
   const pickImage = async () => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert('Permission to access camera roll is required!');
+      alert("Permission to access camera roll is required!");
       return;
     }
 
@@ -30,7 +35,45 @@ export default function DeliveryRequest() {
     });
 
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+      setItemImageUrl(result.assets[0].uri);
+    }
+  };
+
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    setMessage("");
+
+    try {
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+      const { data, error } = await supabase.from("listings").insert([
+        {
+          senderid: session?.user.id,
+          status: "ACTIVE",
+          price: parseFloat(price),
+          startingaddress: startingAddress,
+          destinationaddress: destinationAddress,
+          itemdescription: itemDescription,
+          itemimageurl: itemImageUrl,
+          notes: notes,  // Add notes to the request
+          views: 0, // Initialize views to 0
+        },
+      ]);
+
+      if (error) throw error;
+
+      setMessage("Delivery request submitted successfully!");
+      // Reset form fields
+      setItemDescription("");
+      setStartingAddress("");
+      setDestinationAddress("");
+      setPrice("");
+      setNotes("");
+      setItemImageUrl(null);
+    } catch (error) {
+      setMessage(`Error: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -39,20 +82,20 @@ export default function DeliveryRequest() {
       {/* Request Delivery Header */}
       <Text style={styles.header}>Request Delivery</Text>
 
-      {selectedImage ? (
-        <Image source={{ uri: selectedImage }} style={styles.itemImage} />
+      {itemImageUrl ? (
+        <Image source={{ uri: itemImageUrl }} style={styles.itemImage} />
       ) : (
         <Text>No item picture selected</Text>
       )}
 
-      <Button title="Upload/Take Item Picture" onPress={pickImage} />
+      <Button title="Upload Item Picture" onPress={pickImage} />
 
-      {/* Item Name Input */}
+      {/* Item Description Input */}
       <TextInput
         style={styles.input}
-        placeholder="Enter item name"
-        value={itemName}
-        onChangeText={setItemName}
+        placeholder="Enter item description"
+        value={itemDescription}
+        onChangeText={setItemDescription}
       />
 
       {/* Pickup Address Input */}
@@ -60,9 +103,9 @@ export default function DeliveryRequest() {
         <FontAwesome6 name="location-arrow" size={24} color="black" />
         <TextInput
           style={styles.inputWithIcon}
-          placeholder="Enter pickup address"
-          value={pickupAddress}
-          onChangeText={setPickupAddress}
+          placeholder="Enter starting address"
+          value={startingAddress}
+          onChangeText={setStartingAddress}
         />
       </View>
 
@@ -71,9 +114,9 @@ export default function DeliveryRequest() {
         <Entypo name="location-pin" size={24} color="black" />
         <TextInput
           style={styles.inputWithIcon}
-          placeholder="Enter drop-off address"
-          value={dropOffAddress}
-          onChangeText={setDropOffAddress}
+          placeholder="Enter destination address"
+          value={destinationAddress}
+          onChangeText={setDestinationAddress}
         />
       </View>
 
@@ -99,7 +142,15 @@ export default function DeliveryRequest() {
         />
       </View>
 
-      <Button title="Submit Delivery Request" onPress={() => { /* handle submission */ }} />
+      <Button
+        title="Submit Delivery Request"
+        onPress={handleSubmit}
+        disabled={isLoading}
+      />
+
+      {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
+      {message !== "" && <Text style={styles.message}>{message}</Text>}
+
     </View>
   );
 }
@@ -107,13 +158,13 @@ export default function DeliveryRequest() {
 const styles = StyleSheet.create({
   container: {
     flex: 1, // Takes the full height of the screen
-    justifyContent: 'center', // Centers content vertically
-    alignItems: 'center', // Centers content horizontally
+    justifyContent: "center", // Centers content vertically
+    alignItems: "center", // Centers content horizontally
     padding: 20, // Adds some padding around the elements
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20, // Space between the header and the rest of the form
   },
   itemImage: {
@@ -123,39 +174,45 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     paddingHorizontal: 10,
     marginTop: 20,
     marginBottom: 10,
-    width: '80%',   // Takes 80% of the width of the screen for the input field
+    width: "80%", // Takes 80% of the width of the screen for the input field
     borderRadius: 100,
   },
   inputRow: {
-    flexDirection: 'row',  // Align the icon and input in a row
-    alignItems: 'center',
-    borderColor: 'gray',
+    flexDirection: "row", // Align the icon and input in a row
+    alignItems: "center",
+    borderColor: "gray",
     borderWidth: 1,
     borderRadius: 100,
-    width: '80%',
+    width: "80%",
     paddingHorizontal: 10,
     marginTop: 20,
     marginBottom: 10,
     height: 40,
   },
   inputWithIcon: {
-    flex: 1,  // Let the input take the rest of the space
+    flex: 1, // Let the input take the rest of the space
     paddingHorizontal: 10,
   },
   notesInput: {
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     paddingHorizontal: 10,
     marginTop: 20,
     marginBottom: 10,
-    width: '80%',
-    height: 60,  // Sets the height for multi-line input
+    width: "80%",
+    height: 60, // Sets the height for multi-line input
     borderRadius: 20,
-    textAlignVertical: 'top',  // Ensures text starts at the top for multi-line input
+    textAlignVertical: "top", // Ensures text starts at the top for multi-line input
+  },
+  message: {
+    marginTop: 20,
+    fontSize: 16,
+    color: 'green',
+    textAlign: 'center',
   },
 });
