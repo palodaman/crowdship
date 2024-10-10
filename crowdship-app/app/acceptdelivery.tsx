@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { supabase } from './lib/supabase'
+import { supabase } from '../lib/supabase'
 import React from 'react';
 import { View, ScrollView, Text, ActivityIndicator, TouchableOpacity, StyleSheet, Platform} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -16,7 +16,7 @@ interface Listing {
   itemimageurl: string | null;
 }
 
-const AcceptDelivery = () => {
+export default function AcceptDelivery() {
     const [listings, setListings] = useState<Listing[]>([])
     const [loading, setLoading] = useState(true);
 
@@ -200,4 +200,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AcceptDelivery;
