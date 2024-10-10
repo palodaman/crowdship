@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, Button, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import Entypo from '@expo/vector-icons/Entypo';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Foundation from '@expo/vector-icons/Foundation';
+
 
 export default function DeliveryRequest() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -8,7 +12,7 @@ export default function DeliveryRequest() {
   const [pickupAddress, setPickupAddress] = useState('');
   const [dropOffAddress, setDropOffAddress] = useState('');
   const [notes, setNotes] = useState('');
-  const [price, setPrice] = useState(''); // New state for price
+  const [price, setPrice] = useState('');
 
   const pickImage = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -52,20 +56,26 @@ export default function DeliveryRequest() {
       />
 
       {/* Pickup Address Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Enter pickup address"
-        value={pickupAddress}
-        onChangeText={setPickupAddress}
-      />
+      <View style={styles.inputRow}>
+        <FontAwesome6 name="location-arrow" size={24} color="black" />
+        <TextInput
+          style={styles.inputWithIcon}
+          placeholder="Enter pickup address"
+          value={pickupAddress}
+          onChangeText={setPickupAddress}
+        />
+      </View>
 
       {/* Drop Off Address Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Enter drop-off address"
-        value={dropOffAddress}
-        onChangeText={setDropOffAddress}
-      />
+      <View style={styles.inputRow}>
+        <Entypo name="location-pin" size={24} color="black" />
+        <TextInput
+          style={styles.inputWithIcon}
+          placeholder="Enter drop-off address"
+          value={dropOffAddress}
+          onChangeText={setDropOffAddress}
+        />
+      </View>
 
       {/* Notes Input */}
       <TextInput
@@ -78,13 +88,16 @@ export default function DeliveryRequest() {
       />
 
       {/* Price Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="$: Set price"
-        value={price}
-        onChangeText={setPrice}
-        keyboardType="numeric" // Ensure the keyboard is optimized for entering numbers
-      />
+      <View style={styles.inputRow}>
+        <Foundation name="dollar" size={24} color="black" />
+        <TextInput
+          style={styles.inputWithIcon}
+          placeholder="Set price"
+          value={price}
+          onChangeText={setPrice}
+          keyboardType="numeric" // Ensure the keyboard is optimized for entering numbers
+        />
+      </View>
 
       <Button title="Submit Delivery Request" onPress={() => { /* handle submission */ }} />
     </View>
@@ -117,6 +130,22 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '80%',   // Takes 80% of the width of the screen for the input field
     borderRadius: 100,
+  },
+  inputRow: {
+    flexDirection: 'row',  // Align the icon and input in a row
+    alignItems: 'center',
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 100,
+    width: '80%',
+    paddingHorizontal: 10,
+    marginTop: 20,
+    marginBottom: 10,
+    height: 40,
+  },
+  inputWithIcon: {
+    flex: 1,  // Let the input take the rest of the space
+    paddingHorizontal: 10,
   },
   notesInput: {
     borderColor: 'gray',
