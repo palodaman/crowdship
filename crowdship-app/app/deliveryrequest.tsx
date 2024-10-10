@@ -11,11 +11,13 @@ export default function DeliveryRequest() {
   const [itemDescription, setItemDescription] = useState("");
   const [startingAddress, setStartingAddress] = useState("");
   const [destinationAddress, setDestinationAddress] = useState("");
+  const [notes, setNotes] = useState("");
   const [price, setPrice] = useState("");
   const [itemImageUrl, setItemImageUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const session  = useSession();
+
   const pickImage = async () => {
     let permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -53,7 +55,7 @@ export default function DeliveryRequest() {
           destinationaddress: destinationAddress,
           itemdescription: itemDescription,
           itemimageurl: itemImageUrl,
-          // listedat and updatedat will be handled by Supabase
+          notes: notes,  // Add notes to the request
           views: 0, // Initialize views to 0
         },
       ]);
@@ -66,6 +68,7 @@ export default function DeliveryRequest() {
       setStartingAddress("");
       setDestinationAddress("");
       setPrice("");
+      setNotes("");
       setItemImageUrl(null);
     } catch (error) {
       setMessage(`Error: ${error.message}`);
@@ -87,7 +90,7 @@ export default function DeliveryRequest() {
 
       <Button title="Upload Item Picture" onPress={pickImage} />
 
-      {/* Item Name Input */}
+      {/* Item Description Input */}
       <TextInput
         style={styles.input}
         placeholder="Enter item description"
@@ -116,6 +119,16 @@ export default function DeliveryRequest() {
           onChangeText={setDestinationAddress}
         />
       </View>
+
+      {/* Notes Input */}
+      <TextInput
+        style={styles.notesInput}
+        placeholder="Add notes (instructions or extra info)"
+        value={notes}
+        onChangeText={setNotes}
+        multiline  // Allows multi-line input for notes
+        numberOfLines={4}  // Number of lines for the notes input
+      />
 
       {/* Price Input */}
       <View style={styles.inputRow}>
