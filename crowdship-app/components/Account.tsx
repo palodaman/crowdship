@@ -3,6 +3,9 @@ import { supabase } from '../lib/supabase'
 import { StyleSheet, View, Alert } from 'react-native'
 import { Button, Input } from '@rneui/themed'
 import { Session } from '@supabase/supabase-js'
+import { Link } from 'expo-router';
+import React from 'react'
+
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true)
@@ -100,6 +103,11 @@ export default function Account({ session }: { session: Session }) {
       <View style={styles.verticallySpaced}>
         <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
       </View>
+
+      {/* <View style={[styles.verticallySpaced, styles.mt20]}>
+      <Link href="/deliveryrequest">View details</Link>
+      </View> */}
+
     </View>
   )
 }
