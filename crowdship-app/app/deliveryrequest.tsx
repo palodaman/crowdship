@@ -8,6 +8,7 @@ export default function DeliveryRequest() {
   const [pickupAddress, setPickupAddress] = useState('');
   const [dropOffAddress, setDropOffAddress] = useState('');
   const [notes, setNotes] = useState('');
+  const [price, setPrice] = useState(''); // New state for price
 
   const pickImage = async () => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -74,6 +75,15 @@ export default function DeliveryRequest() {
         onChangeText={setNotes}
         multiline  // Allows multi-line input for notes
         numberOfLines={4}  // Number of lines for the notes input
+      />
+
+      {/* Price Input */}
+      <TextInput
+        style={styles.input}
+        placeholder="$: Set price"
+        value={price}
+        onChangeText={setPrice}
+        keyboardType="numeric" // Ensure the keyboard is optimized for entering numbers
       />
 
       <Button title="Submit Delivery Request" onPress={() => { /* handle submission */ }} />
