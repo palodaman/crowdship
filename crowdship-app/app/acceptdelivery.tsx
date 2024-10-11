@@ -3,7 +3,9 @@ import { supabase } from '../lib/supabase';
 import React from 'react';
 import { View, ScrollView, Text, ActivityIndicator, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import * as ImagePicker from 'expo-image-picker';
+
+// Import your local image from the assets folder
+import diningTableImage from '../assets/diningTable.png'; 
 
 interface Listing {
   listingid: string;
@@ -40,26 +42,6 @@ export default function AcceptDelivery() {
     fetchListings();
   }, []);
 
-  const pickImage = async () => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert('Permission to access camera roll is required!');
-      return;
-    }
-
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1], // square aspect ratio
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
-    }
-  };
-
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
@@ -68,19 +50,13 @@ export default function AcceptDelivery() {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.textContainer}>
-          {/* Upload Button or Image */}
+          {/* Display the local image */}
           <View style={[styles.uploadContainer, selectedImage && styles.uploadedContainer]}>
-            {selectedImage ? (
-              <Image
-                source={{ uri: selectedImage }}
-                style={styles.itemImage}
-                resizeMode="cover"
-              />
-            ) : (
-              <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
-                <Text style={styles.uploadButtonText}>Upload Item Picture</Text>
-              </TouchableOpacity>
-            )}
+            <Image
+              source={diningTableImage} // Using the imported image here
+              style={styles.itemImage}
+              resizeMode="cover"
+            />
           </View>
 
           {/* Delivery Information as Cards */}
@@ -139,7 +115,7 @@ export default function AcceptDelivery() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff', 
+    backgroundColor: '#ffffff',
   },
   textContainer: {
     alignItems: 'center',
@@ -147,7 +123,7 @@ const styles = StyleSheet.create({
   },
   uploadContainer: {
     width: '75%',
-    height: 170,
+    height: 175,
     backgroundColor: '#dde8ff', // Initial background before image is uploaded
     borderRadius: 10,
     padding: 15,
@@ -160,21 +136,11 @@ const styles = StyleSheet.create({
   },
   uploadedContainer: {
     backgroundColor: 'transparent', // Remove the hue once image is uploaded
-    borderWidth: 0, // Remove the dashed border once image is uploaded
-  },
-  uploadButton: {
-    backgroundColor: '#4a90e2',
-    padding: 15,
-    borderRadius: 10,
-  },
-  uploadButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
+    borderWidth: 1, // Remove the dashed border once image is uploaded
   },
   itemImage: {
-    width: '100%',
-    height: '100%',
+    width: '125%',
+    height: '125%',
     borderRadius: 10,
   },
   card: {
