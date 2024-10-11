@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Auth from "../components/Auth";
 import Account from "../components/Account";
 import DeliveryRequest from "./deliveryrequest";
@@ -14,6 +14,7 @@ import Header from "../components/header";
 import { useSession } from "../hooks/useSession";
 import AcceptDelivery from "./acceptdelivery";
 import GoogleMapScreen from "../components/GoogleMapScreen";
+import './cryptoPolyfill.js';
 
 export default function App() {
   const session = useSession();
