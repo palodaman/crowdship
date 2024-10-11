@@ -6,6 +6,7 @@ import { View } from "react-native";
 import { Session } from "@supabase/supabase-js";
 
 import GoogleMapScreen from "./components/GoogleMapScreen";
+import React from "react";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -20,13 +21,5 @@ export default function App() {
     });
   }, []);
 
-  return (
-    <View>
-      {session && session.user ? (
-        <Account key={session.user.id} session={session} />
-      ) : (
-        <Auth />
-      )}
-    </View>
-  );
+  return <GoogleMapScreen />;
 }
