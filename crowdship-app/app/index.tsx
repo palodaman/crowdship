@@ -12,9 +12,9 @@ import {
 import React from "react";
 import Header from "../components/header";
 import { useSession } from "../hooks/useSession";
-import AcceptDelivery from "./acceptdelivery";
 import GoogleMapScreen from "../components/GoogleMapScreen";
-import './cryptoPolyfill.js';
+import "./cryptoPolyfill.js";
+import DeliveryDashboard from "./deliverydashboard";
 
 export default function App() {
   const session = useSession();
@@ -34,10 +34,10 @@ export default function App() {
     if (currentPage === "acceptdelivery")
       return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {/* <AcceptDelivery />   */}
           <GoogleMapScreen />
         </ScrollView>
       );
+    if (currentPage === "deliveryDashboard") return <DeliveryDashboard />;
     return <Account key={session.user.id} session={session} />;
   };
 
@@ -80,6 +80,22 @@ export default function App() {
               ]}
             >
               {" "}
+              Accept Delivery
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.navButton,
+              currentPage === "deliveryDashboard" && styles.activeButton,
+            ]}
+            onPress={() => setCurrentPage("deliveryDashboard")}
+          >
+            <Text
+              style={[
+                styles.navButtonText,
+                currentPage === "deliveryDashboard" && styles.activeButtonText,
+              ]}
+            >
               Deliveries
             </Text>
           </TouchableOpacity>
