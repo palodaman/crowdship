@@ -7,14 +7,12 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  ScrollView,
 } from "react-native";
 import React from "react";
 import Header from "../components/header";
 import { useSession } from "../hooks/useSession";
-import AcceptDelivery from "./acceptdelivery";
 import GoogleMapScreen from "../components/GoogleMapScreen";
-import './cryptoPolyfill.js';
+import "./cryptoPolyfill.js";
 
 export default function App() {
   const session = useSession();
@@ -25,19 +23,8 @@ export default function App() {
     if (!session || !session.user) return <Auth />;
     if (currentPage === "account")
       return <Account key={session.user.id} session={session} />;
-    if (currentPage === "requestdelivery")
-      return (
-        // <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <DeliveryRequest />
-        // </ScrollView>
-      );
-    if (currentPage === "acceptdelivery")
-      return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {/* <AcceptDelivery />   */}
-          <GoogleMapScreen />
-        </ScrollView>
-      );
+    if (currentPage === "requestdelivery") return <DeliveryRequest />;
+    if (currentPage === "acceptdelivery") return <GoogleMapScreen />;
     return <Account key={session.user.id} session={session} />;
   };
 
