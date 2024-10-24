@@ -75,8 +75,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemDistance: {
-    flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
+    flex: 1,
   },
   itemText: {
     color: "#333",
@@ -95,9 +95,9 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   distanceText: {
-    marginLeft: 5,
     color: "#888",
     fontSize: 14,
+    textAlign: "right",
   },
 });
 
@@ -244,8 +244,14 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
                     </View>
                   </View>
                   <View style={styles.itemDistance}>
-                    <Ionicons name="location-outline" size={16} color="#888" />
+                    <Text style={styles.distanceText}>Offset Distance </Text>
                     <Text style={styles.distanceText}>
+                      {" "}
+                      <Ionicons
+                        name="location-outline"
+                        size={14}
+                        color="#888"
+                      />{" "}
                       {item.distance?.toFixed(0)} km
                     </Text>
                   </View>
