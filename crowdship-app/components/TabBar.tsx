@@ -1,31 +1,41 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
 import { AntDesign, Feather, Entypo, FontAwesome } from "@expo/vector-icons";
-import  TabBarButton from "./TabBarButton";
+import TabBarButton from "./TabBarButton";
 
-
-const TabBar = ({ state, descriptors, navigation }: { state: any; descriptors: any; navigation: any }) => {
+const TabBar = ({
+  state,
+  descriptors,
+  navigation,
+}: {
+  state: any;
+  descriptors: any;
+  navigation: any;
+}) => {
   const primaryColor = "#0891b2";
   const greyColor = "#737373";
   return (
     <View style={styles.tabbar}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
-        let label
-        let icon ;
-        if (route.name === 'deliveryrequest') {
-            label = 'Request Delivery'
-            icon = <Entypo name="add-to-list" size={24} color="black" />;
+        let label;
+        let icon;
+        if (route.name === "deliveryrequest") {
+          label = "Request Delivery";
+          icon = <Entypo name="add-to-list" size={24} color="black" />;
         }
-        if (route.name === 'googlemapscreen') {
-            label = 'Deliveries'
-            icon = <AntDesign name="car" size={24} color="black" />
+        if (route.name === "googlemapscreen") {
+          label = "Find Deliveries";
+          icon = <AntDesign name="car" size={24} color="black" />;
         }
-        if (route.name === 'index') {
-            label = 'Account'
-            icon = <FontAwesome name="user" size={24} color="black" />;
+        if (route.name === "deliverydashboard") {
+          label = "Deliveries";
+          icon = <Feather name="list" size={24} color="black" />;
         }
-        
+        if (route.name === "index") {
+          label = "Account";
+          icon = <FontAwesome name="user" size={24} color="black" />;
+        }
 
         if (["_sitemap", "+not-found"].includes(route.name)) return null;
 
@@ -53,7 +63,7 @@ const TabBar = ({ state, descriptors, navigation }: { state: any; descriptors: a
         return (
           <TabBarButton
             key={route.name}
-            icon = {icon!}
+            icon={icon!}
             onPress={onPress}
             onLongPress={onLongPress}
             isFocused={isFocused}

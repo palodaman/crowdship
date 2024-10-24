@@ -3,7 +3,6 @@ import { Tabs, useRouter } from "expo-router";
 import TabBar from "../components/TabBar";
 
 const _layout = () => {
-
   return (
     <Tabs tabBar={(props) => <TabBar {...props} />}>
       <Tabs.Screen
@@ -21,6 +20,12 @@ const _layout = () => {
       <Tabs.Screen
         name="googlemapscreen"
         options={{
+          title: "Find Deliveries",
+        }}
+      />
+      <Tabs.Screen
+        name="deliverydashboard"
+        options={{
           title: "Deliveries",
         }}
       />
@@ -29,4 +34,3 @@ const _layout = () => {
 };
 
 export default _layout;
- 
