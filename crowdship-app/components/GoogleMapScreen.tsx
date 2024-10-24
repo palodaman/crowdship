@@ -4,10 +4,12 @@ import { StyleSheet, View, Text } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapViewDirections from "react-native-maps-directions";
 import DeliveriesList from "./DeliveriesList";
+import Snackbar from "./SnackBar";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    ...StyleSheet.absoluteFillObject,
   },
   map: {
     flex: 1, // This will allow the map to take up half of the screen
@@ -41,6 +43,8 @@ const GoogleMapScreen = () => {
     latitude: number;
     longitude: number;
   } | null>(null);
+
+  const [snackBarVisible, setSnackBarVisible] = useState(false);
 
   async function changeLocation(coordinates: {
     latitude: number | undefined;
@@ -77,6 +81,7 @@ const GoogleMapScreen = () => {
                 };
                 setOrigin(originCoordinates);
                 changeLocation(originCoordinates);
+                setSnackBarVisible(false);
               }
             }}
             query={{
@@ -84,6 +89,7 @@ const GoogleMapScreen = () => {
               language: "en",
             }}
             onFail={(error) => console.error(error)}
+            onNotFound={() => console.log("No valid origin address found")}
           />
         </View>
         <View style={{ flex: 0.5 }}>
@@ -101,6 +107,7 @@ const GoogleMapScreen = () => {
                 };
                 setDestination(destinationCoordinates);
                 changeLocation(destinationCoordinates);
+                setSnackBarVisible(false);
               }
             }}
             query={{
@@ -108,6 +115,7 @@ const GoogleMapScreen = () => {
               language: "en",
             }}
             onFail={(error) => console.error(error)}
+            onNotFound={() => console.log("No valid destination address found")}
           />
         </View>
       </View>
@@ -123,16 +131,27 @@ const GoogleMapScreen = () => {
             apikey={apiKey}
             strokeWidth={3}
             strokeColor="blue"
+            onError={() => {
+              setSnackBarVisible(true);
+            }}
           />
         )}
       </MapView>
-      {destination && (
+      {destination && !snackBarVisible && (
         <View style={styles.listingsContainer}>
           <DeliveriesList
             latitude={destination?.latitude ?? 0}
             longitude={destination?.longitude ?? 0}
           />
         </View>
+      )}
+      {snackBarVisible && (
+        <Snackbar
+          setIsVisible={setSnackBarVisible}
+          isVisible={snackBarVisible}
+          message="The starting or destination address is not a valid."
+          containerStyle={{ marginHorizontal: 12 }} // Apply additional styling
+        />
       )}
     </View>
   );

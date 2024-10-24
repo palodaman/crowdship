@@ -2,19 +2,12 @@ import { useState, useEffect } from "react";
 import Auth from "../components/Auth";
 import Account from "../components/Account";
 import DeliveryRequest from "./deliveryrequest";
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import Header from "../components/header";
 import { useSession } from "../hooks/useSession";
 import GoogleMapScreen from "../components/GoogleMapScreen";
 import "./cryptoPolyfill.js";
-import DeliveryDashboard from "./deliverydashboard";
 
 export default function App() {
   const session = useSession();
@@ -25,19 +18,8 @@ export default function App() {
     if (!session || !session.user) return <Auth />;
     if (currentPage === "account")
       return <Account key={session.user.id} session={session} />;
-    if (currentPage === "requestdelivery")
-      return (
-        // <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <DeliveryRequest />
-        // </ScrollView>
-      );
-    if (currentPage === "acceptdelivery")
-      return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <GoogleMapScreen />
-        </ScrollView>
-      );
-    if (currentPage === "deliveryDashboard") return <DeliveryDashboard />;
+    if (currentPage === "requestdelivery") return <DeliveryRequest />;
+    if (currentPage === "acceptdelivery") return <GoogleMapScreen />;
     return <Account key={session.user.id} session={session} />;
   };
 
