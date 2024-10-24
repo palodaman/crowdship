@@ -6,99 +6,20 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import Header from "../components/header";
 import { useSession } from "../hooks/useSession";
-import GoogleMapScreen from "../components/GoogleMapScreen";
 import "./cryptoPolyfill.js";
 
 export default function App() {
   const session = useSession();
-  const [currentPage, setCurrentPage] = useState<string>("account"); // Track the current page
 
   // Render the selected page based on currentPage state
   const renderPage = () => {
     if (!session || !session.user) return <Auth />;
-    if (currentPage === "account")
-      return <Account key={session.user.id} session={session} />;
-    if (currentPage === "requestdelivery") return <DeliveryRequest />;
-    if (currentPage === "acceptdelivery") return <GoogleMapScreen />;
     return <Account key={session.user.id} session={session} />;
   };
 
   return (
     <View style={styles.container}>
-      <Header>
-        {/* Render the selected page */}
-        {renderPage()}
-      </Header>
-      {session && session.user && (
-        <View style={styles.navBar}>
-          {/* Navigation Buttons */}
-          <TouchableOpacity
-            style={[
-              styles.navButton,
-              currentPage === "requestdelivery" && styles.activeButton,
-            ]}
-            onPress={() => setCurrentPage("requestdelivery")}
-          >
-            <Text
-              style={[
-                styles.navButtonText,
-                currentPage === "requestdelivery" && styles.activeButtonText,
-              ]}
-            >
-              Request
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.navButton,
-              currentPage === "acceptdelivery" && styles.activeButton,
-            ]}
-            onPress={() => setCurrentPage("acceptdelivery")}
-          >
-            <Text
-              style={[
-                styles.navButtonText,
-                currentPage === "acceptdelivery" && styles.activeButtonText,
-              ]}
-            >
-              {" "}
-              Accept Delivery
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.navButton,
-              currentPage === "deliveryDashboard" && styles.activeButton,
-            ]}
-            onPress={() => setCurrentPage("deliveryDashboard")}
-          >
-            <Text
-              style={[
-                styles.navButtonText,
-                currentPage === "deliveryDashboard" && styles.activeButtonText,
-              ]}
-            >
-              Deliveries
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.navButton,
-              currentPage === "account" && styles.activeButton,
-            ]}
-            onPress={() => setCurrentPage("account")}
-          >
-            <Text
-              style={[
-                styles.navButtonText,
-                currentPage === "account" && styles.activeButtonText,
-              ]}
-            >
-              Account
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      <Header>{renderPage()}</Header>
     </View>
   );
 }
