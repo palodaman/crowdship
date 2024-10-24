@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import Card from "./Card";
-import AcceptDelivery from "../app/acceptdelivery";
+import AcceptDelivery from "./acceptdelivery";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 

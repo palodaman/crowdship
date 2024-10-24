@@ -3,8 +3,8 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { StyleSheet, View, Text } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapViewDirections from "react-native-maps-directions";
-import DeliveriesList from "./DeliveriesList";
-import Snackbar from "./SnackBar";
+import DeliveriesList from "../components/DeliveriesList";
+import Snackbar from "../components/SnackBar";
 
 const styles = StyleSheet.create({
   container: {
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
 
 const apiKey = "AIzaSyBJ9ncuQDRBwkj1EnvsGxVDuhJRrA0s_Fk"; // Replace with your actual API key
 
-const GoogleMapScreen = () => {
+export default function GoogleMapScreen() {
   const mapRef = useRef<MapView>(null);
   const [origin, setOrigin] = useState<{
     latitude: number;
@@ -157,4 +157,3 @@ const GoogleMapScreen = () => {
   );
 };
 
-export default GoogleMapScreen;
