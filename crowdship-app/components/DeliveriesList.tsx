@@ -6,11 +6,13 @@ import {
   Text,
   TouchableOpacity,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import Card from "./Card";
 import AcceptDelivery from "./acceptdelivery";
 import React from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 const modalStyles = StyleSheet.create({
   modalContainer: {
@@ -45,27 +47,57 @@ const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     padding: 16,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  item: {
+  itemContainer: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    marginBottom: 16,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 10,
+    width: "95%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   itemImage: {
-    width: 50,
-    height: 50,
-    backgroundColor: "gray",
-    borderRadius: 25,
+    width: 60,
+    height: 60,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 8,
     marginRight: 16,
   },
   itemDescription: {
     flex: 1,
   },
   itemDistance: {
-    marginLeft: 16,
+    alignItems: "flex-end",
+    flex: 1,
+  },
+  itemText: {
+    color: "#333",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  itemPrice: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  priceText: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "#4CAF50", // Green for price
+    marginLeft: 5,
+  },
+  distanceText: {
+    color: "#888",
+    fontSize: 14,
+    textAlign: "right",
   },
 });
 
@@ -177,32 +209,55 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>Loading...</Text>
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator size="large" color="#d3d3d3" />
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, padding: 10 }}>
       <FlatList
-        style={{ padding: 10 }}
         data={listings}
         keyExtractor={(item) => item.listingid}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handlePress(item)}>
-            <Card>
-              <View style={styles.item}>
-                <Text style={styles.itemImage}>Pic</Text>
-                <View style={styles.itemDescription}>
-                  <Text>Item: {item.itemdescription}</Text>
-                  <Text>Price: ${item.price}</Text>
+            <View style={{ alignItems: "center" }}>
+              <Card>
+                <View style={styles.itemContainer}>
+                  {
+                    <View style={styles.itemImage}>
+                      <Ionicons name="image-outline" size={30} color="#ccc" />
+                    </View>
+                  }
+                  <View style={styles.itemDescription}>
+                    <Text style={styles.itemText}>
+                      Item: {item.itemdescription}
+                    </Text>
+                    <View style={styles.itemPrice}>
+                      <Ionicons
+                        name="pricetag-outline"
+                        size={16}
+                        color="#4CAF50"
+                      />
+                      <Text style={styles.priceText}>${item.price}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.itemDistance}>
+                    <Text style={styles.distanceText}>Offset Distance </Text>
+                    <Text style={styles.distanceText}>
+                      {" "}
+                      <Ionicons
+                        name="location-outline"
+                        size={14}
+                        color="#888"
+                      />{" "}
+                      {item.distance?.toFixed(0)} km
+                    </Text>
+                  </View>
                 </View>
-                <Text style={styles.itemDistance}>
-                  {item.distance?.toFixed(0)} km
-                </Text>
-              </View>
-            </Card>
+              </Card>
+            </View>
           </TouchableOpacity>
         )}
       />
