@@ -5,11 +5,14 @@ import {
   StyleSheet,
   FlatList,
   ActivityIndicator,
+  Modal,
+  TouchableOpacity,
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import { Button } from "@rneui/themed";
 import Card from "../components/Card";
 import { Ionicons } from "@expo/vector-icons";
+import CompleteDeliveryModal from "../components/CompleteDeliveryModal";
 
 interface Listing {
   listingid: string;
@@ -28,15 +31,23 @@ const DeliveryDashboard = () => {
   const [activeListings, setActiveListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("active");
+  const [renderAcceptDelivery, setRenderAcceptDelivery] = useState(false);
+  const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
 
   useEffect(() => {
     fetchActiveListings();
     fetchPastListings();
   }, []);
 
+  const handlePress = (item: Listing) => {
+    console.log("Item:", item);
+    setSelectedListing(item);
+    setRenderAcceptDelivery(true);
+  };
+
   const handleButtonPress = async (listingid: string) => {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("listings")
         .update({ status: "INACTIVE" })
         .eq("listingid", listingid);
@@ -96,12 +107,17 @@ const DeliveryDashboard = () => {
     <View style={styles.container}>
       <View style={styles.tabs}>
         <Button
-          style={{ paddingRight: 1 }}
+          style={{ paddingRight: 1, backgroundColor: "white" }}
           onPress={() => setActiveTab("active")}
         >
           Active Deliveries
         </Button>
-        <Button onPress={() => setActiveTab("past")}>Past Deliveries</Button>
+        <Button
+          style={{ paddingRight: 1, backgroundColor: "white" }}
+          onPress={() => setActiveTab("past")}
+        >
+          Past Deliveries
+        </Button>
       </View>
       <View style={styles.listingsContainer}>
         {activeTab === "active" ? (
@@ -109,33 +125,39 @@ const DeliveryDashboard = () => {
             data={activeListings}
             keyExtractor={(item) => item.listingid}
             renderItem={({ item }) => (
-              <View style={{ alignItems: "center" }}>
-                <Card>
-                  <View style={styles.itemContainer}>
-                    {
-                      <View style={styles.itemImage}>
-                        <Ionicons name="image-outline" size={30} color="#ccc" />
+              <TouchableOpacity onPress={() => handlePress(item)}>
+                <View style={{ alignItems: "center" }}>
+                  <Card>
+                    <View style={styles.itemContainer}>
+                      {
+                        <View style={styles.itemImage}>
+                          <Ionicons
+                            name="image-outline"
+                            size={30}
+                            color="#ccc"
+                          />
+                        </View>
+                      }
+                      <View style={styles.itemDescription}>
+                        <Text style={styles.itemText}>
+                          {item.itemdescription}
+                        </Text>
+                        <View style={styles.itemPrice}>
+                          <Ionicons
+                            name="pricetag-outline"
+                            size={16}
+                            color="#4CAF50"
+                          />
+                          <Text style={styles.priceText}>${item.price}</Text>
+                        </View>
                       </View>
-                    }
-                    <View style={styles.itemDescription}>
-                      <Text style={styles.itemText}>
-                        {item.itemdescription}
-                      </Text>
-                      <View style={styles.itemPrice}>
-                        <Ionicons
-                          name="pricetag-outline"
-                          size={16}
-                          color="#4CAF50"
-                        />
-                        <Text style={styles.priceText}>${item.price}</Text>
-                      </View>
+                      <Button onPress={() => handleButtonPress(item.listingid)}>
+                        Complete
+                      </Button>
                     </View>
-                    <Button onPress={() => handleButtonPress(item.listingid)}>
-                      Complete
-                    </Button>
-                  </View>
-                </Card>
-              </View>
+                  </Card>
+                </View>
+              </TouchableOpacity>
             )}
           />
         ) : (
@@ -143,33 +165,62 @@ const DeliveryDashboard = () => {
             data={pastListings}
             keyExtractor={(item) => item.listingid}
             renderItem={({ item }) => (
-              <View style={{ alignItems: "center" }}>
-                <Card>
-                  <View style={styles.itemContainer}>
-                    {
-                      <View style={styles.itemImage}>
-                        <Ionicons name="image-outline" size={30} color="#ccc" />
-                      </View>
-                    }
-                    <View style={styles.itemDescription}>
-                      <Text style={styles.itemText}>
-                        {item.itemdescription}
-                      </Text>
-                      <View style={styles.itemPrice}>
-                        <Ionicons
-                          name="pricetag-outline"
-                          size={16}
-                          color="#4CAF50"
-                        />
-                        <Text style={styles.priceText}>${item.price}</Text>
+              <TouchableOpacity onPress={() => handlePress(item)}>
+                <View style={{ alignItems: "center" }}>
+                  <Card>
+                    <View style={styles.itemContainer}>
+                      {
+                        <View style={styles.itemImage}>
+                          <Ionicons
+                            name="image-outline"
+                            size={30}
+                            color="#ccc"
+                          />
+                        </View>
+                      }
+                      <View style={styles.itemDescription}>
+                        <Text style={styles.itemText}>
+                          {item.itemdescription}
+                        </Text>
+                        <View style={styles.itemPrice}>
+                          <Ionicons
+                            name="pricetag-outline"
+                            size={16}
+                            color="#4CAF50"
+                          />
+                          <Text style={styles.priceText}>${item.price}</Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
-                </Card>
-              </View>
+                  </Card>
+                </View>
+              </TouchableOpacity>
             )}
           />
         )}
+        <Modal
+          visible={renderAcceptDelivery}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setRenderAcceptDelivery(false)}
+        >
+          <View style={modalStyles.modalContainer}>
+            <View style={modalStyles.modalContent}>
+              <TouchableOpacity
+                style={modalStyles.closeButton}
+                onPress={() => setRenderAcceptDelivery(false)}
+              >
+                <Text style={modalStyles.closeButtonText}>X</Text>
+              </TouchableOpacity>
+              {selectedListing && (
+                <CompleteDeliveryModal
+                  selectedListing={selectedListing}
+                  setRenderAcceptDelivery={setRenderAcceptDelivery}
+                />
+              )}
+            </View>
+          </View>
+        </Modal>
       </View>
     </View>
   );
@@ -180,7 +231,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listingsContainer: {
-    backgroundColor: "#288cdc",
+    // backgroundColor: "#288cdc",
+    backgroundColor: "white",
     flex: 1,
   },
   card: {
@@ -254,6 +306,35 @@ const styles = StyleSheet.create({
     color: "#888",
     fontSize: 14,
     textAlign: "right",
+  },
+});
+
+const modalStyles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: "90%",
+    height: "90%",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    position: "relative",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+  },
+  closeButtonText: {
+    color: "grey",
+    fontWeight: "bold",
   },
 });
 
