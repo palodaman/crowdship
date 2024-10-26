@@ -13,35 +13,7 @@ import Card from "./Card";
 import AcceptDelivery from "./acceptdelivery";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
-
-const modalStyles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    width: "90%",
-    height: "90%",
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 20,
-    position: "relative",
-  },
-  closeButton: {
-    position: "absolute",
-    top: 10,
-    right: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1,
-  },
-  closeButtonText: {
-    color: "grey",
-    fontWeight: "bold",
-  },
-});
+import modalStyles from "../styles/modalStyles";
 
 const styles = StyleSheet.create({
   loadingContainer: {
@@ -122,6 +94,7 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [renderAcceptDelivery, setRenderAcceptDelivery] = useState(false);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
+  const [handleAccept, setHandleAccept] = useState(false)
   const GOOGLE_MAPS_API_KEY = "AIzaSyBJ9ncuQDRBwkj1EnvsGxVDuhJRrA0s_Fk";
 
   useEffect(() => {
@@ -136,7 +109,7 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
   async function fetchListings(latitude: number, longitude: number) {
     try {
       // Fetch listings from Supabase
-      const { data, error } = await supabase.from("listings").select("*");
+      const { data, error } = await supabase.from("listings").select("*").eq('status', 'ACTIVE'); ;
 
       if (error) throw error;
 
@@ -280,6 +253,7 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
               <AcceptDelivery
                 selectedListing={selectedListing}
                 setRenderAcceptDelivery={setRenderAcceptDelivery}
+                onAccept={() => fetchListings(latitude, longitude)}
               />
             )}
           </View>
