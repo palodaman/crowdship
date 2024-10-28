@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Alert, StyleSheet, View, AppState } from 'react-native'
+import { Alert, StyleSheet, View, AppState, TouchableOpacity, Text } from 'react-native'
 import { supabase } from '../lib/supabase'
-import { Button, Input } from '@rneui/themed'
+import { Input } from '@rneui/themed'
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -70,10 +70,22 @@ export default function Auth() {
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={() => signInWithEmail()}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>Sign in</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.verticallySpaced}>
-        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={() => signUpWithEmail()}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>Sign up</Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -91,5 +103,18 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
+  },
+  button: {
+    backgroundColor: "#4a90e2",
+    padding: 15,
+    borderRadius: 10,
+    width: "60%",
+    alignItems: "center",
+    alignSelf: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 18,
   },
 })

@@ -163,8 +163,8 @@ export default function Account({ session }: { session: Session }) {
         )}
 
         {/* Always show upload button */}
-        <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
-          <Text style={styles.uploadText}>Upload New Picture</Text>
+        <TouchableOpacity style={styles.button} onPress={pickImage}>
+          <Text style={styles.buttonText}>Upload New Picture</Text>
         </TouchableOpacity>
       </View>
       
@@ -176,12 +176,25 @@ export default function Account({ session }: { session: Session }) {
         <Input label="Username" value={username || ''} onChangeText={(text) => setUsername(text)} />
       </View>
 
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title={loading ? 'Loading ...' : 'Update'} onPress={() => updateProfile({ username, avatar_url: avatarUrl })} disabled={loading} />
-      </View>
+      <View style={styles.buttonContainer}>
+        <View style={[styles.verticallySpaced, styles.mt20]}>
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => updateProfile({ username, avatar_url: avatarUrl })}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>{loading ? 'Loading ...' : 'Update'}</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+        <View style={styles.verticallySpaced}>
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={() => supabase.auth.signOut()}
+          >
+            <Text style={styles.buttonText}>Sign Out</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -214,15 +227,6 @@ const styles = StyleSheet.create({
   placeholderText: {
     color: '#555',
   },
-  uploadButton: {
-    marginTop: 10,
-    backgroundColor: '#007bff',
-    padding: 10,
-    borderRadius: 5,
-  },
-  uploadText: {
-    color: '#fff',
-  },
   verticallySpaced: {
     paddingTop: 10,
     paddingBottom: 10,
@@ -230,5 +234,22 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
+  },
+  button: {
+    backgroundColor: "#4a90e2",
+    padding: 10,
+    borderRadius: 10,
+    width: "60%",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+  buttonContainer: {
+    marginBottom: 50,
   },
 });
