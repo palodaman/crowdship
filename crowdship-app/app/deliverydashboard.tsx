@@ -293,9 +293,6 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     flexDirection: "row",
   },
-  activeButton: {
-    backgroundColor: 'white',
-  },
   list: {
     flex: 1,
   },
