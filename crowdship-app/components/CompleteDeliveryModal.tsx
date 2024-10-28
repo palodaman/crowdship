@@ -73,6 +73,7 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
               </Text>
             </View>
           </View>
+          
           <View style={styles.card}>
             <Icon name="location-arrow" size={24} color="black" />
             <View style={styles.cardContent}>
@@ -96,7 +97,7 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
           <View style={styles.card}>
             <Icon name="dollar" size={24} color="black" />
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>Price:</Text>
+              <Text style={styles.cardTitle}>You'll Earn:</Text>
               <Text style={styles.cardData}>
                 ${selectedListing.price || "Not available"}
               </Text>

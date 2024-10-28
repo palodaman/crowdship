@@ -51,17 +51,14 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
 
   const newOrder = async (selectedListing: Listing) => {
     try {
-      const { data: userData, error: userError } =
-        await supabase.auth.getUser();
-      
-      if (userError) throw userError;
-
-      const { data: orderData, error: orderError} = await supabase.from("orders").insert([
-        {
-          delivererid: session?.user.id,
-          listingid: selectedListing.listingid,
-          status: 'ACCEPTED'
-        },
+      const { data: orderData, error: orderError} = await supabase
+        .from("orders")
+        .insert([
+          {
+            delivererid: session?.user.id,
+            listingid: selectedListing.listingid,
+            status: 'ACCEPTED'
+          },
       ]);
 
       if (orderError) throw orderError;

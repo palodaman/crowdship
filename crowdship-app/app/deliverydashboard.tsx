@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -13,8 +13,12 @@ import { Button } from "@rneui/themed";
 import Card from "../components/Card";
 import { Ionicons } from "@expo/vector-icons";
 import CompleteDeliveryModal from "../components/CompleteDeliveryModal";
+import modalStyles from "../styles/modalStyles";
+import { User } from '@supabase/supabase-js';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface Listing {
+  delivererid: string;
   listingid: string;
   senderid: string;
   status: string;
@@ -27,17 +31,73 @@ interface Listing {
 }
 
 const DeliveryDashboard = () => {
-  const [pastListings, setPastListings] = useState<Listing[]>([]);
-  const [activeListings, setActiveListings] = useState<Listing[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [pastOrders, setPastOrders] = useState<Listing[]>([]);
+  const [activeOrders, setActiveOrders] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("active");
   const [renderAcceptDelivery, setRenderAcceptDelivery] = useState(false);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchAllOrders();
+    }, [])
+  );
 
-  useEffect(() => {
-    fetchActiveListings();
-    fetchPastListings();
-  }, []);
+  const fetchAllOrders = async () => {
+    try {
+      const { data, error } =
+        await supabase.auth.getUser();
+      
+      setUser(data.user);
+      await fetchActiveOrders(data.user)
+      await fetchPastOrders(data.user)
+      if (error) throw error;
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const fetchActiveOrders = async (user: User | null) => {
+    try {
+      const { data, error } = await supabase
+        .from("orders")
+        .select("listings (*)")
+        .eq("delivererid", user?.id)
+        .eq("status", "ACCEPTED");
+        
+      if (error) throw error;
+    
+      const listingsArray = data.flatMap((order) => order.listings);
+      setActiveOrders(listingsArray);
+
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchPastOrders = async (user: User | null) => {
+    try {
+      const { data, error } = await supabase
+        .from("orders")
+        .select("listings (*)")
+        .eq("delivererid", user?.id)
+        .eq("status", "COMPLETE");
+      
+      if (error) throw error;
+      
+      const listingsArray = data.flatMap((order) => order.listings);
+      setPastOrders(listingsArray);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handlePress = (item: Listing) => {
     console.log("Item:", item);
@@ -47,54 +107,20 @@ const DeliveryDashboard = () => {
 
   const handleButtonPress = async (listingid: string) => {
     try {
-      const { error } = await supabase
-        .from("listings")
-        .update({ status: "INACTIVE" })
-        .eq("listingid", listingid);
-      if (error) {
-        throw error;
-      }
-      fetchActiveListings();
-      fetchPastListings();
+      const { error} = await supabase
+        .from("orders")
+        .update({ status: "COMPLETE" })
+        .eq("listingid", listingid)
+      
+       if (error) throw error;
+      
+      fetchAllOrders();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const fetchActiveListings = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("listings")
-        .select("*")
-        .eq("status", "ACTIVE");
-      if (error) {
-        throw error;
-      }
-      setActiveListings(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchPastListings = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("listings")
-        .select("*")
-        .eq("status", "INACTIVE");
-      if (error) {
-        throw error;
-      }
-      setPastListings(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
@@ -107,22 +133,31 @@ const DeliveryDashboard = () => {
     <View style={styles.container}>
       <View style={styles.tabs}>
         <Button
-          style={{ paddingRight: 1, backgroundColor: "white" }}
-          onPress={() => setActiveTab("active")}
+          style={{ paddingRight: 1, backgroundColor: activeTab === "active" ? '#2089DC' : 'lightgray'}}
+          onPress={() => {
+            setActiveTab("active");
+            fetchAllOrders();
+          }}
+          color="transparent"
         >
           Active Deliveries
         </Button>
         <Button
-          style={{ paddingRight: 1, backgroundColor: "white" }}
-          onPress={() => setActiveTab("past")}
+          style={{ paddingRight: 1, backgroundColor: activeTab === "past" ? '#2089DC' : 'lightgray'}}
+          onPress={() => {
+            setActiveTab("past");
+            fetchAllOrders();
+          }}
+          color="transparent"
         >
           Past Deliveries
         </Button>
       </View>
+
       <View style={styles.listingsContainer}>
-        {activeTab === "active" ? (
+        {activeTab === "active" && activeOrders.length > 0 ? (
           <FlatList
-            data={activeListings}
+            data={activeOrders}
             keyExtractor={(item) => item.listingid}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handlePress(item)}>
@@ -160,9 +195,13 @@ const DeliveryDashboard = () => {
               </TouchableOpacity>
             )}
           />
-        ) : (
+        ) : activeTab === "active" && activeOrders.length === 0 ? (
+          <View style={styles.noDeliveriesContainer}>
+            <Text style={styles.noDeliveriesText}>No deliveries in progress</Text>
+          </View>
+        ) : activeTab === "past" && pastOrders.length > 0 ? (
           <FlatList
-            data={pastListings}
+            data={pastOrders}
             keyExtractor={(item) => item.listingid}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handlePress(item)}>
@@ -197,7 +236,12 @@ const DeliveryDashboard = () => {
               </TouchableOpacity>
             )}
           />
+        ) : (
+          <View style={styles.noDeliveriesContainer}>
+            <Text style={styles.noDeliveriesText}>No past deliveries completed</Text>
+          </View>
         )}
+        
         <Modal
           visible={renderAcceptDelivery}
           animationType="slide"
@@ -248,6 +292,9 @@ const styles = StyleSheet.create({
   tabs: {
     paddingTop: 16,
     flexDirection: "row",
+  },
+  activeButton: {
+    backgroundColor: 'white',
   },
   list: {
     flex: 1,
@@ -307,35 +354,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "right",
   },
-});
-
-const modalStyles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  noDeliveriesContainer: {
+    alignItems: 'center',
+    padding: '10%',
   },
-  modalContent: {
-    width: "90%",
-    height: "90%",
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 20,
-    position: "relative",
-  },
-  closeButton: {
-    position: "absolute",
-    top: 10,
-    right: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1,
-  },
-  closeButtonText: {
-    color: "grey",
+  noDeliveriesText: {
+    fontSize: 16,
     fontWeight: "bold",
-  },
+  }
 });
 
 export default DeliveryDashboard;
