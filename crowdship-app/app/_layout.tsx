@@ -27,6 +27,12 @@ const _layout = () => {
       <Tabs.Screen
         name="googlemapscreen"
         options={{
+          title: "Find Deliveries",
+        }}
+      />
+      <Tabs.Screen
+        name="deliverydashboard"
+        options={{
           title: "Deliveries",
         }}
       />
@@ -35,4 +41,3 @@ const _layout = () => {
 };
 
 export default _layout;
- 

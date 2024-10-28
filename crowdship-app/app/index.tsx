@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
 import Auth from "../components/Auth";
 import Account from "../components/Account";
-import DeliveryRequest from "./deliveryrequest";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React from "react";
 import Header from "../components/header";
 import { useSession } from "../hooks/useSession";
@@ -19,9 +17,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Header>
-        {renderPage()}
-      </Header>
+      <Header>{renderPage()}</Header>
     </View>
   );
 }

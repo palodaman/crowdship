@@ -97,7 +97,7 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
   const [handleAccept, setHandleAccept] = useState(false)
   const GOOGLE_MAPS_API_KEY = "AIzaSyBJ9ncuQDRBwkj1EnvsGxVDuhJRrA0s_Fk";
 
-  useEffect(() => {
+  useEffect(() => { 
     fetchListings(latitude, longitude);
   }, [latitude, longitude]);
 
