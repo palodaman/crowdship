@@ -93,7 +93,6 @@ export default function DeliveryRequest() {
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.textContainer}>
-        <Text style={styles.header}>Request Delivery</Text>
 
         {/* Upload Button or Image */}
         <View
