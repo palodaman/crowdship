@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { Alert, StyleSheet, View, AppState, TouchableOpacity, Text } from 'react-native';
+import { useRouter } from 'expo-router';
 import { supabase } from '../lib/supabase';
 import { Input } from '@rneui/themed';
-import { useNavigation } from 'expo-router';
 
-// Tells Supabase Auth to continuously refresh the session automatically if
-// the app is in the foreground. When this is added, you will continue to receive
-// `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
-// if the user's session is terminated. This should only be registered once.
+// Set up the AppState listener for automatic session refresh
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
     supabase.auth.startAutoRefresh();
@@ -17,11 +14,11 @@ AppState.addEventListener('change', (state) => {
 });
 
 export default function Auth() {
-  const navigation = useNavigation(); // Use useNavigation to navigate between screens
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   async function signInWithEmail() {
     setLoading(true);
@@ -30,13 +27,14 @@ export default function Auth() {
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
+    if (error) {
+      Alert.alert(error.message);
+    }
     setLoading(false);
   }
 
-  function handleSignUpNavigate() {
-    // Navigate to the SignUpScreen
-    navigation.navigate('SignUpScreen');
+  function navigateToSignUp() {
+    router.push('/SignUpScreen');
   }
 
   return (
@@ -62,10 +60,21 @@ export default function Auth() {
           autoCapitalize={'none'}
         />
       </View>
+      <View style={styles.verticallySpaced}>
+        <Input
+          label="Username"
+          leftIcon={{ type: 'font-awesome', name: 'user' }}
+          onChangeText={(text) => setUsername(text)}
+          value={username}
+          secureTextEntry={true}
+          placeholder="Username"
+          autoCapitalize={'none'}
+        />
+      </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <TouchableOpacity 
           style={styles.button} 
-          onPress={() => signInWithEmail()}
+          onPress={signInWithEmail}
           disabled={loading}
         >
           <Text style={styles.buttonText}>Sign in</Text>
@@ -74,7 +83,7 @@ export default function Auth() {
       <View style={styles.verticallySpaced}>
         <TouchableOpacity 
           style={styles.button} 
-          onPress={handleSignUpNavigate}
+          onPress={navigateToSignUp}  // Navigate to the Sign Up screen
           disabled={loading}
         >
           <Text style={styles.buttonText}>Sign up</Text>

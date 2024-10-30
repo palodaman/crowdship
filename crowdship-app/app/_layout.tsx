@@ -1,15 +1,33 @@
 import React from "react";
-import { Tabs, useRouter } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 import TabBar from "../components/TabBar";
 import { useSession } from "../hooks/useSession";
-import Auth from "../components/Auth";
-import App from "./index";
 
 const _layout = () => {
-  const session = useSession()
-  if (session?.user == undefined || null) {
-    return <App/>
+  const session = useSession();
+
+  if (!session?.user) {
+    // If the user is not authenticated, show the Stack Navigator with Auth screens
+    return (
+      <Stack>
+        <Stack.Screen
+          name="index"  // Auth screen is the main screen when the user is not authenticated
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="SignUpScreen"  // Sign Up screen as part of the authentication flow
+          options={{
+            title: "Sign Up", // Add a back button in the navigation header
+            headerBackTitle: "Back",
+          }}
+        />
+      </Stack>
+    );
   }
+
+  // If the user is authenticated, show the Tabs Navigator with main app screens
   return (
     <Tabs tabBar={(props) => <TabBar {...props} />}>
       <Tabs.Screen
@@ -36,8 +54,19 @@ const _layout = () => {
           title: "Deliveries",
         }}
       />
+      {/* <Tabs.Screen
+        name="SignUpScreen"
+        options={{
+          headerShown: false,
+          href: null,
+          tabBarStyle: {display: 
+          'none'
+          }
+        }}
+      /> */}
     </Tabs>
   );
 };
 
 export default _layout;
+
