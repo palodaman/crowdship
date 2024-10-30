@@ -36,6 +36,9 @@ const TabBar = ({
           label = "Account";
           icon = <FontAwesome name="user" size={24} color="black" />;
         }
+        if (route.name === "chatscreen"){
+          return null;
+        }
 
         if (["_sitemap", "+not-found"].includes(route.name)) return null;
 
