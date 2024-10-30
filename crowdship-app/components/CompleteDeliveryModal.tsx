@@ -14,7 +14,7 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-// Import your local image from the assets folder
+//import your local image from the assets folder
 import diningTableImage from "../assets/diningTable.png";
 
 interface Listing {
@@ -112,6 +112,7 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
         
             onPress={() => {
               if (selectedListing?.listingid && selectedListing?.senderid) {
+                setRenderAcceptDelivery(false); //close the modal
                 router.push({
                   pathname: '/chatscreen',
                   params: {

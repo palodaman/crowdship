@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  Image,
 } from 'react-native';
 import { supabase } from '../lib/supabase';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -28,17 +29,18 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ChatScreen'>;
 const ChatScreen = () => {
   const router = useRouter();
   const { orderId, senderId } = useLocalSearchParams();
-  console.log(orderId)
-  console.log(senderId)
 
-  // console.log(senderId);
+
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
   const flatListRef = useRef<any>(null);
+  const [senderUsername, setSenderUsername] = useState<string | null>(null);
+  const [senderAvatar, setSenderAvatar] = useState<string | null>(null);
 
   useEffect(() => {
     fetchMessages();
     setupSubscription();
+    fetchSenderUsername();
   }, []);
 
   const fetchMessages = async () => {
@@ -95,6 +97,19 @@ const ChatScreen = () => {
     router.back();
   };
 
+  const fetchSenderUsername = async () => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('username, avatar_url')
+      .eq('userid', senderId)
+      .single();
+
+    if (data) {
+      setSenderUsername(data.username);
+      setSenderAvatar(data.avatar_url);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -104,7 +119,22 @@ const ChatScreen = () => {
         >
           <Icon name="arrow-left" size={24} color="#333" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Chat</Text>
+        <View style={styles.headerContent}>
+          {senderAvatar ? (
+            <Image 
+              source={{ uri: senderAvatar }} 
+              style={styles.avatarImage}
+            />
+          ) : (
+            <View style={styles.avatarPlaceholder}>
+              <Icon name="user" size={24} color="#999" />
+            </View>
+          )}
+          <View style={styles.headerText}>
+            <Text style={styles.headerTitle}>Chat with</Text>
+            <Text style={styles.senderName}>{senderUsername || 'Loading...'}</Text>
+          </View>
+        </View>
       </View>
 
       <FlatList
@@ -173,7 +203,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginLeft: 10,
+    // marginLeft: 10,
   },
   messageContainer: {
     maxWidth: '80%',
@@ -221,6 +251,28 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  headerText: {
+    marginLeft: 10,
+  },
+  avatarImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  avatarPlaceholder: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
     justifyContent: 'center',
     alignItems: 'center',
   },
