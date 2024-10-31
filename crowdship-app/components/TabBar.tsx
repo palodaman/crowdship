@@ -41,6 +41,9 @@ const TabBar = ({
           label = "Account";
           icon = <FontAwesome name="user" size={24} color="black" />;
         }
+        // returns null on the tab bar button when signupscreen is the route name passed by expo router props
+        if(route.name === "SignUpScreen") {
+          return null
         if (route.name === "chatscreen"){
           return null;
         }

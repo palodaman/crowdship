@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
-import { Alert, StyleSheet, View, AppState, TouchableOpacity, Text } from 'react-native'
-import { supabase } from '../lib/supabase'
-import { Input } from '@rneui/themed'
+import React, { useState } from 'react';
+import { Alert, StyleSheet, View, AppState, TouchableOpacity, Text } from 'react-native';
+import { supabase } from '../lib/supabase';
+import { Input } from '@rneui/themed';
+import { useNavigation } from 'expo-router';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -9,41 +10,33 @@ import { Input } from '@rneui/themed'
 // if the user's session is terminated. This should only be registered once.
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
-    supabase.auth.startAutoRefresh()
+    supabase.auth.startAutoRefresh();
   } else {
-    supabase.auth.stopAutoRefresh()
+    supabase.auth.stopAutoRefresh();
   }
-})
+});
 
 export default function Auth() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
+  const navigation = useNavigation(); // Use useNavigation to navigate between screens
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function signInWithEmail() {
-    setLoading(true)
+    setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
-    })
+    });
 
-    if (error) Alert.alert(error.message)
-    setLoading(false)
+    if (error) Alert.alert(error.message);
+    setLoading(false);
   }
 
-  async function signUpWithEmail() {
-    setLoading(true)
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    })
-
-    if (error) Alert.alert(error.message)
-    if (!session) Alert.alert('Please check your inbox for email verification!')
-    setLoading(false)
+  function handleSignUpNavigate() {
+    // Navigate to the SignUpScreen
+    navigation.navigate('SignUpScreen');
   }
 
   return (
@@ -81,14 +74,14 @@ export default function Auth() {
       <View style={styles.verticallySpaced}>
         <TouchableOpacity 
           style={styles.button} 
-          onPress={() => signUpWithEmail()}
+          onPress={handleSignUpNavigate}
           disabled={loading}
         >
           <Text style={styles.buttonText}>Sign up</Text>
         </TouchableOpacity>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -117,4 +110,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
   },
-})
+});
