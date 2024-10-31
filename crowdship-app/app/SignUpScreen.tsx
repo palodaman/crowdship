@@ -1,45 +1,82 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, View, AppState, TouchableOpacity, Text } from 'react-native';
+import { Alert, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../lib/supabase';
 import { Input } from '@rneui/themed';
 
-// Set up the AppState listener for automatic session refresh
-AppState.addEventListener('change', (state) => {
-  if (state === 'active') {
-    supabase.auth.startAutoRefresh();
-  } else {
-    supabase.auth.stopAutoRefresh();
-  }
-});
-
-export default function Auth() {
+export default function SignUpScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  async function signInWithEmail() {
+  async function signUpWithEmail() {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            username: username, // Pass username via metadata
+            first_name: firstname,
+            last_name: lastname
+          },
+        },
+      });
 
-    if (error) {
-      Alert.alert(error.message);
+      if (error) {
+        throw error;
+      }
+
+      if (data?.user) {
+        Alert.alert('Sign up successful! Please check your inbox for email verification.');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  }
-
-  function navigateToSignUp() {
-    router.push('/SignUpScreen');
   }
 
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Input
+          label="First Name"
+          leftIcon={{ type: 'font-awesome', name: 'user' }}
+          onChangeText={(text) => setFirstname(text)}
+          value={firstname}
+          placeholder="First name"
+          autoCapitalize={'none'}
+        />
+      </View>
+      <View style={styles.verticallySpaced}>
+        <Input
+          label="Last Name"
+          leftIcon={{ type: 'font-awesome', name: 'user' }}
+          onChangeText={(text) => setLastname(text)}
+          value={lastname}
+          placeholder="Last name"
+          autoCapitalize={'none'}
+        />
+      </View>
+      <View style={styles.verticallySpaced}>
+        <Input
+          label="Username"
+          leftIcon={{ type: 'font-awesome', name: 'user' }}
+          onChangeText={(text) => setUsername(text)}
+          value={username}
+          placeholder="Username"
+          autoCapitalize={'none'}
+        />
+      </View>
+      <View style={styles.verticallySpaced}>
         <Input
           label="Email"
           leftIcon={{ type: 'font-awesome', name: 'envelope' }}
@@ -61,32 +98,12 @@ export default function Auth() {
         />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input
-          label="Username"
-          leftIcon={{ type: 'font-awesome', name: 'user' }}
-          onChangeText={(text) => setUsername(text)}
-          value={username}
-          secureTextEntry={true}
-          placeholder="Username"
-          autoCapitalize={'none'}
-        />
-      </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <TouchableOpacity 
-          style={styles.button} 
-          onPress={signInWithEmail}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={signUpWithEmail}
           disabled={loading}
         >
-          <Text style={styles.buttonText}>Sign in</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <TouchableOpacity 
-          style={styles.button} 
-          onPress={navigateToSignUp}  // Navigate to the Sign Up screen
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>Sign up</Text>
+          <Text style={styles.buttonText}>{loading ? 'Loading...' : 'Sign up'}</Text>
         </TouchableOpacity>
       </View>
     </View>
