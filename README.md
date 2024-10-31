@@ -1,8 +1,8 @@
 # CrowdShip
 
-Crowdship is an innovative peer-to-peer package delivery platform designed to connect individuals who need affordable, reliable delivery with commuters and gig workers already traveling to their destination. This approach not only reduces delivery costs but also minimizes environmental impact by utilizing existing routes. Crowdship is perfect for users looking to send packages out-of-town quickly, securely, and at a fraction of traditional courier costs.
+CrowdShip is an innovative peer-to-peer package delivery platform designed to connect individuals who need affordable, reliable delivery with commuters and gig workers already traveling to their destination. This approach not only reduces delivery costs but also minimizes environmental impact by utilizing existing routes. CrowdShip is perfect for users looking to send packages out-of-town quickly, securely, and at a fraction of traditional courier costs.
 
-With Crowdship, senders can post a delivery request and find a trusted, verified commuter who can deliver their package along their route. Commuters benefit from earning additional income with minimal inconvenience, making it a win-win for all users. The platform is equipped with secure login, real-time package tracking, and a two-way rating system to build trust within the community.
+With CrowdShip, senders can post a delivery request and find a trusted, verified commuter who can deliver their package along their route. Commuters benefit from earning additional income with minimal inconvenience, making it a win-win for all users. The platform is equipped with secure login, real-time package tracking, and a two-way rating system to build trust within the community.
 
 ## Product Page
 
