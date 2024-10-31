@@ -1,18 +1,9 @@
+import { router } from 'expo-router';
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import React from "react";
-import {
-  View,
-  ScrollView,
-  Text,
-  ActivityIndicator,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-
-// Import your local image from the assets folder
+import {View, ScrollView, Text, ActivityIndicator,TouchableOpacity,StyleSheet,Image,} from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";//import your local image from the assets folder
 import diningTableImage from "../assets/diningTable.png";
 
 interface Listing {
@@ -29,7 +20,6 @@ interface Listing {
 
 interface CompleteDeliveryModalProps {
   selectedListing: Listing;
-
   setRenderAcceptDelivery: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -37,6 +27,7 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
   selectedListing,
   setRenderAcceptDelivery,
 }) => {
+ 
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -58,7 +49,7 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
             ]}
           >
             <Image
-              source={diningTableImage} // Using the imported image here
+              source={diningTableImage}
               style={styles.itemImage}
               resizeMode="cover"
             />
@@ -103,6 +94,27 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
               </Text>
             </View>
           </View>
+
+          {/* Chat Button */}
+          <TouchableOpacity 
+            style={styles.chatButton}
+        
+            onPress={() => {
+              if (selectedListing?.listingid && selectedListing?.senderid) {
+                setRenderAcceptDelivery(false); //close the modal
+                router.push({
+                  pathname: '/chatscreen',
+                  params: {
+                    orderId: selectedListing.listingid,
+                    senderId: selectedListing.senderid,
+                  }
+                });
+              }
+            }}
+          >
+            <Icon name="comment" size={20} color="white" style={styles.buttonIcon} />
+            <Text style={styles.buttonText}>Chat with Sender</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -121,7 +133,7 @@ const styles = StyleSheet.create({
   uploadContainer: {
     width: "75%",
     height: 175,
-    backgroundColor: "#dde8ff", // Initial background before image is uploaded
+    backgroundColor: "#dde8ff",
     borderRadius: 10,
     padding: 15,
     marginVertical: 10,
@@ -132,8 +144,8 @@ const styles = StyleSheet.create({
     borderColor: "#4a90e2",
   },
   uploadedContainer: {
-    backgroundColor: "transparent", // Remove the hue once image is uploaded
-    borderWidth: 1, // Remove the dashed border once image is uploaded
+    backgroundColor: "transparent",
+    borderWidth: 1,
   },
   itemImage: {
     width: "125%",
@@ -167,6 +179,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#666",
   },
+  chatButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#4a90e2',
+    padding: 15,
+    borderRadius: 10,
+    width: '90%',
+    justifyContent: 'center',
+    marginTop: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  buttonIcon: {
+    marginRight: 10,
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -193,11 +229,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: 16,
   },
 });
 

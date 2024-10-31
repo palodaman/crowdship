@@ -12,6 +12,11 @@ const TabBar = ({
   descriptors: any;
   navigation: any;
 }) => {
+  // Add this check at the beginning of the component
+  const currentRoute = state.routes[state.index].name;
+  if (currentRoute === 'chatscreen') {
+    return null;
+  }
   const primaryColor = "#0891b2";
   const greyColor = "#737373";
   return (
@@ -35,6 +40,9 @@ const TabBar = ({
         if (route.name === "index") {
           label = "Account";
           icon = <FontAwesome name="user" size={24} color="black" />;
+        }
+        if (route.name === "chatscreen"){
+          return null;
         }
 
         if (["_sitemap", "+not-found"].includes(route.name)) return null;
