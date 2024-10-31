@@ -38,7 +38,7 @@ export default function DeliveryRequest() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1], // square aspect ratio
+      aspect: [1, 1], //square aspect ratio
       quality: 1,
     });
 
@@ -215,10 +215,10 @@ const styles = StyleSheet.create({
     borderColor: "#4a90e2",
   },
   uploadedContainer: {
-    padding: 0, // Ensures padding remains consistent after upload
-    justifyContent: "center", // Aligns the image in the center
-    height: 175, // Adjusts height to fit the image better
-    borderWidth: 0, // Removes the border once the image is uploaded
+    padding: 0, //ensures padding remains consistent after upload
+    justifyContent: "center", //aligns the image in the center
+    height: 175, //adjusts height to fit the image better
+    borderWidth: 0, //removes the border once the image is uploaded
   },
   uploadButton: {
     backgroundColor: "#4a90e2",
