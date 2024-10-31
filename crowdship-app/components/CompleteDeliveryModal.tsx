@@ -2,19 +2,8 @@ import { router } from 'expo-router';
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import React from "react";
-import {
-  View,
-  ScrollView,
-  Text,
-  ActivityIndicator,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-//import your local image from the assets folder
+import {View, ScrollView, Text, ActivityIndicator,TouchableOpacity,StyleSheet,Image,} from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";//import your local image from the assets folder
 import diningTableImage from "../assets/diningTable.png";
 
 interface Listing {

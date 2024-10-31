@@ -1,21 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  Image,
-} from 'react-native';
+import {  View,Text,TextInput,FlatList,TouchableOpacity, StyleSheet,KeyboardAvoidingView, Platform,SafeAreaView,Image,} from 'react-native';
 import { supabase } from '../lib/supabase';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useLocalSearchParams } from 'expo-router';
 import { useRouter } from 'expo-router';
+import { useSession } from '../hooks/useSession';
 
 type RootStackParamList = {
   ChatScreen: {
@@ -29,18 +19,19 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ChatScreen'>;
 const ChatScreen = () => {
   const router = useRouter();
   const { orderId, senderId } = useLocalSearchParams();
-
+  const session = useSession();
+  const currentUserId = session?.user?.id;
 
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
   const flatListRef = useRef<any>(null);
-  const [senderUsername, setSenderUsername] = useState<string | null>(null);
-  const [senderAvatar, setSenderAvatar] = useState<string | null>(null);
+  const [requesterUsername, setRequesterUsername] = useState<string | null>(null);
+  const [requesterAvatar, setRequesterAvatar] = useState<string | null>(null);
 
   useEffect(() => {
     fetchMessages();
     setupSubscription();
-    fetchSenderUsername();
+    fetchRequesterInfo();
   }, []);
 
   const fetchMessages = async () => {
@@ -76,14 +67,13 @@ const ChatScreen = () => {
   };
 
   const sendMessage = async () => {
-    if (!newMessage.trim()) return;
-
+    if (!newMessage.trim() || !currentUserId) return;
     const { error } = await supabase
       .from('chat_messages')
       .insert([
         {
           order_id: orderId,
-          sender_id: supabase.auth.user()?.id,
+          sender_id: currentUserId,
           content: newMessage.trim(),
         },
       ]);
@@ -97,7 +87,7 @@ const ChatScreen = () => {
     router.back();
   };
 
-  const fetchSenderUsername = async () => {
+  const fetchRequesterInfo = async () => {
     const { data, error } = await supabase
       .from('profiles')
       .select('username, avatar_url')
@@ -105,8 +95,8 @@ const ChatScreen = () => {
       .single();
 
     if (data) {
-      setSenderUsername(data.username);
-      setSenderAvatar(data.avatar_url);
+      setRequesterUsername(data.username);
+      setRequesterAvatar(data.avatar_url);
     }
   };
 
@@ -120,9 +110,9 @@ const ChatScreen = () => {
           <Icon name="arrow-left" size={24} color="#333" />
         </TouchableOpacity>
         <View style={styles.headerContent}>
-          {senderAvatar ? (
+          {requesterAvatar ? (
             <Image 
-              source={{ uri: senderAvatar }} 
+              source={{ uri: requesterAvatar }} 
               style={styles.avatarImage}
             />
           ) : (
@@ -131,8 +121,8 @@ const ChatScreen = () => {
             </View>
           )}
           <View style={styles.headerText}>
-            <Text style={styles.headerTitle}>Chat with</Text>
-            <Text style={styles.senderName}>{senderUsername || 'Loading...'}</Text>
+            <Text style={styles.headerTitle}>Chat with Delivery Requester</Text>
+            <Text style={styles.senderName}>{requesterUsername || 'Loading...'}</Text>
           </View>
         </View>
       </View>
@@ -145,13 +135,13 @@ const ChatScreen = () => {
         renderItem={({ item }) => (
           <View style={[
             styles.messageContainer,
-            item.sender_id === supabase.auth.user()?.id 
+            item.sender_id === currentUserId
               ? styles.sentMessage 
               : styles.receivedMessage
           ]}>
             <Text style={[
               styles.messageText,
-              item.sender_id === supabase.auth.user()?.id 
+              item.sender_id === currentUserId
                 ? styles.sentMessageText 
                 : styles.receivedMessageText
             ]}>
