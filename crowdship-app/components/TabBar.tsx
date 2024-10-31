@@ -44,10 +44,10 @@ const TabBar = ({
         // returns null on the tab bar button when signupscreen is the route name passed by expo router props
         if(route.name === "SignUpScreen") {
           return null
+        }
         if (route.name === "chatscreen"){
           return null;
         }
-
         if (["_sitemap", "+not-found"].includes(route.name)) return null;
 
         const isFocused = state.index === index;
