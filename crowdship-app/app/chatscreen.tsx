@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {  View,Text,TextInput,FlatList,TouchableOpacity, StyleSheet,KeyboardAvoidingView, Platform,SafeAreaView,Image,} from 'react-native';
+import {  View,Text,TextInput,FlatList,TouchableOpacity, StyleSheet,KeyboardAvoidingView, Platform,SafeAreaView,Image, Button} from 'react-native';
 import { supabase } from '../lib/supabase';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -66,8 +66,10 @@ const ChatScreen = () => {
     };
   };
 
-  const sendMessage = async () => {
+  const sendMessage =  async () => {
+    console.log("this is the message", newMessage);
     if (!newMessage.trim() || !currentUserId) return;
+    console.log(orderId, 'hello')
     const { error } = await supabase
       .from('chat_messages')
       .insert([
@@ -77,8 +79,8 @@ const ChatScreen = () => {
           content: newMessage.trim(),
         },
       ]);
-
     if (!error) {
+    
       setNewMessage('');
     }
   };
