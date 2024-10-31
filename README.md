@@ -2,6 +2,8 @@
 
 This repository contains the source code for **CrowdShip**, a delivery management system that allows users to send and receive packages easily. The app offers features for both senders and drivers, including package requests, delivery acceptance, and communication between parties. The following sections describe the current state of the app, its features, and implementation status.
 
+Visit our product page here: https://webhome.csc.uvic.ca/~amanpalod/
+
 ## Features
 
 | Feature                       | Description                                                                                   | Implemented | Workload (hrs) |
