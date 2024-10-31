@@ -14,7 +14,6 @@ import Card from "../components/Card";
 import { Ionicons } from "@expo/vector-icons";
 import CompleteDeliveryModal from "../components/CompleteDeliveryModal";
 import modalStyles from "../styles/modalStyles";
-import { User } from '@supabase/supabase-js';
 import { useFocusEffect } from '@react-navigation/native';
 
 interface Listing {
@@ -31,7 +30,6 @@ interface Listing {
 }
 
 const DeliveryDashboard = () => {
-  const [user, setUser] = useState<User | null>(null);
   const [pastOrders, setPastOrders] = useState<Listing[]>([]);
   const [activeOrders, setActiveOrders] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,9 +48,8 @@ const DeliveryDashboard = () => {
       const { data, error } =
         await supabase.auth.getUser();
       
-      setUser(data.user);
-      await fetchActiveOrders(data.user)
-      await fetchPastOrders(data.user)
+      await fetchActiveOrders(data.user);
+      await fetchPastOrders(data.user);
       if (error) throw error;
 
     } catch (error) {
