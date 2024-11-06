@@ -17,11 +17,11 @@ import { User } from "@supabase/supabase-js";
 import modalStyles from "../styles/modalStyles";
 import CompleteDeliveryModal from "./CompleteDeliveryModal";
 
-const DriverDashboard: React.FC = () => {
+const SenderDashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
-  const [activeOrders, setActiveOrders] = useState<Listing[]>([]);
-  const [pastOrders, setPastOrders] = useState<Listing[]>([]);
+  const [activeShipments, setActiveShipments] = useState<Listing[]>([]);
+  const [pastShipments, setPastShipments] = useState<Listing[]>([]);
   const [renderAcceptDelivery, setRenderAcceptDelivery] =
     useState<boolean>(false);
 
@@ -40,30 +40,30 @@ const DriverDashboard: React.FC = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchAllOrders();
+      fetchAllShipments();
     }, [])
   );
 
-  const fetchAllOrders = async () => {
+  const fetchAllShipments = async () => {
     try {
       const { data, error } = await supabase.auth.getUser();
-      await fetchActiveOrders(data.user);
-      await fetchPastOrders(data.user);
+      await fetchActiveShipments(data.user);
+      await fetchPastShipments(data.user);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const fetchActiveOrders = async (user: User | null) => {
+  const fetchActiveShipments = async (user: User | null) => {
     try {
       const { data, error } = await supabase
-        .from("orders")
-        .select("listings (*)")
-        .eq("delivererid", user?.id)
-        .eq("status", "ACCEPTED");
+        .from("listings")
+        .select("*")
+        .eq("senderid", user?.id)
+        .or(`status.eq.ACTIVE,status.eq.CLAIMED`);
 
-      const listingsArray = data ? data.flatMap((order) => order.listings) : [];
-      setActiveOrders(listingsArray);
+      const listingsArray = data || [];
+      setActiveShipments(listingsArray);
     } catch (error) {
       console.error(error);
     } finally {
@@ -71,16 +71,16 @@ const DriverDashboard: React.FC = () => {
     }
   };
 
-  const fetchPastOrders = async (user: User | null) => {
+  const fetchPastShipments = async (user: User | null) => {
     try {
       const { data, error } = await supabase
-        .from("orders")
-        .select("listings (*)")
-        .eq("delivererid", user?.id)
-        .eq("status", "COMPLETE");
+        .from("listings")
+        .select("*")
+        .eq("senderid", user?.id)
+        .eq("status", "INACTIVE");
 
-      const listingsArray = data ? data.flatMap((order) => order.listings) : [];
-      setPastOrders(listingsArray);
+      const listingsArray = data || [];
+      setPastShipments(listingsArray);
     } catch (error) {
       console.error(error);
     } finally {
@@ -103,7 +103,7 @@ const DriverDashboard: React.FC = () => {
 
       if (error) throw error;
 
-      fetchAllOrders();
+      fetchAllShipments();
     } catch (error) {
       console.error(error);
     }
@@ -116,24 +116,31 @@ const DriverDashboard: React.FC = () => {
       </View>
     );
   }
-  // console.log("Past Orders:", pastOrders);
-  // console.log("Active Orders:", activeOrders);
+
+  console.log("activeShipments", activeShipments);
+  console.log("pastShipments", pastShipments);
   return (
     <View style={styles.container}>
       <View style={{ flexShrink: 1 }}>
-        <Text style={styles.header}>Current Deliveries</Text>
-        {activeOrders.length > 0 ? (
+        <Text style={styles.header}>Current Shipments</Text>
+        {activeShipments.length > 0 ? (
           <FlatList
-            data={activeOrders}
+            data={activeShipments}
             keyExtractor={(item) => item.listingid.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handlePress(item)}>
                 <View style={{ alignItems: "center" }}>
                   <Card>
                     <View style={styles.itemContainer}>
-                      <View style={styles.itemImage}>
-                        <Ionicons name="image-outline" size={30} color="#ccc" />
-                      </View>
+                      {
+                        <View style={styles.itemImage}>
+                          <Ionicons
+                            name="image-outline"
+                            size={30}
+                            color="#ccc"
+                          />
+                        </View>
+                      }
                       <View style={styles.itemDescription}>
                         <Text style={styles.itemText}>
                           {item.itemdescription}
@@ -149,7 +156,7 @@ const DriverDashboard: React.FC = () => {
                         </View>
                       </View>
                       <Button onPress={() => handleButtonPress(item.listingid)}>
-                        Complete
+                        Edit
                       </Button>
                     </View>
                   </Card>
@@ -160,25 +167,31 @@ const DriverDashboard: React.FC = () => {
         ) : (
           <View style={styles.noDeliveriesContainer}>
             <Text style={styles.noDeliveriesText}>
-              No deliveries in progress
+              No shipments in progress
             </Text>
           </View>
         )}
       </View>
       <View style={{ flexShrink: 1 }}>
-        <Text style={styles.header}>Past Deliveries</Text>
-        {pastOrders.length > 0 ? (
+        <Text style={styles.header}>Past Shipments</Text>
+        {pastShipments.length > 0 ? (
           <FlatList
-            data={pastOrders}
+            data={pastShipments}
             keyExtractor={(item) => item.listingid.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handlePress(item)}>
                 <View style={{ alignItems: "center" }}>
                   <Card>
                     <View style={styles.itemContainer}>
-                      <View style={styles.itemImage}>
-                        <Ionicons name="image-outline" size={30} color="#ccc" />
-                      </View>
+                      {
+                        <View style={styles.itemImage}>
+                          <Ionicons
+                            name="image-outline"
+                            size={30}
+                            color="#ccc"
+                          />
+                        </View>
+                      }
                       <View style={styles.itemDescription}>
                         <Text style={styles.itemText}>
                           {item.itemdescription}
@@ -192,7 +205,7 @@ const DriverDashboard: React.FC = () => {
                           <Text style={styles.priceText}>${item.price}</Text>
                         </View>
                       </View>
-                      <Text>COMPLETE</Text>
+                      <Text>SHIPPED</Text>
                     </View>
                   </Card>
                 </View>
@@ -202,7 +215,7 @@ const DriverDashboard: React.FC = () => {
         ) : (
           <View style={styles.noDeliveriesContainer}>
             <Text style={styles.noDeliveriesText}>
-              No deliveries have been completed
+              No shipments have been completed
             </Text>
           </View>
         )}
@@ -238,7 +251,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingBottom: 50,
   },
   loadingContainer: {
     flex: 1,
@@ -335,4 +347,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DriverDashboard;
+export default SenderDashboard;
