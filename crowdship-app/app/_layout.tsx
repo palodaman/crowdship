@@ -11,13 +11,13 @@ const _layout = () => {
     return (
       <Stack>
         <Stack.Screen
-          name="index"  // Auth screen is the main screen when the user is not authenticated
+          name="index" // Auth screen is the main screen when the user is not authenticated
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="SignUpScreen"  // Sign Up screen as part of the authentication flow
+          name="SignUpScreen" // Sign Up screen as part of the authentication flow
           options={{
             title: "Sign Up", // Add a back button in the navigation header
             headerBackTitle: "Back",
@@ -51,22 +51,11 @@ const _layout = () => {
       <Tabs.Screen
         name="deliverydashboard"
         options={{
-          title: "Deliveries",
+          title: "Delivery Dashboard",
         }}
       />
-      {/* <Tabs.Screen
-        name="SignUpScreen"
-        options={{
-          headerShown: false,
-          href: null,
-          tabBarStyle: {display: 
-          'none'
-          }
-        }}
-      /> */}
     </Tabs>
   );
 };
 
 export default _layout;
-

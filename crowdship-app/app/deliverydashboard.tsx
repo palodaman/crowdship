@@ -1,20 +1,11 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  Modal,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { supabase } from "../lib/supabase";
 import { Button } from "@rneui/themed";
-import Card from "../components/Card";
-import { Ionicons } from "@expo/vector-icons";
-import CompleteDeliveryModal from "../components/CompleteDeliveryModal";
-import modalStyles from "../styles/modalStyles";
-import { useFocusEffect } from '@react-navigation/native';
+import { User } from "@supabase/supabase-js";
+import { useFocusEffect } from "@react-navigation/native";
+import SenderDashboard from "../components/senderdashboard";
+import DriverDashboard from "../components/driverdashboard";
 
 interface Listing {
   delivererid: string;
@@ -30,238 +21,49 @@ interface Listing {
 }
 
 const DeliveryDashboard = () => {
-  const [pastOrders, setPastOrders] = useState<Listing[]>([]);
-  const [activeOrders, setActiveOrders] = useState<Listing[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("active");
-  const [renderAcceptDelivery, setRenderAcceptDelivery] = useState(false);
-  const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
-  
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchAllOrders();
-    }, [])
-  );
+  // const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("deliveries");
 
-  const fetchAllOrders = async () => {
-    try {
-      const { data, error } =
-        await supabase.auth.getUser();
-      
-      await fetchActiveOrders(data.user);
-      await fetchPastOrders(data.user);
-      if (error) throw error;
-
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  const fetchActiveOrders = async (user: User | null) => {
-    try {
-      const { data, error } = await supabase
-        .from("orders")
-        .select("listings (*)")
-        .eq("delivererid", user?.id)
-        .eq("status", "ACCEPTED");
-        
-      if (error) throw error;
-    
-      const listingsArray = data.flatMap((order) => order.listings);
-      setActiveOrders(listingsArray);
-
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchPastOrders = async (user: User | null) => {
-    try {
-      const { data, error } = await supabase
-        .from("orders")
-        .select("listings (*)")
-        .eq("delivererid", user?.id)
-        .eq("status", "COMPLETE");
-      
-      if (error) throw error;
-      
-      const listingsArray = data.flatMap((order) => order.listings);
-      setPastOrders(listingsArray);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlePress = (item: Listing) => {
-    console.log("Item:", item);
-    setSelectedListing(item);
-    setRenderAcceptDelivery(true);
-  };
-
-  const handleButtonPress = async (listingid: string) => {
-    try {
-      const { error} = await supabase
-        .from("orders")
-        .update({ status: "COMPLETE" })
-        .eq("listingid", listingid)
-      
-       if (error) throw error;
-      
-      fetchAllOrders();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center" }}>
-        <ActivityIndicator size="large" color="#d3d3d3" />
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center" }}>
+  //       <ActivityIndicator size="large" color="#d3d3d3" />
+  //     </View>
+  //   );
+  // }
 
   return (
     <View style={styles.container}>
       <View style={styles.tabs}>
         <Button
-          style={{ paddingRight: 1, backgroundColor: activeTab === "active" ? '#2089DC' : 'lightgray'}}
+          style={{
+            paddingRight: 1,
+            backgroundColor:
+              activeTab === "deliveries" ? "#2089DC" : "lightgray",
+          }}
           onPress={() => {
-            setActiveTab("active");
-            fetchAllOrders();
+            setActiveTab("deliveries");
           }}
           color="transparent"
         >
-          Active Deliveries
+          My Deliveries
         </Button>
         <Button
-          style={{ paddingRight: 1, backgroundColor: activeTab === "past" ? '#2089DC' : 'lightgray'}}
+          style={{
+            paddingRight: 1,
+            backgroundColor: activeTab === "packages" ? "#2089DC" : "lightgray",
+          }}
           onPress={() => {
-            setActiveTab("past");
-            fetchAllOrders();
+            setActiveTab("packages");
           }}
           color="transparent"
         >
-          Past Deliveries
+          My Packages
         </Button>
       </View>
 
       <View style={styles.listingsContainer}>
-        {activeTab === "active" && activeOrders.length > 0 ? (
-          <FlatList
-            data={activeOrders}
-            keyExtractor={(item) => item.listingid}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handlePress(item)}>
-                <View style={{ alignItems: "center" }}>
-                  <Card>
-                    <View style={styles.itemContainer}>
-                      {
-                        <View style={styles.itemImage}>
-                          <Ionicons
-                            name="image-outline"
-                            size={30}
-                            color="#ccc"
-                          />
-                        </View>
-                      }
-                      <View style={styles.itemDescription}>
-                        <Text style={styles.itemText}>
-                          {item.itemdescription}
-                        </Text>
-                        <View style={styles.itemPrice}>
-                          <Ionicons
-                            name="pricetag-outline"
-                            size={16}
-                            color="#4CAF50"
-                          />
-                          <Text style={styles.priceText}>${item.price}</Text>
-                        </View>
-                      </View>
-                      <Button onPress={() => handleButtonPress(item.listingid)}>
-                        Complete
-                      </Button>
-                    </View>
-                  </Card>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        ) : activeTab === "active" && activeOrders.length === 0 ? (
-          <View style={styles.noDeliveriesContainer}>
-            <Text style={styles.noDeliveriesText}>No deliveries in progress</Text>
-          </View>
-        ) : activeTab === "past" && pastOrders.length > 0 ? (
-          <FlatList
-            data={pastOrders}
-            keyExtractor={(item) => item.listingid}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handlePress(item)}>
-                <View style={{ alignItems: "center" }}>
-                  <Card>
-                    <View style={styles.itemContainer}>
-                      {
-                        <View style={styles.itemImage}>
-                          <Ionicons
-                            name="image-outline"
-                            size={30}
-                            color="#ccc"
-                          />
-                        </View>
-                      }
-                      <View style={styles.itemDescription}>
-                        <Text style={styles.itemText}>
-                          {item.itemdescription}
-                        </Text>
-                        <View style={styles.itemPrice}>
-                          <Ionicons
-                            name="pricetag-outline"
-                            size={16}
-                            color="#4CAF50"
-                          />
-                          <Text style={styles.priceText}>${item.price}</Text>
-                        </View>
-                      </View>
-                    </View>
-                  </Card>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        ) : (
-          <View style={styles.noDeliveriesContainer}>
-            <Text style={styles.noDeliveriesText}>No past deliveries completed</Text>
-          </View>
-        )}
-        
-        <Modal
-          visible={renderAcceptDelivery}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setRenderAcceptDelivery(false)}
-        >
-          <View style={modalStyles.modalContainer}>
-            <View style={modalStyles.modalContent}>
-              <TouchableOpacity
-                style={modalStyles.closeButton}
-                onPress={() => setRenderAcceptDelivery(false)}
-              >
-                <Text style={modalStyles.closeButtonText}>X</Text>
-              </TouchableOpacity>
-              {selectedListing && (
-                <CompleteDeliveryModal
-                  selectedListing={selectedListing}
-                  setRenderAcceptDelivery={setRenderAcceptDelivery}
-                />
-              )}
-            </View>
-          </View>
-        </Modal>
+      {activeTab === 'deliveries' ? <DriverDashboard /> : <SenderDashboard />}
       </View>
     </View>
   );
@@ -272,7 +74,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listingsContainer: {
-    // backgroundColor: "#288cdc",
     backgroundColor: "white",
     flex: 1,
   },
@@ -349,13 +150,13 @@ const styles = StyleSheet.create({
     textAlign: "right",
   },
   noDeliveriesContainer: {
-    alignItems: 'center',
-    padding: '10%',
+    alignItems: "center",
+    padding: "10%",
   },
   noDeliveriesText: {
     fontSize: 16,
     fontWeight: "bold",
-  }
+  },
 });
 
 export default DeliveryDashboard;
