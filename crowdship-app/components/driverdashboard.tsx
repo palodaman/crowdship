@@ -22,8 +22,7 @@ const DriverDashboard: React.FC = () => {
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [activeOrders, setActiveOrders] = useState<Listing[]>([]);
   const [pastOrders, setPastOrders] = useState<Listing[]>([]);
-  const [renderAcceptDelivery, setRenderAcceptDelivery] =
-    useState<boolean>(false);
+  const [renderAcceptDelivery, setRenderModal] = useState<boolean>(false);
 
   interface Listing {
     delivererid: string;
@@ -36,6 +35,7 @@ const DriverDashboard: React.FC = () => {
     destinationaddress: string;
     itemdescription: string;
     itemimageurl: string | null;
+    notes: string | null;
   }
 
   useFocusEffect(
@@ -91,7 +91,7 @@ const DriverDashboard: React.FC = () => {
   const handlePress = (item: Listing) => {
     console.log("Item:", item);
     setSelectedListing(item);
-    setRenderAcceptDelivery(true);
+    setRenderModal(true);
   };
 
   const handleButtonPress = async (listingid: string) => {
@@ -192,7 +192,7 @@ const DriverDashboard: React.FC = () => {
                           <Text style={styles.priceText}>${item.price}</Text>
                         </View>
                       </View>
-                      <Text>COMPLETE</Text>
+                      <Text>DELIVERED</Text>
                     </View>
                   </Card>
                 </View>
@@ -211,20 +211,20 @@ const DriverDashboard: React.FC = () => {
         visible={renderAcceptDelivery}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => setRenderAcceptDelivery(false)}
+        onRequestClose={() => setRenderModal(false)}
       >
         <View style={modalStyles.modalContainer}>
           <View style={modalStyles.modalContent}>
             <TouchableOpacity
               style={modalStyles.closeButton}
-              onPress={() => setRenderAcceptDelivery(false)}
+              onPress={() => setRenderModal(false)}
             >
               <Text style={modalStyles.closeButtonText}>X</Text>
             </TouchableOpacity>
             {selectedListing && (
               <CompleteDeliveryModal
                 selectedListing={selectedListing}
-                setRenderAcceptDelivery={setRenderAcceptDelivery}
+                setRenderModal={setRenderModal}
               />
             )}
           </View>

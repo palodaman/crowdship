@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Modal,
+  ScrollView,
 } from "react-native";
 import { Button } from "@rneui/themed";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,15 +16,18 @@ import { supabase } from "../lib/supabase";
 import Card from "./Card";
 import { User } from "@supabase/supabase-js";
 import modalStyles from "../styles/modalStyles";
-import CompleteDeliveryModal from "./CompleteDeliveryModal";
+import CompleteDeliveryModal2 from "./CompleteDeliveryModal2";
+import EditDeliveryModal from "./EditDeliveryModal";
 
 const SenderDashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [activeShipments, setActiveShipments] = useState<Listing[]>([]);
   const [pastShipments, setPastShipments] = useState<Listing[]>([]);
-  const [renderAcceptDelivery, setRenderAcceptDelivery] =
-    useState<boolean>(false);
+  const [inProgressShipments, setInProgressShipments] = useState<Listing[]>([]);
+  const [renderAcceptDelivery, setRenderModal] = useState<boolean>(false);
+  const [renderEditDelivery, setRenderEditDelivery] = useState<boolean>(false);
+  const [transactionComplete, setTransactionComplete] = useState("inactive");
 
   interface Listing {
     delivererid: string;
@@ -36,6 +40,7 @@ const SenderDashboard: React.FC = () => {
     destinationaddress: string;
     itemdescription: string;
     itemimageurl: string | null;
+    notes: string | null;
   }
 
   useFocusEffect(
@@ -49,6 +54,7 @@ const SenderDashboard: React.FC = () => {
       const { data, error } = await supabase.auth.getUser();
       await fetchActiveShipments(data.user);
       await fetchPastShipments(data.user);
+      await fetchInProgressShipments(data.user);
     } catch (error) {
       console.error(error);
     }
@@ -60,10 +66,27 @@ const SenderDashboard: React.FC = () => {
         .from("listings")
         .select("*")
         .eq("senderid", user?.id)
-        .or(`status.eq.ACTIVE,status.eq.CLAIMED`);
+        .eq("status", "ACTIVE");
 
       const listingsArray = data || [];
       setActiveShipments(listingsArray);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchInProgressShipments = async (user: User | null) => {
+    try {
+      const { data, error } = await supabase
+        .from("listings")
+        .select("*")
+        .eq("senderid", user?.id)
+        .eq("status", "CLAIMED");
+
+      const listingsArray = data || [];
+      setInProgressShipments(listingsArray);
     } catch (error) {
       console.error(error);
     } finally {
@@ -88,25 +111,26 @@ const SenderDashboard: React.FC = () => {
     }
   };
 
-  const handlePress = (item: Listing) => {
+  const handlePress = (item: Listing, edit: boolean) => {
     console.log("Item:", item);
     setSelectedListing(item);
-    setRenderAcceptDelivery(true);
+    setRenderModal(true);
+    setRenderEditDelivery(edit);
+
+    if (item.status === "INACTIVE") {
+      setTransactionComplete("inactive");
+    } else if (item.status === "CLAIMED") {
+      setTransactionComplete("claimed");
+    } else {
+      setTransactionComplete("active");
+    }
   };
 
-  const handleButtonPress = async (listingid: string) => {
-    try {
-      const { error } = await supabase
-        .from("orders")
-        .update({ status: "COMPLETE" })
-        .eq("listingid", listingid);
-
-      if (error) throw error;
-
-      fetchAllShipments();
-    } catch (error) {
-      console.error(error);
-    }
+  const handleEditPress = (item: Listing, edit: boolean) => {
+    console.log("Item:", item);
+    setSelectedListing(item);
+    setRenderModal(true);
+    setRenderEditDelivery(edit);
   };
 
   if (loading) {
@@ -121,128 +145,186 @@ const SenderDashboard: React.FC = () => {
   console.log("pastShipments", pastShipments);
   return (
     <View style={styles.container}>
-      <View style={{ flexShrink: 1 }}>
-        <Text style={styles.header}>Current Shipments</Text>
-        {activeShipments.length > 0 ? (
-          <FlatList
-            data={activeShipments}
-            keyExtractor={(item) => item.listingid.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handlePress(item)}>
-                <View style={{ alignItems: "center" }}>
-                  <Card>
-                    <View style={styles.itemContainer}>
-                      {
-                        <View style={styles.itemImage}>
-                          <Ionicons
-                            name="image-outline"
-                            size={30}
-                            color="#ccc"
-                          />
+      <ScrollView>
+        <View style={{ flexShrink: 1 }}>
+          <Text style={styles.header}>Unclaimed Shipments</Text>
+          {activeShipments.length > 0 ? (
+            <FlatList
+              data={activeShipments}
+              keyExtractor={(item) => item.listingid.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => handlePress(item, false)}>
+                  <View style={{ alignItems: "center" }}>
+                    <Card>
+                      <View style={styles.itemContainer}>
+                        {
+                          <View style={styles.itemImage}>
+                            <Ionicons
+                              name="image-outline"
+                              size={30}
+                              color="#ccc"
+                            />
+                          </View>
+                        }
+                        <View style={styles.itemDescription}>
+                          <Text style={styles.itemText}>
+                            {item.itemdescription}
+                          </Text>
+                          <Text>{item.status}</Text>
+                          <View style={styles.itemPrice}>
+                            <Ionicons
+                              name="pricetag-outline"
+                              size={16}
+                              color="#4CAF50"
+                            />
+                            <Text style={styles.priceText}>${item.price}</Text>
+                          </View>
                         </View>
-                      }
-                      <View style={styles.itemDescription}>
-                        <Text style={styles.itemText}>
-                          {item.itemdescription}
-                        </Text>
-                        <Text>{item.status}</Text>
-                        <View style={styles.itemPrice}>
-                          <Ionicons
-                            name="pricetag-outline"
-                            size={16}
-                            color="#4CAF50"
-                          />
-                          <Text style={styles.priceText}>${item.price}</Text>
-                        </View>
+                        <Button onPress={() => handleEditPress(item, true)}>
+                          Edit
+                        </Button>
                       </View>
-                      <Button onPress={() => handleButtonPress(item.listingid)}>
-                        Edit
-                      </Button>
-                    </View>
-                  </Card>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        ) : (
-          <View style={styles.noDeliveriesContainer}>
-            <Text style={styles.noDeliveriesText}>
-              No shipments in progress
-            </Text>
-          </View>
-        )}
-      </View>
-      <View style={{ flexShrink: 1 }}>
-        <Text style={styles.header}>Past Shipments</Text>
-        {pastShipments.length > 0 ? (
-          <FlatList
-            data={pastShipments}
-            keyExtractor={(item) => item.listingid.toString()}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handlePress(item)}>
-                <View style={{ alignItems: "center" }}>
-                  <Card>
-                    <View style={styles.itemContainer}>
-                      {
-                        <View style={styles.itemImage}>
-                          <Ionicons
-                            name="image-outline"
-                            size={30}
-                            color="#ccc"
-                          />
-                        </View>
-                      }
-                      <View style={styles.itemDescription}>
-                        <Text style={styles.itemText}>
-                          {item.itemdescription}
-                        </Text>
-                        <View style={styles.itemPrice}>
-                          <Ionicons
-                            name="pricetag-outline"
-                            size={16}
-                            color="#4CAF50"
-                          />
-                          <Text style={styles.priceText}>${item.price}</Text>
-                        </View>
-                      </View>
-                      <Text>SHIPPED</Text>
-                    </View>
-                  </Card>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        ) : (
-          <View style={styles.noDeliveriesContainer}>
-            <Text style={styles.noDeliveriesText}>
-              No shipments have been completed
-            </Text>
-          </View>
-        )}
-      </View>
-      <Modal
-        visible={renderAcceptDelivery}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setRenderAcceptDelivery(false)}
-      >
-        <View style={modalStyles.modalContainer}>
-          <View style={modalStyles.modalContent}>
-            <TouchableOpacity
-              style={modalStyles.closeButton}
-              onPress={() => setRenderAcceptDelivery(false)}
-            >
-              <Text style={modalStyles.closeButtonText}>X</Text>
-            </TouchableOpacity>
-            {selectedListing && (
-              <CompleteDeliveryModal
-                selectedListing={selectedListing}
-                setRenderAcceptDelivery={setRenderAcceptDelivery}
-              />
-            )}
-          </View>
+                    </Card>
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          ) : (
+            <View style={styles.noDeliveriesContainer}>
+              <Text style={styles.noDeliveriesText}>
+                No shipments in progress
+              </Text>
+            </View>
+          )}
         </View>
-      </Modal>
+        <View style={{ flexShrink: 1 }}>
+          <Text style={styles.header}>In Progress Shipments</Text>
+          {inProgressShipments.length > 0 ? (
+            <FlatList
+              data={inProgressShipments}
+              keyExtractor={(item) => item.listingid.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => handlePress(item, false)}>
+                  <View style={{ alignItems: "center" }}>
+                    <Card>
+                      <View style={styles.itemContainer}>
+                        {
+                          <View style={styles.itemImage}>
+                            <Ionicons
+                              name="image-outline"
+                              size={30}
+                              color="#ccc"
+                            />
+                          </View>
+                        }
+                        <View style={styles.itemDescription}>
+                          <Text style={styles.itemText}>
+                            {item.itemdescription}
+                          </Text>
+                          <View style={styles.itemPrice}>
+                            <Ionicons
+                              name="pricetag-outline"
+                              size={16}
+                              color="#4CAF50"
+                            />
+                            <Text style={styles.priceText}>${item.price}</Text>
+                          </View>
+                        </View>
+                        <Text>CLAIMED</Text>
+                      </View>
+                    </Card>
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          ) : (
+            <View style={styles.noDeliveriesContainer}>
+              <Text style={styles.noDeliveriesText}>
+                No shipments in progress
+              </Text>
+            </View>
+          )}
+        </View>
+        <View style={{ flexShrink: 1 }}>
+          <Text style={styles.header}>Past Shipments</Text>
+          {pastShipments.length > 0 ? (
+            <FlatList
+              data={pastShipments}
+              keyExtractor={(item) => item.listingid.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => handlePress(item, false)}>
+                  <View style={{ alignItems: "center" }}>
+                    <Card>
+                      <View style={styles.itemContainer}>
+                        {
+                          <View style={styles.itemImage}>
+                            <Ionicons
+                              name="image-outline"
+                              size={30}
+                              color="#ccc"
+                            />
+                          </View>
+                        }
+                        <View style={styles.itemDescription}>
+                          <Text style={styles.itemText}>
+                            {item.itemdescription}
+                          </Text>
+                          <View style={styles.itemPrice}>
+                            <Ionicons
+                              name="pricetag-outline"
+                              size={16}
+                              color="#4CAF50"
+                            />
+                            <Text style={styles.priceText}>${item.price}</Text>
+                          </View>
+                        </View>
+                        <Text>SHIPPED</Text>
+                      </View>
+                    </Card>
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          ) : (
+            <View style={styles.noDeliveriesContainer}>
+              <Text style={styles.noDeliveriesText}>
+                No shipments have been completed
+              </Text>
+            </View>
+          )}
+        </View>
+        <Modal
+          visible={renderAcceptDelivery}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setRenderModal(false)}
+        >
+          <View style={modalStyles.modalContainer}>
+            <View style={modalStyles.modalContent}>
+              <TouchableOpacity
+                style={modalStyles.closeButton}
+                onPress={() => setRenderModal(false)}
+              >
+                <Text style={modalStyles.closeButtonText}>X</Text>
+              </TouchableOpacity>
+              {selectedListing &&
+                (renderEditDelivery ? (
+                  <EditDeliveryModal
+                    selectedListing={selectedListing}
+                    setRenderModal={setRenderModal}
+                    setRenderEditDelivery={setRenderEditDelivery}
+                  />
+                ) : (
+                  <CompleteDeliveryModal2
+                    selectedListing={selectedListing}
+                    setRenderModal={setRenderModal}
+                    transactionComplete={transactionComplete}
+                  />
+                ))}
+            </View>
+          </View>
+        </Modal>
+      </ScrollView>
     </View>
   );
 };
@@ -251,6 +333,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    paddingBottom: 90,
   },
   loadingContainer: {
     flex: 1,

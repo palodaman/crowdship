@@ -4,8 +4,8 @@ import { supabase } from "../lib/supabase";
 import { Button } from "@rneui/themed";
 import { User } from "@supabase/supabase-js";
 import { useFocusEffect } from "@react-navigation/native";
-import SenderDashboard from "../components/senderdashboard";
-import DriverDashboard from "../components/driverdashboard";
+import SenderDashboard from "../components/SenderDashboard";
+import DriverDashboard from "../components/DriverDashboard";
 
 interface Listing {
   delivererid: string;
@@ -21,16 +21,7 @@ interface Listing {
 }
 
 const DeliveryDashboard = () => {
-  // const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("deliveries");
-
-  // if (loading) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: "center" }}>
-  //       <ActivityIndicator size="large" color="#d3d3d3" />
-  //     </View>
-  //   );
-  // }
 
   return (
     <View style={styles.container}>
@@ -63,7 +54,7 @@ const DeliveryDashboard = () => {
       </View>
 
       <View style={styles.listingsContainer}>
-      {activeTab === 'deliveries' ? <DriverDashboard /> : <SenderDashboard />}
+        {activeTab === "deliveries" ? <DriverDashboard /> : <SenderDashboard />}
       </View>
     </View>
   );
