@@ -97,7 +97,7 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
   const [renderAcceptDelivery, setRenderAcceptDelivery] = useState(false);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [handleAccept, setHandleAccept] = useState(false)
-  const GOOGLE_MAPS_API_KEY = "AIzaSyBJ9ncuQDRBwkj1EnvsGxVDuhJRrA0s_Fk";
+  const GOOGLE_MAPS_API_KEY = "AIzaSyCIUk8AvslqD49GmsyLs19xaxvREx1R9PE";
 
   useEffect(() => {
     fetchUser();
