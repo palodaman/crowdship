@@ -28,13 +28,13 @@ interface Listing {
   notes: string | null;
 }
 
-interface CompleteDeliveryModal2Props {
+interface SenderModalProps {
   selectedListing: Listing;
   setRenderModal: React.Dispatch<React.SetStateAction<boolean>>;
   transactionComplete: string;
 }
 
-const CompleteDeliveryModal2: React.FC<CompleteDeliveryModal2Props> = ({
+const SenderModal: React.FC<SenderModalProps> = ({
   selectedListing,
   setRenderModal,
   transactionComplete,
@@ -263,4 +263,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CompleteDeliveryModal2;
+export default SenderModal;

@@ -23,6 +23,7 @@ const DriverDashboard: React.FC = () => {
   const [activeOrders, setActiveOrders] = useState<Listing[]>([]);
   const [pastOrders, setPastOrders] = useState<Listing[]>([]);
   const [renderAcceptDelivery, setRenderModal] = useState<boolean>(false);
+  const [claimedOrders, setClaimedOrders] = useState<Listing[]>([]);
 
   interface Listing {
     delivererid: string;
@@ -116,8 +117,7 @@ const DriverDashboard: React.FC = () => {
       </View>
     );
   }
-  // console.log("Past Orders:", pastOrders);
-  // console.log("Active Orders:", activeOrders);
+
   return (
     <View style={styles.container}>
       <View style={{ flexShrink: 1 }}>

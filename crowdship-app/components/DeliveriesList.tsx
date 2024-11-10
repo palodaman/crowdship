@@ -14,7 +14,7 @@ import AcceptDelivery from "./acceptdelivery";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import modalStyles from "../styles/modalStyles";
-import { User } from '@supabase/supabase-js';
+import { User } from "@supabase/supabase-js";
 
 const styles = StyleSheet.create({
   loadingContainer: {
@@ -96,14 +96,14 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [renderAcceptDelivery, setRenderAcceptDelivery] = useState(false);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
-  const [handleAccept, setHandleAccept] = useState(false)
-  const GOOGLE_MAPS_API_KEY = "AIzaSyBJ9ncuQDRBwkj1EnvsGxVDuhJRrA0s_Fk";
+  const [handleAccept, setHandleAccept] = useState(false);
+  const GOOGLE_MAPS_API_KEY = "AIzaSyCIUk8AvslqD49GmsyLs19xaxvREx1R9PE";
 
   useEffect(() => {
     fetchUser();
   });
 
-  useEffect(() => { 
+  useEffect(() => {
     if (user) {
       fetchListings(latitude, longitude);
     }
@@ -111,16 +111,13 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
 
   const fetchUser = async () => {
     try {
-      const { data, error } =
-        await supabase.auth.getUser();
-      
+      const { data, error } = await supabase.auth.getUser();
       setUser(data.user);
       if (error) throw error;
-
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const handlePress = (item: Listing) => {
     setSelectedListing(item);
@@ -130,7 +127,11 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
   async function fetchListings(latitude: number, longitude: number) {
     try {
       // Fetch listings from Supabase
-      const { data, error } = await supabase.from("listings").select("*").eq('status', 'ACTIVE').neq('senderid', user?.id); ;
+      const { data, error } = await supabase
+        .from("listings")
+        .select("*")
+        .eq("status", "ACTIVE")
+        .neq("senderid", user?.id);
 
       if (error) throw error;
 

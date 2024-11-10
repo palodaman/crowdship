@@ -16,7 +16,7 @@ import { supabase } from "../lib/supabase";
 import Card from "./Card";
 import { User } from "@supabase/supabase-js";
 import modalStyles from "../styles/modalStyles";
-import CompleteDeliveryModal2 from "./CompleteDeliveryModal2";
+import SenderModal from "./SenderModal";
 import EditDeliveryModal from "./EditDeliveryModal";
 
 const SenderDashboard: React.FC = () => {
@@ -313,9 +313,10 @@ const SenderDashboard: React.FC = () => {
                     selectedListing={selectedListing}
                     setRenderModal={setRenderModal}
                     setRenderEditDelivery={setRenderEditDelivery}
+                    fetchAllShipments={fetchAllShipments}
                   />
                 ) : (
-                  <CompleteDeliveryModal2
+                  <SenderModal
                     selectedListing={selectedListing}
                     setRenderModal={setRenderModal}
                     transactionComplete={transactionComplete}

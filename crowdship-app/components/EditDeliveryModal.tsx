@@ -11,9 +11,6 @@ import {
   Image,
   TextInput,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome"; //import your local image from the assets folder
-import diningTableImage from "../assets/diningTable.png";
-import { useSession } from "../hooks/useSession";
 import * as ImagePicker from "expo-image-picker";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Entypo from "@expo/vector-icons/Entypo";
@@ -36,15 +33,16 @@ interface EditDeliveryModalProps {
   selectedListing: Listing;
   setRenderModal: React.Dispatch<React.SetStateAction<boolean>>;
   setRenderEditDelivery: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchAllShipments: () => void;
 }
 
 const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
   selectedListing,
   setRenderModal,
   setRenderEditDelivery,
+  fetchAllShipments,
 }) => {
   const [loading, setLoading] = useState(true);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [itemDescription, setItemDescription] = useState("");
   const [startingAddress, setStartingAddress] = useState("");
   const [destinationAddress, setDestinationAddress] = useState("");
@@ -53,7 +51,8 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
   const [itemImageUrl, setItemImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const session = useSession();
+  const [confirmDelete, setConfirmDelete] = useState(0);
+  const [deleteMessage, setDeleteMessage] = useState("");
 
   const pickImage = async () => {
     let permissionResult =
@@ -75,9 +74,31 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
     }
   };
 
+  const handleDelete = async () => {
+    setConfirmDelete(confirmDelete + 1);
+    console.log("confirmDelete", confirmDelete);
+    if (confirmDelete === 0) {
+      setDeleteMessage("Press delete again to confirm");
+      return;
+    } else if (confirmDelete === 1) {
+      try {
+        const { data, error } = await supabase
+          .from("listings")
+          .delete()
+          .eq("listingid", selectedListing.listingid);
+
+        setMessage("Listing was successfully deleted!");
+        setRenderModal(false);
+        setRenderEditDelivery(false);
+        fetchAllShipments();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   const handleSubmit = async () => {
     setIsLoading(true);
-    setMessage("");
     try {
       const { data: userData, error: userError } =
         await supabase.auth.getUser();
@@ -95,10 +116,10 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
         })
         .eq("listingid", selectedListing.listingid);
 
-
-      if (error) throw error;
-
-      setMessage("Delivery request submitted successfully!");
+      setMessage("Edits were successfully saved!");
+      setRenderModal(false);
+      setRenderEditDelivery(false);
+      fetchAllShipments();
     } catch (error) {
       if (error instanceof Error) {
         setMessage(`Error: ${error.message}`);
@@ -130,6 +151,7 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
             itemImageUrl && styles.uploadedContainer,
           ]}
         >
+          {message !== "" && <Text style={styles.message}>{message}</Text>}
           {itemImageUrl ? (
             <View style={styles.imageContainer}>
               <Image source={{ uri: itemImageUrl }} style={styles.itemImage} />
@@ -201,9 +223,14 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
             keyboardType="numeric"
           />
         </View>
-
+        {deleteMessage !== "" && (
+          <Text style={styles.deleteMessage}>{deleteMessage}</Text>
+        )}
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit Edits</Text>
+          <Text style={styles.submitButtonText}>Submit Changes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.submitButton} onPress={handleDelete}>
+          <Text style={styles.submitButtonText}>Delete Listing</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.submitButton}
@@ -216,7 +243,6 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
         </TouchableOpacity>
 
         {isLoading && <ActivityIndicator size="large" color="#d3d3d3" />}
-        {message !== "" && <Text style={styles.message}>{message}</Text>}
       </View>
     </ScrollView>
   );
@@ -400,6 +426,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     color: "green",
+    textAlign: "center",
+  },
+  deleteMessage: {
+    marginTop: 20,
+    fontSize: 16,
+    color: "red",
     textAlign: "center",
   },
 });
