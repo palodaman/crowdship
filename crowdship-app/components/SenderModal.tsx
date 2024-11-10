@@ -142,10 +142,11 @@ const SenderModal: React.FC<SenderModalProps> = ({
           </View>
         ) : (
           <EditDeliveryModal
-            selectedListing={selectedListing}
-            setRenderModal={setRenderModal}
-            setRenderEditDelivery={setRenderEditDelivery}
-          />
+              selectedListing={selectedListing}
+              setRenderModal={setRenderModal}
+              setRenderEditDelivery={setRenderEditDelivery} fetchAllShipments={function (): void {
+                throw new Error("Function not implemented.");
+              } }          />
         )}
       </ScrollView>
     </View>
