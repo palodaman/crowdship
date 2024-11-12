@@ -172,12 +172,15 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
             style={styles.negotiateButton}
             disabled={true}
           >
-            <TextInput
-              style={styles.buttonText}
-              placeholder="Custom"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              keyboardType="numeric"
-            />
+            <View style={styles.customButtonContainer}>
+              <Icon style={styles.pencilIcon} name="pencil" size={16} color="white" />
+              <TextInput
+                style={styles.buttonText}
+                placeholder="Custom"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                keyboardType="numeric"
+              />
+            </View>
           </TouchableOpacity>
         </View>
 
@@ -330,6 +333,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
+  },
+  customButtonContainer: {
+    flexDirection: "row",
+    alignItems: 'center',
+  },
+  pencilIcon: {
+    paddingRight: 5,
   },
   confirmationText: {
     fontFamily: "Avenir",
