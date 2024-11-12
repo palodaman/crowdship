@@ -12,6 +12,7 @@ import {
   StyleSheet,
   Image,
   Modal,
+  TextInput,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import modalStyles from "../styles/modalStyles";
@@ -149,6 +150,39 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
             </View>
           </View>
         </View>
+        
+        <View style={styles.negotiateHeader}>
+          <Text style={styles.negotiateHeaderText}>
+            Negotiate Offer:
+          </Text>
+        </View>
+
+        <View style={styles.negotiationButtonsContainer}>
+          <TouchableOpacity
+            style={styles.negotiateButton}
+          >
+            <Text style={styles.buttonText}>${selectedListing.price+5}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.negotiateButton}
+          >
+            <Text style={styles.buttonText}>${selectedListing.price+10}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.negotiateButton}
+            disabled={true}
+          >
+            <View style={styles.customButtonContainer}>
+              <Icon style={styles.pencilIcon} name="pencil" size={16} color="white" />
+              <TextInput
+                style={styles.buttonText}
+                placeholder="Custom"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                keyboardType="numeric"
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
 
         {/* Buttons and Views */}
         <View style={styles.buttonContainer}>
@@ -156,16 +190,10 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
             <Icon name="eye" size={20} color="black" />
             <Text style={styles.numViews}>{selectedListing?.views}</Text>
           </View>
-
-          <TouchableOpacity
-            style={[styles.button, { backgroundColor: "#FF6961" }]} onPress={() => setRenderAcceptDelivery(false)}
-          >
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: "#6EC175" }]} onPress={() => newOrder(selectedListing)}
           >
-            <Text style={styles.buttonText}>Accept</Text>
+            <Text style={styles.buttonText}>Accept Initial Offer</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -267,7 +295,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    width: "40%",
+    width: "90%",
     alignItems: "center",
     padding: 10,
     borderRadius: 5,
@@ -281,6 +309,37 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  negotiateHeader: {
+    paddingLeft: 10,
+    marginBottom: 10,
+  },
+  negotiateHeaderText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  negotiationButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  negotiateButton: {
+    width: "29%",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#808080',
+    marginHorizontal: 5,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+  },
+  customButtonContainer: {
+    flexDirection: "row",
+    alignItems: 'center',
+  },
+  pencilIcon: {
+    paddingRight: 5,
   },
   confirmationText: {
     fontFamily: "Avenir",
