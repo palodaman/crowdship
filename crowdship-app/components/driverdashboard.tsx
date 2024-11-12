@@ -47,9 +47,11 @@ const DriverDashboard: React.FC = () => {
 
   const fetchAllOrders = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase.auth.getUser();
       await fetchActiveOrders(data.user);
       await fetchPastOrders(data.user);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -67,8 +69,6 @@ const DriverDashboard: React.FC = () => {
       setActiveOrders(listingsArray);
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -84,13 +84,10 @@ const DriverDashboard: React.FC = () => {
       setPastOrders(listingsArray);
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handlePress = (item: Listing) => {
-    console.log("Item:", item);
     setSelectedListing(item);
     setRenderModal(true);
   };

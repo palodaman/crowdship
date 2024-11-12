@@ -43,12 +43,20 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
   fetchAllShipments,
 }) => {
   const [loading, setLoading] = useState(true);
-  const [itemDescription, setItemDescription] = useState("");
-  const [startingAddress, setStartingAddress] = useState("");
-  const [destinationAddress, setDestinationAddress] = useState("");
-  const [notes, setNotes] = useState("");
-  const [price, setPrice] = useState("");
-  const [itemImageUrl, setItemImageUrl] = useState<string | null>(null);
+  const [itemDescription, setItemDescription] = useState(
+    selectedListing.itemdescription
+  );
+  const [startingAddress, setStartingAddress] = useState(
+    selectedListing.startingaddress
+  );
+  const [destinationAddress, setDestinationAddress] = useState(
+    selectedListing.destinationaddress
+  );
+  const [notes, setNotes] = useState(selectedListing.notes || "");
+  const [price, setPrice] = useState(selectedListing.price.toString());
+  const [itemImageUrl, setItemImageUrl] = useState(
+    selectedListing.itemimageurl
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(0);
@@ -87,7 +95,7 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
           .delete()
           .eq("listingid", selectedListing.listingid);
 
-        setMessage("Listing was successfully deleted!");
+        // setMessage("Listing was successfully deleted!");
         setRenderModal(false);
         setRenderEditDelivery(false);
         fetchAllShipments();
@@ -102,8 +110,10 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
     try {
       const { data: userData, error: userError } =
         await supabase.auth.getUser();
+        
       if (userError) throw userError;
 
+      console.log("item description", itemDescription);
       const { data, error } = await supabase
         .from("listings")
         .update({
@@ -111,15 +121,15 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
           startingaddress: startingAddress,
           destinationaddress: destinationAddress,
           notes: notes,
-          itemImageUrl: itemImageUrl,
+          itemimageurl: itemImageUrl,
           price: parseFloat(price),
         })
         .eq("listingid", selectedListing.listingid);
 
       setMessage("Edits were successfully saved!");
-      setRenderModal(false);
-      setRenderEditDelivery(false);
-      fetchAllShipments();
+      // setRenderModal(false);
+      // setRenderEditDelivery(false);
+      // fetchAllShipments();
     } catch (error) {
       if (error instanceof Error) {
         setMessage(`Error: ${error.message}`);
@@ -138,20 +148,16 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.scrollContainer}
-      bounces={false}
-      showsVerticalScrollIndicator={false}
-    >
+    <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
       <View style={styles.textContainer}>
         {/* Upload Button or Image */}
+        {message !== "" && <Text style={styles.message}>{message}</Text>}
         <View
           style={[
             styles.uploadContainer,
             itemImageUrl && styles.uploadedContainer,
           ]}
         >
-          {message !== "" && <Text style={styles.message}>{message}</Text>}
           {itemImageUrl ? (
             <View style={styles.imageContainer}>
               <Image source={{ uri: itemImageUrl }} style={styles.itemImage} />
@@ -226,12 +232,15 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
         {deleteMessage !== "" && (
           <Text style={styles.deleteMessage}>{deleteMessage}</Text>
         )}
+
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitButtonText}>Submit Changes</Text>
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.submitButton} onPress={handleDelete}>
           <Text style={styles.submitButtonText}>Delete Listing</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.submitButton}
           onPress={() => {
@@ -269,6 +278,10 @@ const styles = StyleSheet.create({
     borderStyle: "dashed",
     borderWidth: 2,
     borderColor: "#4a90e2",
+  },
+  uploadedContainer: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
   },
   itemImage: {
     width: "125%",
@@ -326,22 +339,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 20,
-    marginBottom: "10%",
-  },
-  views: {
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 5,
-  },
-  numViews: {
-    color: "black",
-    fontSize: 16,
-  },
   button: {
     width: "40%",
     alignItems: "center",
@@ -353,34 +350,26 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
   },
-
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: 15,
-    paddingBottom: 100,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  uploadedContainer: {
-    padding: 0, //ensures padding remains consistent after upload
-    justifyContent: "center", //aligns the image in the center
-    height: 175, //adjusts height to fit the image better
-    borderWidth: 0, //removes the border once the image is uploaded
-  },
-  uploadButton: {
+  submitButton: {
+    marginTop: 20,
     backgroundColor: "#4a90e2",
     padding: 15,
     borderRadius: 10,
+    width: "90%",
+    alignItems: "center",
   },
-  uploadButtonText: {
+  submitButtonText: {
     color: "white",
     fontWeight: "bold",
+    fontSize: 18,
+  },
+  message: {
+    top: 10,
+    marginBottom: 10,
+    width: "100%",
     fontSize: 16,
+    color: "green",
+    textAlign: "center",
   },
   imageContainer: {
     width: "100%",
@@ -403,30 +392,21 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 12,
   },
+  uploadButton: {
+    backgroundColor: "#4a90e2",
+    padding: 15,
+    borderRadius: 10,
+  },
+  uploadButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
   inputWithIcon: {
     flex: 1,
     marginLeft: 15,
     fontSize: 16,
     color: "black",
-  },
-  submitButton: {
-    marginTop: 20,
-    backgroundColor: "#4a90e2",
-    padding: 15,
-    borderRadius: 10,
-    width: "90%",
-    alignItems: "center",
-  },
-  submitButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-  message: {
-    marginTop: 20,
-    fontSize: 16,
-    color: "green",
-    textAlign: "center",
   },
   deleteMessage: {
     marginTop: 20,

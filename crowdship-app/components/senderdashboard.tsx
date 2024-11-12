@@ -52,9 +52,11 @@ const SenderDashboard: React.FC = () => {
   const fetchAllShipments = async () => {
     try {
       const { data, error } = await supabase.auth.getUser();
+      setLoading(true);
       await fetchActiveShipments(data.user);
       await fetchPastShipments(data.user);
       await fetchInProgressShipments(data.user);
+      setLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -72,8 +74,6 @@ const SenderDashboard: React.FC = () => {
       setActiveShipments(listingsArray);
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -89,8 +89,6 @@ const SenderDashboard: React.FC = () => {
       setInProgressShipments(listingsArray);
     } catch (error) {
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -112,7 +110,6 @@ const SenderDashboard: React.FC = () => {
   };
 
   const handlePress = (item: Listing, edit: boolean) => {
-    console.log("Item:", item);
     setSelectedListing(item);
     setRenderModal(true);
     setRenderEditDelivery(edit);
@@ -127,7 +124,6 @@ const SenderDashboard: React.FC = () => {
   };
 
   const handleEditPress = (item: Listing, edit: boolean) => {
-    console.log("Item:", item);
     setSelectedListing(item);
     setRenderModal(true);
     setRenderEditDelivery(edit);
@@ -141,8 +137,6 @@ const SenderDashboard: React.FC = () => {
     );
   }
 
-  console.log("activeShipments", activeShipments);
-  console.log("pastShipments", pastShipments);
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -303,7 +297,10 @@ const SenderDashboard: React.FC = () => {
             <View style={modalStyles.modalContent}>
               <TouchableOpacity
                 style={modalStyles.closeButton}
-                onPress={() => setRenderModal(false)}
+                onPress={() => {
+                  setRenderModal(false);
+                  fetchAllShipments();
+                }}
               >
                 <Text style={modalStyles.closeButtonText}>X</Text>
               </TouchableOpacity>

@@ -137,16 +137,23 @@ const SenderModal: React.FC<SenderModalProps> = ({
 
             {/* if the transaction is not complete, show the edit delivery button */}
             {transactionComplete === "active" && (
-              <Button onPress={handleEditDelivery}>Edit</Button>
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={handleEditDelivery}
+              >
+                <Text style={styles.submitButtonText}>Edit</Text>
+              </TouchableOpacity>
             )}
           </View>
         ) : (
           <EditDeliveryModal
-              selectedListing={selectedListing}
-              setRenderModal={setRenderModal}
-              setRenderEditDelivery={setRenderEditDelivery} fetchAllShipments={function (): void {
-                throw new Error("Function not implemented.");
-              } }          />
+            selectedListing={selectedListing}
+            setRenderModal={setRenderModal}
+            setRenderEditDelivery={setRenderEditDelivery}
+            fetchAllShipments={function (): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         )}
       </ScrollView>
     </View>
@@ -235,22 +242,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 20,
-    marginBottom: "10%",
-  },
-  views: {
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 5,
-  },
-  numViews: {
-    color: "black",
-    fontSize: 16,
-  },
   button: {
     width: "40%",
     alignItems: "center",
@@ -261,6 +252,19 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
+  },
+  submitButton: {
+    marginTop: 20,
+    backgroundColor: "#4a90e2",
+    padding: 15,
+    borderRadius: 10,
+    width: "90%",
+    alignItems: "center",
+  },
+  submitButtonText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 18,
   },
 });
 
