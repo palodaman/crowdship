@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { StyleSheet, View, Alert, Image, TouchableOpacity, Text } from 'react-native';
-import { Button, Input } from '@rneui/themed';
+import { Input } from '@rneui/themed';
 import { Session } from '@supabase/supabase-js';
 import * as ImagePicker from 'expo-image-picker';
 import React from 'react';

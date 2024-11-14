@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import Animated, {
   interpolate,
@@ -7,7 +7,13 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 
-const TabBarButton = (props: { isFocused: boolean; label: string, routeName: string, color: string, icon: React.ReactNode }) => {
+const TabBarButton = (props: {
+  isFocused: boolean;
+  label: string;
+  routeName: string;
+  color: string;
+  icon: React.ReactNode;
+}) => {
   const { isFocused, label, routeName, color, icon } = props;
 
   const scale = useSharedValue(0);
@@ -39,9 +45,7 @@ const TabBarButton = (props: { isFocused: boolean; label: string, routeName: str
   });
   return (
     <Pressable {...props} style={styles.container}>
-      <Animated.View style={[animatedIconStyle]}>
-        {icon}
-      </Animated.View>
+      <Animated.View style={[animatedIconStyle]}>{icon}</Animated.View>
 
       <Animated.Text
         style={[

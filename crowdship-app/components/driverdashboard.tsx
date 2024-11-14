@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
-  FlatList,
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
@@ -10,10 +9,8 @@ import {
 } from "react-native";
 import { Button } from "@rneui/themed";
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from "@react-navigation/native";
 import { supabase } from "../lib/supabase";
 import Card from "./Card";
-import { User } from "@supabase/supabase-js";
 import modalStyles from "../styles/modalStyles";
 import CompleteDeliveryModal from "./CompleteDeliveryModal";
 

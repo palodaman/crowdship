@@ -1,6 +1,5 @@
 import { router } from "expo-router";
-import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
+import { useState } from "react";
 import React from "react";
 import {
   View,
