@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Button } from "@rneui/themed";
-import SenderDashboard from "../components/SenderDashboard";
-import DriverDashboard from "../components/DriverDashboard";
+import SenderDashboard from "../components/senderdashboard";
+import DriverDashboard from "../components/driverdashboard";
 import { useFocusEffect } from "@react-navigation/native";
 import { supabase } from "../lib/supabase";
 
