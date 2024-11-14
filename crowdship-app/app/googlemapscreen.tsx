@@ -155,5 +155,4 @@ export default function GoogleMapScreen() {
       )}
     </View>
   );
-};
-
+}

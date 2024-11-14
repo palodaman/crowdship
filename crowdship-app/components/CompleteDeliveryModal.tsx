@@ -1,9 +1,16 @@
-import { router } from 'expo-router';
-import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
+import { router } from "expo-router";
+import { useState } from "react";
 import React from "react";
-import {View, ScrollView, Text, ActivityIndicator,TouchableOpacity,StyleSheet,Image,} from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";//import your local image from the assets folder
+import {
+  View,
+  ScrollView,
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+} from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome"; //import your local image from the assets folder
 import diningTableImage from "../assets/diningTable.png";
 
 interface Listing {
@@ -20,14 +27,13 @@ interface Listing {
 
 interface CompleteDeliveryModalProps {
   selectedListing: Listing;
-  setRenderAcceptDelivery: React.Dispatch<React.SetStateAction<boolean>>;
+  setRenderModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
   selectedListing,
-  setRenderAcceptDelivery,
+  setRenderModal,
 }) => {
- 
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -64,7 +70,7 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
               </Text>
             </View>
           </View>
-          
+
           <View style={styles.card}>
             <Icon name="location-arrow" size={24} color="black" />
             <View style={styles.cardContent}>
@@ -96,24 +102,28 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
           </View>
 
           {/* Chat Button */}
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.chatButton}
-        
             onPress={() => {
               if (selectedListing?.listingid && selectedListing?.senderid) {
-                setRenderAcceptDelivery(false); //close the modal
+                setRenderModal(false); //close the modal
                 router.push({
-                  pathname: '/chatscreen',
+                  pathname: "/chatscreen",
                   params: {
                     orderId: selectedListing.listingid,
                     senderId: selectedListing.senderid,
-                  }
+                  },
                 });
               }
             }}
           >
-            <Icon name="comment" size={20} color="white" style={styles.buttonIcon} />
-            <Text style={styles.buttonText}>Chat with Sender</Text>
+            <Icon
+              name="comment"
+              size={20}
+              color="white"
+              style={styles.buttonIcon}
+            />
+            <Text style={styles.buttonText}>Chat With Sender</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -180,16 +190,16 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   chatButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#4a90e2',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#4a90e2",
     padding: 15,
     borderRadius: 10,
-    width: '90%',
-    justifyContent: 'center',
+    width: "90%",
+    justifyContent: "center",
     marginTop: 20,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,

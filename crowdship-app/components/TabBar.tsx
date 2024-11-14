@@ -14,7 +14,7 @@ const TabBar = ({
 }) => {
   // Add this check at the beginning of the component
   const currentRoute = state.routes[state.index].name;
-  if (currentRoute === 'chatscreen') {
+  if (currentRoute === "chatscreen") {
     return null;
   }
   const primaryColor = "#0891b2";
@@ -34,7 +34,7 @@ const TabBar = ({
           icon = <AntDesign name="car" size={24} color="black" />;
         }
         if (route.name === "deliverydashboard") {
-          label = "Deliveries";
+          label = "Delivery Dashboard";
           icon = <Feather name="list" size={24} color="black" />;
         }
         if (route.name === "index") {
@@ -42,10 +42,10 @@ const TabBar = ({
           icon = <FontAwesome name="user" size={24} color="black" />;
         }
         // returns null on the tab bar button when signupscreen is the route name passed by expo router props
-        if(route.name === "SignUpScreen") {
-          return null
+        if (route.name === "SignUpScreen") {
+          return null;
         }
-        if (route.name === "chatscreen"){
+        if (route.name === "chatscreen") {
           return null;
         }
         if (["_sitemap", "+not-found"].includes(route.name)) return null;
