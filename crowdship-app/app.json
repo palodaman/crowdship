@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "crowdship-app",
-    "slug": "crowdship-app",
-    "scheme": "crowdshipapp",
+    "name": "crowdship",
+    "slug": "crowdship",
+    "scheme": "com.crowdship",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.crowdship-app"
+      "bundleIdentifier": "com.anonymous.crowdship"
     },
     "android": {
       "adaptiveIcon": {
