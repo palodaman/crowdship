@@ -11,33 +11,70 @@ export default function SignUpScreen() {
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showOTPInput, setShowOTPInput] = useState(false);
+  const [otp, setOtp] = useState('');
   const router = useRouter();
 
   async function signUpWithEmail() {
     setLoading(true);
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
+      // Request OTP
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
         options: {
           data: {
-            username: username, // Pass username via metadata
+            username,
             first_name: firstname,
-            last_name: lastname
+            last_name: lastname,
           },
         },
       });
 
-      if (error) {
-        throw error;
+      if (error) throw error;
+
+      setShowOTPInput(true);
+      Alert.alert('Success', 'Check your email for the OTP code');
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert('Error', error.message);
       }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function verifyOTP() {
+    setLoading(true);
+    try {
+      // Verify OTP
+      const { data, error } = await supabase.auth.verifyOtp({
+        email,
+        token: otp,
+        type: 'email',
+      });
+
+      if (error) throw error;
 
       if (data?.user) {
-        Alert.alert('Sign up successful! Please check your inbox for email verification.');
+        // Set password after successful OTP verification
+        const { error: updateError } = await supabase.auth.updateUser({
+          password: password,
+        });
+
+        if (updateError) throw updateError;
+
+        Alert.alert('Success', 'Sign up successful! You can now login with your email and password.', [
+          {
+            text: 'OK',
+            onPress: () => {
+              router.push('/'); 
+            },
+          },
+        ]);
       }
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message);
+        Alert.alert('Error', error.message);
       }
     } finally {
       setLoading(false);
@@ -54,6 +91,7 @@ export default function SignUpScreen() {
           value={firstname}
           placeholder="First name"
           autoCapitalize={'none'}
+          disabled={showOTPInput}
         />
       </View>
       <View style={styles.verticallySpaced}>
@@ -64,6 +102,7 @@ export default function SignUpScreen() {
           value={lastname}
           placeholder="Last name"
           autoCapitalize={'none'}
+          disabled={showOTPInput}
         />
       </View>
       <View style={styles.verticallySpaced}>
@@ -74,6 +113,7 @@ export default function SignUpScreen() {
           value={username}
           placeholder="Username"
           autoCapitalize={'none'}
+          disabled={showOTPInput}
         />
       </View>
       <View style={styles.verticallySpaced}>
@@ -84,6 +124,7 @@ export default function SignUpScreen() {
           value={email}
           placeholder="email@address.com"
           autoCapitalize={'none'}
+          disabled={showOTPInput}
         />
       </View>
       <View style={styles.verticallySpaced}>
@@ -95,17 +136,47 @@ export default function SignUpScreen() {
           secureTextEntry={true}
           placeholder="Password"
           autoCapitalize={'none'}
+          disabled={showOTPInput}
         />
       </View>
-      <View style={styles.verticallySpaced}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={signUpWithEmail}
-          disabled={loading}
-        >
-          <Text style={styles.buttonText}>{loading ? 'Loading...' : 'Sign up'}</Text>
-        </TouchableOpacity>
-      </View>
+
+      {showOTPInput ? (
+        <>
+          <View style={styles.verticallySpaced}>
+            <Input
+              label="OTP Code"
+              leftIcon={{ type: 'font-awesome', name: 'key' }}
+              onChangeText={(text) => setOtp(text)}
+              value={otp}
+              placeholder="Enter OTP code"
+              autoCapitalize={'none'}
+            />
+          </View>
+          <View style={styles.verticallySpaced}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={verifyOTP}
+              disabled={loading}
+            >
+              <Text style={styles.buttonText}>
+                {loading ? 'Verifying...' : 'Verify OTP'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </>
+      ) : (
+        <View style={styles.verticallySpaced}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={signUpWithEmail}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? 'Loading...' : 'Sign up'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
