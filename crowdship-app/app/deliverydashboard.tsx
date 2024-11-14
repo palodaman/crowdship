@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { supabase } from "../lib/supabase";
+import React, { useCallback, useState } from "react";
+import { View, StyleSheet } from "react-native";
 import { Button } from "@rneui/themed";
-import { User } from "@supabase/supabase-js";
-import { useFocusEffect } from "@react-navigation/native";
 import SenderDashboard from "../components/SenderDashboard";
 import DriverDashboard from "../components/DriverDashboard";
+import { useFocusEffect } from "@react-navigation/native";
+import { supabase } from "../lib/supabase";
 
 interface Listing {
   delivererid: string;
@@ -18,10 +17,103 @@ interface Listing {
   destinationaddress: string;
   itemdescription: string;
   itemimageurl: string | null;
+  notes: string | null;
 }
 
 const DeliveryDashboard = () => {
   const [activeTab, setActiveTab] = useState("deliveries");
+  const [activeShipments, setActiveShipments] = useState<Listing[]>([]);
+  const [pastShipments, setPastShipments] = useState<Listing[]>([]);
+  const [inProgressShipments, setInProgressShipments] = useState<Listing[]>([]);
+  const [activeOrders, setActiveOrders] = useState<Listing[]>([]);
+  const [pastOrders, setPastOrders] = useState<Listing[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAllOrders();
+      fetchAllShipments();
+    }, [])
+  );
+
+  const fetchAllOrders = async () => {
+    try {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) throw error;
+
+      await fetchActiveOrders(data.user);
+      await fetchPastOrders(data.user);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchActiveOrders = async (user: User | null) => {
+    try {
+      const { data, error } = await supabase
+        .from("orders")
+        .select("listings (*)")
+        .eq("delivererid", user?.id)
+        .eq("status", "ACCEPTED");
+      const listingsArray = data ? data.flatMap((order) => order.listings) : [];
+      setActiveOrders(listingsArray);
+      console.log("My Deliveries active orders", listingsArray);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchPastOrders = async (user: User | null) => {
+    try {
+      const { data, error } = await supabase
+        .from("orders")
+        .select("listings (*)")
+        .eq("delivererid", user?.id)
+        .eq("status", "COMPLETE");
+
+      const listingsArray = data ? data.flatMap((order) => order.listings) : [];
+      setPastOrders(listingsArray);
+      console.log("My Deliveries past orders", data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchAllShipments = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.auth.getUser();
+      console.log("fetchAllShipments user", data);
+      const { data: listingsData, error: listingsError } = await supabase
+        .from("listings")
+        .select("*")
+        .eq("senderid", data.user?.id)
+        .in("status", ["ACTIVE", "CLAIMED", "INACTIVE"]);
+
+      if (listingsError) throw listingsError;
+
+      // Filter results locally to categorize shipments
+      const active = listingsData.filter(
+        (listing) => listing.status === "ACTIVE"
+      );
+      const inProgress = listingsData.filter(
+        (listing) => listing.status === "CLAIMED"
+      );
+      const past = listingsData.filter(
+        (listing) => listing.status === "INACTIVE"
+      );
+
+      setActiveShipments(active);
+      setInProgressShipments(inProgress);
+      setPastShipments(past);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -54,7 +146,22 @@ const DeliveryDashboard = () => {
       </View>
 
       <View style={styles.listingsContainer}>
-        {activeTab === "deliveries" ? <DriverDashboard /> : <SenderDashboard />}
+        {activeTab === "deliveries" ? (
+          <DriverDashboard
+            activeOrders={activeOrders}
+            pastOrders={pastOrders}
+            fetchAllOrders={fetchAllOrders}
+            loading={loading}
+          />
+        ) : (
+          <SenderDashboard
+            activeShipments={activeShipments}
+            pastShipments={pastShipments}
+            inProgressShipments={inProgressShipments}
+            fetchAllShipments={fetchAllShipments}
+            loading={loading}
+          />
+        )}
       </View>
     </View>
   );
@@ -68,85 +175,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flex: 1,
   },
-  card: {
-    padding: 16,
-    marginBottom: 16,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
   tabs: {
     paddingTop: 16,
     flexDirection: "row",
-  },
-  list: {
-    flex: 1,
-  },
-  loadingContainer: {
-    flex: 1,
-    padding: 16,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  itemContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 15,
-    marginVertical: 10,
-    width: "95%",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  itemImage: {
-    width: 60,
-    height: 60,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 8,
-    marginRight: 16,
-  },
-  itemDescription: {
-    flex: 1,
-  },
-  itemDistance: {
-    alignItems: "flex-end",
-    flex: 1,
-  },
-  itemText: {
-    color: "#333",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  itemPrice: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 4,
-  },
-  priceText: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#4CAF50", // Green for price
-    marginLeft: 5,
-  },
-  distanceText: {
-    color: "#888",
-    fontSize: 14,
-    textAlign: "right",
-  },
-  noDeliveriesContainer: {
-    alignItems: "center",
-    padding: "10%",
-  },
-  noDeliveriesText: {
-    fontSize: 16,
-    fontWeight: "bold",
   },
 });
 

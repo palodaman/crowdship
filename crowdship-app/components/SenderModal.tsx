@@ -13,7 +13,6 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome"; //import your local image from the assets folder
 import diningTableImage from "../assets/diningTable.png";
 import EditDeliveryModal from "./EditDeliveryModal";
-import { Button } from "@rneui/themed";
 
 interface Listing {
   listingid: string;
@@ -32,12 +31,14 @@ interface SenderModalProps {
   selectedListing: Listing;
   setRenderModal: React.Dispatch<React.SetStateAction<boolean>>;
   transactionComplete: string;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SenderModal: React.FC<SenderModalProps> = ({
   selectedListing,
   setRenderModal,
   transactionComplete,
+  setEditMode,
 }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [renderEditDelivery, setRenderEditDelivery] = useState<boolean>(false);
@@ -147,6 +148,7 @@ const SenderModal: React.FC<SenderModalProps> = ({
           </View>
         ) : (
           <EditDeliveryModal
+            setEditMode={setEditMode}
             selectedListing={selectedListing}
             setRenderModal={setRenderModal}
             setRenderEditDelivery={setRenderEditDelivery}

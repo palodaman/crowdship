@@ -30,6 +30,7 @@ interface Listing {
 }
 
 interface EditDeliveryModalProps {
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   selectedListing: Listing;
   setRenderModal: React.Dispatch<React.SetStateAction<boolean>>;
   setRenderEditDelivery: React.Dispatch<React.SetStateAction<boolean>>;
@@ -37,6 +38,7 @@ interface EditDeliveryModalProps {
 }
 
 const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
+  setEditMode,
   selectedListing,
   setRenderModal,
   setRenderEditDelivery,
@@ -95,7 +97,6 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
           .delete()
           .eq("listingid", selectedListing.listingid);
 
-        // setMessage("Listing was successfully deleted!");
         setRenderModal(false);
         setRenderEditDelivery(false);
         fetchAllShipments();
@@ -110,7 +111,7 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
     try {
       const { data: userData, error: userError } =
         await supabase.auth.getUser();
-        
+
       if (userError) throw userError;
 
       console.log("item description", itemDescription);
@@ -127,9 +128,7 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
         .eq("listingid", selectedListing.listingid);
 
       setMessage("Edits were successfully saved!");
-      // setRenderModal(false);
-      // setRenderEditDelivery(false);
-      // fetchAllShipments();
+      setEditMode(true);
     } catch (error) {
       if (error instanceof Error) {
         setMessage(`Error: ${error.message}`);

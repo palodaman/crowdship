@@ -46,39 +46,43 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [renderAcceptDeliveryConfirmation , setRenderAcceptDeliveryConfirmation] = useState(false);
+  const [
+    renderAcceptDeliveryConfirmation,
+    setRenderAcceptDeliveryConfirmation,
+  ] = useState(false);
   const session = useSession();
-
 
   const newOrder = async (selectedListing: Listing) => {
     try {
-      const { data: orderData, error: orderError} = await supabase
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+      if (userError) throw userError;
+
+      const { data: orderData, error: orderError } = await supabase
         .from("orders")
         .insert([
           {
             delivererid: session?.user.id,
             listingid: selectedListing.listingid,
-            status: 'ACCEPTED'
+            status: "ACCEPTED",
           },
-      ]);
+        ]);
 
       if (orderError) throw orderError;
 
       const { data: updatedData, error: updateError } = await supabase
-        .from('listings')               
-        .update({ status: 'CLAIMED' }) 
-        .eq('listingid', selectedListing.listingid); 
-
+        .from("listings")
+        .update({ status: "CLAIMED" })
+        .eq("listingid", selectedListing.listingid);
 
       if (updateError) throw updateError;
 
       setRenderAcceptDeliveryConfirmation(true);
-      
     } catch (error) {
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleAccept = async () => {
     setRenderAcceptDelivery(false);
@@ -150,30 +154,26 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
             </View>
           </View>
         </View>
-        
+
         <View style={styles.negotiateHeader}>
-          <Text style={styles.negotiateHeaderText}>
-            Negotiate Offer:
-          </Text>
+          <Text style={styles.negotiateHeaderText}>Negotiate Offer:</Text>
         </View>
 
         <View style={styles.negotiationButtonsContainer}>
-          <TouchableOpacity
-            style={styles.negotiateButton}
-          >
-            <Text style={styles.buttonText}>${selectedListing.price+5}</Text>
+          <TouchableOpacity style={styles.negotiateButton}>
+            <Text style={styles.buttonText}>${selectedListing.price + 5}</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.negotiateButton}
-          >
-            <Text style={styles.buttonText}>${selectedListing.price+10}</Text>
+          <TouchableOpacity style={styles.negotiateButton}>
+            <Text style={styles.buttonText}>${selectedListing.price + 10}</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.negotiateButton}
-            disabled={true}
-          >
+          <TouchableOpacity style={styles.negotiateButton} disabled={true}>
             <View style={styles.customButtonContainer}>
-              <Icon style={styles.pencilIcon} name="pencil" size={16} color="white" />
+              <Icon
+                style={styles.pencilIcon}
+                name="pencil"
+                size={16}
+                color="white"
+              />
               <TextInput
                 style={styles.buttonText}
                 placeholder="Custom"
@@ -191,13 +191,14 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
             <Text style={styles.numViews}>{selectedListing?.views}</Text>
           </View>
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: "#6EC175" }]} onPress={() => newOrder(selectedListing)}
+            style={[styles.button, { backgroundColor: "#6EC175" }]}
+            onPress={() => newOrder(selectedListing)}
           >
             <Text style={styles.buttonText}>Accept Initial Offer</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
-    
+
       <Modal
         visible={renderAcceptDeliveryConfirmation}
         animationType="slide"
@@ -211,8 +212,12 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
             >
               <Text style={modalStyles.closeButtonText}>X</Text>
             </TouchableOpacity>
-            <Text style={[styles.confirmationText, {fontWeight: "bold"}]}>{'Delivery Accepted!\n'}</Text>
-            <Text style={styles.confirmationText}>Navigate to active deliveries to view order information.</Text>
+            <Text style={[styles.confirmationText, { fontWeight: "bold" }]}>
+              {"Delivery Accepted!\n"}
+            </Text>
+            <Text style={styles.confirmationText}>
+              Navigate to active deliveries to view order information.
+            </Text>
           </View>
         </View>
       </Modal>
@@ -315,7 +320,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   negotiateHeaderText: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 16,
   },
   negotiationButtonsContainer: {
@@ -327,7 +332,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#808080',
+    backgroundColor: "#808080",
     marginHorizontal: 5,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
@@ -336,7 +341,7 @@ const styles = StyleSheet.create({
   },
   customButtonContainer: {
     flexDirection: "row",
-    alignItems: 'center',
+    alignItems: "center",
   },
   pencilIcon: {
     paddingRight: 5,
@@ -344,13 +349,13 @@ const styles = StyleSheet.create({
   confirmationText: {
     fontFamily: "Avenir",
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   modifiedModalStyle: {
-     height: "20%", 
-     width: "80%", 
-     justifyContent: 'center',
-  }
+    height: "20%",
+    width: "80%",
+    justifyContent: "center",
+  },
 });
 
 export default AcceptDelivery;
