@@ -59,7 +59,6 @@ const DeliveryDashboard = () => {
         .eq("status", "ACCEPTED");
       const listingsArray = data ? data.flatMap((order) => order.listings) : [];
       setActiveOrders(listingsArray);
-      console.log("My Deliveries active orders", listingsArray);
     } catch (error) {
       console.error(error);
     }
@@ -75,7 +74,6 @@ const DeliveryDashboard = () => {
 
       const listingsArray = data ? data.flatMap((order) => order.listings) : [];
       setPastOrders(listingsArray);
-      console.log("My Deliveries past orders", data);
     } catch (error) {
       console.error(error);
     }

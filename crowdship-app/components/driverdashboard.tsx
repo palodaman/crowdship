@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
-  FlatList,
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
@@ -10,11 +9,9 @@ import {
 } from "react-native";
 import { Button } from "@rneui/themed";
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from "@react-navigation/native";
-import { supabase } from "../lib/supabase";
 import Card from "./Card";
-import { User } from "@supabase/supabase-js";
 import modalStyles from "../styles/modalStyles";
+import DefaultDeliveryModal from "./DefaultDeliveryModal";
 import CompleteDeliveryModal from "./CompleteDeliveryModal";
 
 interface Listing {
@@ -45,26 +42,20 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
   loading,
 }) => {
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
-  const [renderAcceptDelivery, setRenderModal] = useState<boolean>(false);
+  const [renderModal, setRenderModal] = useState<boolean>(false);
+  const [renderCompleteDelivery, setRenderCompleteDelivery] =
+    useState<boolean>(false);
 
   const handlePress = (item: Listing) => {
     setSelectedListing(item);
     setRenderModal(true);
+    setRenderCompleteDelivery(false);
   };
 
-  const handleButtonPress = async (listingid: string) => {
-    try {
-      const { error } = await supabase
-        .from("orders")
-        .update({ status: "COMPLETE" })
-        .eq("listingid", listingid);
-
-      if (error) throw error;
-
-      fetchAllOrders();
-    } catch (error) {
-      console.error(error);
-    }
+  const handleCompleteButtonPress = async (item: Listing) => {
+    setRenderCompleteDelivery(true);
+    setSelectedListing(item);
+    setRenderModal(true);
   };
 
   if (loading) {
@@ -75,6 +66,8 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
     );
   }
 
+  console.log("setRenderCompleteDelivery", renderCompleteDelivery);
+  console.log("selectedListing", selectedListing);
   return (
     <View style={styles.container}>
       <View style={{ flexShrink: 1 }}>
@@ -105,7 +98,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
                         <Text style={styles.priceText}>${item.price}</Text>
                       </View>
                     </View>
-                    <Button onPress={() => handleButtonPress(item.listingid)}>
+                    <Button onPress={() => handleCompleteButtonPress(item)}>
                       Complete
                     </Button>
                   </View>
@@ -163,7 +156,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
         )}
       </View>
       <Modal
-        visible={renderAcceptDelivery}
+        visible={renderModal}
         animationType="slide"
         transparent={true}
         onRequestClose={() => setRenderModal(false)}
@@ -176,12 +169,19 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
             >
               <Text style={modalStyles.closeButtonText}>X</Text>
             </TouchableOpacity>
-            {selectedListing && (
-              <CompleteDeliveryModal
-                selectedListing={selectedListing}
-                setRenderModal={setRenderModal}
-              />
-            )}
+            {selectedListing &&
+              (renderCompleteDelivery ? (
+                <CompleteDeliveryModal
+                  selectedListing={selectedListing}
+                  setRenderModal={setRenderModal}
+                  fetchAllOrders={fetchAllOrders}
+                />
+              ) : (
+                <DefaultDeliveryModal
+                  selectedListing={selectedListing}
+                  setRenderModal={setRenderModal}
+                />
+              ))}
           </View>
         </View>
       </Modal>
