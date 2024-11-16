@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { Button } from "@rneui/themed";
 import { Ionicons } from "@expo/vector-icons";
-import { supabase } from "../lib/supabase";
 import Card from "./Card";
 import modalStyles from "../styles/modalStyles";
 import DefaultDeliveryModal from "./DefaultDeliveryModal";
@@ -50,24 +49,13 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
   const handlePress = (item: Listing) => {
     setSelectedListing(item);
     setRenderModal(true);
+    setRenderCompleteDelivery(false);
   };
 
-  const handleButtonPress = async (item: Listing) => {
+  const handleCompleteButtonPress = async (item: Listing) => {
     setRenderCompleteDelivery(true);
     setSelectedListing(item);
     setRenderModal(true);
-    // try {
-    //   const { error } = await supabase
-    //     .from("orders")
-    //     .update({ status: "COMPLETE" })
-    //     .eq("listingid", listingid);
-
-    //   if (error) throw error;
-
-    //   fetchAllOrders();
-    // } catch (error) {
-    //   console.error(error);
-    // }
   };
 
   if (loading) {
@@ -110,7 +98,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
                         <Text style={styles.priceText}>${item.price}</Text>
                       </View>
                     </View>
-                    <Button onPress={() => handleButtonPress(item)}>
+                    <Button onPress={() => handleCompleteButtonPress(item)}>
                       Complete
                     </Button>
                   </View>
