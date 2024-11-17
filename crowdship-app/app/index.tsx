@@ -10,15 +10,15 @@ import Path from "../components/Path";
 
 
 export default function App() {
-    const session = useSession();
-    const [currentPage, setCurrentPage] = useState<'auth' | 'path' | 'account'>('path');
-    const [loading, setLoading] = useState(true);
+  const session = useSession();
+  const [currentPage, setCurrentPage] = useState<'auth' | 'path' | 'account'>('path');
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-      if (session && session.user) {
-        setLoading(false);
-      }
-    }, [session]);
+  useEffect(() => {
+    if (session && session.user) {
+      setLoading(false);
+    }
+  }, [session]);
 
   const handleButtonPress = () => {
     setCurrentPage('account');
