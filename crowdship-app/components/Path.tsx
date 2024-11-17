@@ -11,14 +11,15 @@ const Path: React.FC<PathProps> = ({ onButtonPress }) => {
   const router = useRouter();
 
   const navigateToRequestDelivery = () => {
+    router.push("/deliveryrequest");
     onButtonPress();
-    router.push("/deliveryrequest")
+   
     
   };
   
   const navigateToFindDeliveries = () => {
-    onButtonPress();
     router.push("/googlemapscreen")
+    onButtonPress();
   };
 
   return (
