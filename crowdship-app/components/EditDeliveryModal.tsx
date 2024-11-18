@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: "100%",
     fontSize: 16,
-    color: "green",
+    color: "#5DE49B",
     textAlign: "center",
   },
   imageContainer: {

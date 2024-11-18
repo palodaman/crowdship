@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   priceText: {
     fontWeight: "bold",
     fontSize: 16,
-    color: "#4CAF50", // Green for price
+    color: "#5DE49B", 
     marginLeft: 5,
   },
   distanceText: {

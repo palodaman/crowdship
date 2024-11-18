@@ -51,7 +51,7 @@ const _layout = () => {
       <Tabs.Screen
         name="deliverydashboard"
         options={{
-          title: "Delivery Dashboard",
+          title: "Order Dashboard",
         }}
       />
     </Tabs>

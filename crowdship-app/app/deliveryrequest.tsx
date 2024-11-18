@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
   message: {
     marginTop: 20,
     fontSize: 16,
-    color: "green",
+    color: "#5DE49B",
     textAlign: "center",
   },
 });

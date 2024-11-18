@@ -17,29 +17,29 @@ const TabBar = ({
   if (currentRoute === "chatscreen") {
     return null;
   }
-  const primaryColor = "#0891b2";
+
   const greyColor = "#737373";
   return (
     <View style={styles.tabbar}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
-        let label;
+        let label = "";
         let icon;
         if (route.name === "deliveryrequest") {
-          label = "Request Delivery";
-          icon = <Entypo name="add-to-list" size={24} color="black" />;
+          label = "Send Packages";
+          icon = <AntDesign name="gift" size={24} color="black" />;
         }
         if (route.name === "googlemapscreen") {
           label = "Find Deliveries";
-          icon = <AntDesign name="car" size={24} color="black" />;
+          icon = <AntDesign name="search1" size={24} color="black" />;
         }
         if (route.name === "deliverydashboard") {
-          label = "Delivery Dashboard";
-          icon = <Feather name="list" size={24} color="black" />;
+          label = "Orders";
+          icon = <AntDesign name="bars" size={24} color="black" />;
         }
         if (route.name === "index") {
-          label = "Account";
-          icon = <FontAwesome name="user" size={24} color="black" />;
+          label = "Profile";
+          icon = <AntDesign name="user" size={24} color="black" />;
         }
         // returns null on the tab bar button when signupscreen is the route name passed by expo router props
         if (route.name === "SignUpScreen") {
@@ -79,35 +79,10 @@ const TabBar = ({
             onLongPress={onLongPress}
             isFocused={isFocused}
             routeName={route.name}
-            color={isFocused ? primaryColor : greyColor}
-            label={label!}
+            color={isFocused ? "#5DE49B" : greyColor}
+            label={label}
           />
         );
-
-        // return (
-        //   <TouchableOpacity
-        //     key={route.name}
-        //     style={styles.tabbarItem}
-        //     accessibilityRole="button"
-        //     accessibilityState={isFocused ? { selected: true } : {}}
-        //     accessibilityLabel={options.tabBarAccessibilityLabel}
-        //     testID={options.tabBarTestID}
-        //     onPress={onPress}
-        //     onLongPress={onLongPress}
-        //   >
-        //     {
-        //         icons[route.name]({
-        //             color: isFocused? primaryColor: greyColor
-        //         })
-        //     }
-        //     <Text style={{
-        //         color: isFocused ? primaryColor : greyColor,
-        //         fontSize: 11
-        //     }}>
-        //       {label}
-        //     </Text>
-        //   </TouchableOpacity>
-        // );
       })}
     </View>
   );
@@ -116,15 +91,12 @@ const TabBar = ({
 const styles = StyleSheet.create({
   tabbar: {
     position: "absolute",
-    bottom: 25,
+    bottom: 0,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "white",
-    marginHorizontal: 20,
     paddingVertical: 15,
-    borderRadius: 25,
-    borderCurve: "continuous",
     shadowColor: "black",
     shadowOffset: { width: 0, height: 10 },
     shadowRadius: 10,
