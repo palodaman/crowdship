@@ -182,7 +182,7 @@ export default function Account({ session }: { session: Session }) {
           style={buttonStyles.secondaryButton}
           onPress={pickImage}
         >
-          <Text style={buttonStyles.buttonText}>Upload New Picture</Text>
+          <Text style={buttonStyles.buttonText}>Upload New Image</Text>
         </TouchableOpacity>
       </View>
 
@@ -227,7 +227,6 @@ export default function Account({ session }: { session: Session }) {
 const styles = StyleSheet.create({
   container: {
     marginTop: 10,
-    padding: 12,
   },
   avatarContainer: {
     alignItems: "center",
@@ -259,20 +258,6 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
-  // button: {
-  //   backgroundColor: "#4a90e2",
-  //   padding: 10,
-  //   borderRadius: 10,
-  //   width: "60%",
-  //   alignItems: "center",
-  //   alignSelf: "center",
-  //   marginTop: 10,
-  // },
-  // buttonText: {
-  //   color: "white",
-  //   fontWeight: "bold",
-  //   fontSize: 18,
-  // },
   buttonContainer: {
     marginBottom: 50,
   },
