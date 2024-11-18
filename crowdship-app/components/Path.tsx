@@ -1,25 +1,18 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
-
 
 interface PathProps {
-  onButtonPress: () => void;
+  onButtonPress: (route: string) => void;
 }
 
 const Path: React.FC<PathProps> = ({ onButtonPress }) => {
-  const router = useRouter();
 
   const navigateToRequestDelivery = () => {
-    router.push("/deliveryrequest");
-    onButtonPress();
-   
-    
+    onButtonPress("/deliveryrequest");
   };
   
   const navigateToFindDeliveries = () => {
-    router.push("/googlemapscreen")
-    onButtonPress();
+    onButtonPress("/googlemapscreen");
   };
 
   return (
