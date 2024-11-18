@@ -93,12 +93,12 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
                         <Ionicons
                           name="pricetag-outline"
                           size={16}
-                          color="#4CAF50"
+                          color="#5DE49B"
                         />
                         <Text style={styles.priceText}>${item.price}</Text>
                       </View>
                     </View>
-                    <Button onPress={() => handleCompleteButtonPress(item)}>
+                    <Button onPress={() => handleCompleteButtonPress(item)} color={"#5DE49B"}>
                       Complete
                     </Button>
                   </View>
@@ -136,7 +136,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
                         <Ionicons
                           name="pricetag-outline"
                           size={16}
-                          color="#4CAF50"
+                          color="#5DE49B"
                         />
                         <Text style={styles.priceText}>${item.price}</Text>
                       </View>
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   priceText: {
     fontWeight: "bold",
     fontSize: 16,
-    color: "#4CAF50",
+    color: "#5DE49B",
     marginLeft: 5,
   },
   noDeliveriesContainer: {

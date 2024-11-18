@@ -110,7 +110,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                           <Ionicons
                             name="pricetag-outline"
                             size={16}
-                            color="#4CAF50"
+                            color="#5DE49B"
                           />
                           <Text style={styles.priceText}>${item.price}</Text>
                         </View>
@@ -119,6 +119,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                         onPress={() => {
                           handleEditPress(item, true);
                         }}
+                        color={"#5DE49B"}
                       >
                         Edit
                       </Button>
@@ -163,7 +164,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                           <Ionicons
                             name="pricetag-outline"
                             size={16}
-                            color="#4CAF50"
+                            color="#5DE49B"
                           />
                           <Text style={styles.priceText}>${item.price}</Text>
                         </View>
@@ -322,7 +323,7 @@ const styles = StyleSheet.create({
   priceText: {
     fontWeight: "bold",
     fontSize: 16,
-    color: "#4CAF50",
+    color: "#5DE49B",
     marginLeft: 5,
   },
   noDeliveriesContainer: {
