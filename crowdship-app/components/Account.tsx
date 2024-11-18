@@ -1,25 +1,33 @@
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
-import { StyleSheet, View, Alert, Image, TouchableOpacity, Text } from 'react-native';
-import { Input } from '@rneui/themed';
-import { Session } from '@supabase/supabase-js';
-import * as ImagePicker from 'expo-image-picker';
-import React from 'react';
+import { useState, useEffect, useCallback } from "react";
+import { supabase } from "../lib/supabase";
+import {
+  StyleSheet,
+  View,
+  Alert,
+  Image,
+  TouchableOpacity,
+  Text,
+} from "react-native";
+import { Input } from "@rneui/themed";
+import { Session } from "@supabase/supabase-js";
+import * as ImagePicker from "expo-image-picker";
+import React from "react";
+import buttonStyles from "../styles/buttonStyles";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   const getProfile = async () => {
     try {
       setLoading(true);
-      if (!session?.user) throw new Error('No user on the session!');
+      if (!session?.user) throw new Error("No user on the session!");
 
       const { data } = await supabase
-        .from('profiles')
-        .select('avatar_url')
-        .eq('userid', session?.user.id);
+        .from("profiles")
+        .select("avatar_url")
+        .eq("userid", session?.user.id);
 
       if (data?.[0]) {
         setAvatarUrl(data?.[0].avatar_url); // Set the avatar URL from the profile data
@@ -36,12 +44,12 @@ export default function Account({ session }: { session: Session }) {
   const getUsername = useCallback(async () => {
     try {
       setLoading(true);
-      if (!session?.user) throw new Error('No user on the session!');
+      if (!session?.user) throw new Error("No user on the session!");
 
       const { data: userData } = await supabase
-        .from('profiles')
-        .select('username')
-        .eq('userid', session?.user.id);
+        .from("profiles")
+        .select("username")
+        .eq("userid", session?.user.id);
 
       if (userData?.[0]) {
         setUsername(userData?.[0].username);
@@ -62,10 +70,16 @@ export default function Account({ session }: { session: Session }) {
     }
   }, [session]);
 
-  async function updateProfile({ username, avatar_url }: { username: string; avatar_url: string | null }) {
+  async function updateProfile({
+    username,
+    avatar_url,
+  }: {
+    username: string;
+    avatar_url: string | null;
+  }) {
     try {
       setLoading(true);
-      if (!session?.user) throw new Error('No user on the session!');
+      if (!session?.user) throw new Error("No user on the session!");
 
       const updates = {
         userid: session?.user.id,
@@ -74,7 +88,7 @@ export default function Account({ session }: { session: Session }) {
         updated_at: new Date(),
       };
 
-      const { error } = await supabase.from('profiles').upsert(updates);
+      const { error } = await supabase.from("profiles").upsert(updates);
 
       if (error) {
         throw error;
@@ -82,7 +96,7 @@ export default function Account({ session }: { session: Session }) {
 
       await getProfile();
 
-      Alert.alert('Profile updated!');
+      Alert.alert("Profile updated!");
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message);
@@ -98,35 +112,36 @@ export default function Account({ session }: { session: Session }) {
       const fileName = `${session.user.id}-${Date.now()}`; // Create a unique file name using the user ID and current timestamp
 
       const { error: uploadError } = await supabase.storage
-        .from('avatars') // Upload directly to the 'avatars' bucket
+        .from("avatars") // Upload directly to the 'avatars' bucket
         .upload(fileName, {
           uri,
-          type: 'image/jpeg',
+          type: "image/jpeg",
           name: fileName,
         });
 
       if (uploadError) {
         throw uploadError;
       }
-      await getProfile()
+      await getProfile();
 
       // Get the public URL of the uploaded file
-      const { data } = supabase.storage.from('avatars').getPublicUrl(fileName);
-      if (!data?.publicUrl) throw new Error('Could not get public URL.');
+      const { data } = supabase.storage.from("avatars").getPublicUrl(fileName);
+      if (!data?.publicUrl) throw new Error("Could not get public URL.");
 
       return data.publicUrl;
     } catch (error) {
-      Alert.alert('Error uploading image:', error.message);
+      Alert.alert("Error uploading image:", error.message);
       return null;
     }
   };
 
   // Function to handle the image picking and upload
   const pickImage = async () => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (!permissionResult.granted) {
-      Alert.alert('Permission to access camera roll is required!');
+      Alert.alert("Permission to access camera roll is required!");
       return;
     }
 
@@ -141,8 +156,8 @@ export default function Account({ session }: { session: Session }) {
       const pickedUri = result.assets[0].uri;
       // Upload to Supabase storage and get the public URL
       const uploadedUrl = await uploadImageToSupabase(pickedUri);
-      
-      if (uploadedUrl) { 
+
+      if (uploadedUrl) {
         setAvatarUrl(uploadedUrl); // Update the avatar URL state
         // Update the profile with the new avatar URL
         await updateProfile({ username, avatar_url: uploadedUrl });
@@ -163,36 +178,45 @@ export default function Account({ session }: { session: Session }) {
         )}
 
         {/* Always show upload button */}
-        <TouchableOpacity style={styles.button} onPress={pickImage}>
-          <Text style={styles.buttonText}>Upload New Picture</Text>
+        <TouchableOpacity
+          style={buttonStyles.secondaryButton}
+          onPress={pickImage}
+        >
+          <Text style={buttonStyles.buttonText}>Upload New Picture</Text>
         </TouchableOpacity>
       </View>
-      
+
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input label="Email" value={session?.user?.email} disabled />
       </View>
-      
+
       <View style={styles.verticallySpaced}>
-        <Input label="Username" value={username || ''} onChangeText={(text) => setUsername(text)} />
+        <Input
+          label="Username"
+          value={username || ""}
+          onChangeText={(text) => setUsername(text)}
+        />
       </View>
 
       <View style={styles.buttonContainer}>
         <View style={[styles.verticallySpaced, styles.mt20]}>
-          <TouchableOpacity 
-            style={styles.button} 
+          <TouchableOpacity
+            style={buttonStyles.primaryButton}
             onPress={() => updateProfile({ username, avatar_url: avatarUrl })}
             disabled={loading}
           >
-            <Text style={styles.buttonText}>{loading ? 'Loading ...' : 'Update'}</Text>
+            <Text style={buttonStyles.buttonText}>
+              {loading ? "Loading ..." : "Update"}
+            </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.verticallySpaced}>
-          <TouchableOpacity 
-            style={styles.button} 
+          <TouchableOpacity
+            style={buttonStyles.primaryButton}
             onPress={() => supabase.auth.signOut()}
           >
-            <Text style={styles.buttonText}>Sign Out</Text>
+            <Text style={buttonStyles.buttonText}>Sign Out</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -206,7 +230,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   avatarContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 15,
   },
   avatar: {
@@ -214,41 +238,41 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 75,
     borderWidth: 2,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
   },
   avatarPlaceholder: {
     width: 150,
     height: 150,
     borderRadius: 75,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ddd',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ddd",
   },
   placeholderText: {
-    color: '#555',
+    color: "#555",
   },
   verticallySpaced: {
     paddingTop: 10,
     paddingBottom: 10,
-    alignSelf: 'stretch',
+    alignSelf: "stretch",
   },
   mt20: {
     marginTop: 20,
   },
-  button: {
-    backgroundColor: "#4a90e2",
-    padding: 10,
-    borderRadius: 10,
-    width: "60%",
-    alignItems: "center",
-    alignSelf: "center",
-    marginTop: 10,
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 18,
-  },
+  // button: {
+  //   backgroundColor: "#4a90e2",
+  //   padding: 10,
+  //   borderRadius: 10,
+  //   width: "60%",
+  //   alignItems: "center",
+  //   alignSelf: "center",
+  //   marginTop: 10,
+  // },
+  // buttonText: {
+  //   color: "white",
+  //   fontWeight: "bold",
+  //   fontSize: 18,
+  // },
   buttonContainer: {
     marginBottom: 50,
   },
