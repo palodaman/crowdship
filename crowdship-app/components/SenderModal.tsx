@@ -9,9 +9,11 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome"; //import your local image from the assets folder
 import diningTableImage from "../assets/diningTable.png";
 import EditDeliveryModal from "./EditDeliveryModal";
+import buttonStyles from "../styles/buttonStyles";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import fontStyles from "../styles/fontStyles";
 
 interface Listing {
   listingid: string;
@@ -53,6 +55,7 @@ const SenderModal: React.FC<SenderModalProps> = ({
       <ScrollView>
         {renderEditDelivery === false ? (
           <View style={styles.textContainer}>
+            <Text style={fontStyles.title}>Shipment Information</Text>
             {/* Display the local image */}
             <View
               style={[
@@ -68,40 +71,40 @@ const SenderModal: React.FC<SenderModalProps> = ({
             </View>
 
             <View style={styles.card}>
-              <Icon name="info-circle" size={24} color="black" />
+              <AntDesign name="infocirlceo" size={24} color="black" />
               <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>Item Description:</Text>
-                <Text style={styles.cardData}>
+                <Text style={fontStyles.h1}>Item Description</Text>
+                <Text style={fontStyles.greyText}>
                   {selectedListing.itemdescription || "Not available"}
                 </Text>
               </View>
             </View>
 
             <View style={styles.card}>
-              <Icon name="location-arrow" size={24} color="black" />
+              <AntDesign name="enviroment" size={24} color="black" />
               <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>Pickup From:</Text>
-                <Text style={styles.cardData}>
+                <Text style={fontStyles.h1}>Pickup From</Text>
+                <Text style={fontStyles.greyText}>
                   {selectedListing.startingaddress || "Not available"}{" "}
                 </Text>
               </View>
             </View>
 
             <View style={styles.card}>
-              <Icon name="map-marker" size={24} color="black" />
+              <AntDesign name="enviromento" size={24} color="black" />
               <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>Deliver To:</Text>
-                <Text style={styles.cardData}>
+                <Text style={fontStyles.h1}>Deliver To</Text>
+                <Text style={fontStyles.greyText}>
                   {selectedListing.destinationaddress || "Not available"}
                 </Text>
               </View>
             </View>
 
             <View style={styles.card}>
-              <Icon name="dollar" size={24} color="black" />
+              <Feather name="dollar-sign" size={20} color="black" />
               <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>Price:</Text>
-                <Text style={styles.cardData}>
+                <Text style={fontStyles.h1}>You'll Earn</Text>
+                <Text style={fontStyles.greyText}>
                   ${selectedListing.price || "Not available"}
                 </Text>
               </View>
@@ -111,7 +114,7 @@ const SenderModal: React.FC<SenderModalProps> = ({
             {(transactionComplete === "claimed" ||
               transactionComplete === "inactive") && (
               <TouchableOpacity
-                style={styles.chatButton}
+                style={buttonStyles.chatButton}
                 onPress={() => {
                   if (selectedListing?.listingid && selectedListing?.senderid) {
                     setRenderModal(false); //close the modal
@@ -125,23 +128,23 @@ const SenderModal: React.FC<SenderModalProps> = ({
                   }
                 }}
               >
-                <Icon
-                  name="comment"
-                  size={20}
+                <AntDesign
+                  name="message1"
+                  size={24}
                   color="white"
-                  style={styles.buttonIcon}
+                  style={{ marginRight: 10 }}
                 />
-                <Text style={styles.buttonText}>Chat With Driver</Text>
+                <Text style={buttonStyles.buttonText}>Chat With Driver</Text>
               </TouchableOpacity>
             )}
 
             {/* if the transaction is not complete, show the edit delivery button */}
             {transactionComplete === "active" && (
               <TouchableOpacity
-                style={styles.submitButton}
+                style={buttonStyles.primaryButton}
                 onPress={handleEditDelivery}
               >
-                <Text style={styles.submitButtonText}>Edit</Text>
+                <Text style={buttonStyles.buttonText}>Edit</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -209,63 +212,6 @@ const styles = StyleSheet.create({
   cardContent: {
     marginLeft: 15,
     flex: 1,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  cardData: {
-    fontSize: 16,
-    color: "#666",
-  },
-  chatButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#4a90e2",
-    padding: 15,
-    borderRadius: 10,
-    width: "90%",
-    justifyContent: "center",
-    marginTop: 20,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  buttonIcon: {
-    marginRight: 10,
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  button: {
-    width: "40%",
-    alignItems: "center",
-    padding: 10,
-    borderRadius: 5,
-    marginHorizontal: 5,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-  },
-  submitButton: {
-    marginTop: 20,
-    backgroundColor: "#4a90e2",
-    padding: 15,
-    borderRadius: 10,
-    width: "90%",
-    alignItems: "center",
-  },
-  submitButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 18,
   },
 });
 

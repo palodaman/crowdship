@@ -12,11 +12,9 @@ import {
   TextInput,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import Entypo from "@expo/vector-icons/Entypo";
-import Foundation from "@expo/vector-icons/Foundation";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import buttonStyles from "../styles/buttonStyles";
+import fontStyles from "../styles/fontStyles";
 
 interface Listing {
   listingid: string;
@@ -151,8 +149,8 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
   return (
     <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
       <View style={styles.textContainer}>
+        <Text style={fontStyles.title}>Edit Delivery</Text>
         {/* Upload Button or Image */}
-        {message !== "" && <Text style={styles.message}>{message}</Text>}
         <View
           style={[
             styles.uploadContainer,
@@ -231,8 +229,10 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
           </View>
         </View>
         {deleteMessage !== "" && (
-          <Text style={styles.deleteMessage}>{deleteMessage}</Text>
+          <Text style={fontStyles.redText}>{deleteMessage}</Text>
         )}
+
+        {message !== "" && <Text style={fontStyles.greenText}>{message}</Text>}
 
         <TouchableOpacity
           style={buttonStyles.primaryButton}
@@ -319,34 +319,11 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     flex: 1,
   },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  cardData: {
-    fontSize: 16,
-    color: "#666",
-  },
-  message: {
-    top: 10,
-    marginBottom: 10,
-    width: "100%",
-    fontSize: 16,
-    color: "#5DE49B",
-    textAlign: "center",
-  },
   inputWithIcon: {
     flex: 1,
     marginLeft: 15,
     fontSize: 16,
     color: "black",
-  },
-  deleteMessage: {
-    marginTop: 20,
-    fontSize: 16,
-    color: "red",
-    textAlign: "center",
   },
 });
 

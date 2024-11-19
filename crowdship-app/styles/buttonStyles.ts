@@ -41,6 +41,22 @@ const buttonStyles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
   },
+  chatButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#5DE49A",
+    padding: 15,
+    borderRadius: 10,
+    width: "90%",
+    justifyContent: "center",
+    marginTop: 20,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
 });
 
 export default buttonStyles;
