@@ -15,64 +15,7 @@ import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import modalStyles from "../styles/modalStyles";
 import { User } from "@supabase/supabase-js";
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    padding: 16,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  itemContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 15,
-    marginVertical: 10,
-    width: "95%",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  itemImage: {
-    width: 60,
-    height: 60,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 8,
-    marginRight: 16,
-  },
-  itemDescription: {
-    flex: 1,
-  },
-  itemDistance: {
-    alignItems: "flex-end",
-    flex: 1,
-  },
-  itemText: {
-    color: "#333",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  itemPrice: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 4,
-  },
-  priceText: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#5DE49B", 
-    marginLeft: 5,
-  },
-  distanceText: {
-    color: "#888",
-    fontSize: 14,
-    textAlign: "right",
-  },
-});
+import fontStyles from "../styles/fontStyles";
 
 interface Listing {
   listingid: string;
@@ -215,6 +158,7 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
       <FlatList
         data={listings}
         keyExtractor={(item) => item.listingid}
+        contentContainerStyle={{ paddingBottom: 54 }}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handlePress(item)}>
             <View style={{ alignItems: "center" }}>
@@ -226,21 +170,21 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
                     </View>
                   }
                   <View style={styles.itemDescription}>
-                    <Text style={styles.itemText}>
+                    <Text style={fontStyles.boldedText}>
                       Item: {item.itemdescription}
                     </Text>
                     <View style={styles.itemPrice}>
                       <Ionicons
                         name="pricetag-outline"
                         size={16}
-                        color="#4CAF50"
+                        color="#5DE49B"
                       />
-                      <Text style={styles.priceText}>${item.price}</Text>
+                      <Text style={fontStyles.greenText}>${item.price}</Text>
                     </View>
                   </View>
                   <View style={styles.itemDistance}>
-                    <Text style={styles.distanceText}>Offset Distance </Text>
-                    <Text style={styles.distanceText}>
+                    <Text style={fontStyles.greyText}>Offset Distance </Text>
+                    <Text style={fontStyles.greyText}>
                       {" "}
                       <Ionicons
                         name="location-outline"
@@ -284,5 +228,47 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    padding: 16,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  itemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 10,
+    width: "95%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  itemImage: {
+    width: 60,
+    height: 60,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 8,
+    marginRight: 16,
+  },
+  itemDescription: {
+    flex: 1,
+  },
+  itemDistance: {
+    alignItems: "flex-end",
+    flex: 1,
+  },
+  itemPrice: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+  },
+});
 
 export default DeliveriesList;
