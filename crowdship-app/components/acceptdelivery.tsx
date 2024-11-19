@@ -16,9 +16,13 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import modalStyles from "../styles/modalStyles";
+import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 // Import your local image from the assets folder
 import diningTableImage from "../assets/diningTable.png";
+import fontStyles from "../styles/fontStyles";
+import buttonStyles from "../styles/buttonStyles";
 
 interface Listing {
   listingid: string;
@@ -99,6 +103,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.textContainer}>
+          <Text style={fontStyles.title}>Accept Delivery</Text>
           {/* Display the local image */}
           <View
             style={[
@@ -114,68 +119,76 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
           </View>
 
           {/* Delivery Information as Cards */}
+
           <View style={styles.card}>
-            <Icon name="location-arrow" size={24} color="black" />
+            <AntDesign name="infocirlceo" size={24} color="black" />
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>Pickup From:</Text>
-              <Text style={styles.cardData}>
-                {selectedListing?.startingaddress || "Not available"}{" "}
+              <Text style={fontStyles.h1}>Item Description</Text>
+              <Text style={fontStyles.greyText}>
+                {selectedListing.itemdescription || "Not available"}
               </Text>
             </View>
           </View>
 
           <View style={styles.card}>
-            <Icon name="map-marker" size={24} color="black" />
+            <AntDesign name="enviroment" size={24} color="black" />
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>Deliver To:</Text>
-              <Text style={styles.cardData}>
-                {selectedListing?.destinationaddress || "Not available"}
+              <Text style={fontStyles.h1}>Pickup From</Text>
+              <Text style={fontStyles.greyText}>
+                {selectedListing.startingaddress || "Not available"}{" "}
               </Text>
             </View>
           </View>
 
           <View style={styles.card}>
-            <Icon name="dollar" size={24} color="black" />
+            <AntDesign name="enviromento" size={24} color="black" />
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>You'll Earn:</Text>
-              <Text style={styles.cardData}>
-                ${selectedListing?.price || "Not available"}
+              <Text style={fontStyles.h1}>Deliver To</Text>
+              <Text style={fontStyles.greyText}>
+                {selectedListing.destinationaddress || "Not available"}
               </Text>
             </View>
           </View>
 
           <View style={styles.card}>
-            <Icon name="info-circle" size={24} color="black" />
+            <Feather name="dollar-sign" size={24} color="black" />
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>Item Description:</Text>
-              <Text style={styles.cardData}>
-                {selectedListing?.itemdescription || "Not available"}
+              <Text style={fontStyles.h1}>You'll Earn</Text>
+              <Text style={fontStyles.greyText}>
+                ${selectedListing.price || "Not available"}
               </Text>
             </View>
           </View>
         </View>
 
         <View style={styles.negotiateHeader}>
-          <Text style={styles.negotiateHeaderText}>Negotiate Offer:</Text>
+          <Text style={fontStyles.h1}>Negotiate Offer</Text>
         </View>
 
         <View style={styles.negotiationButtonsContainer}>
           <TouchableOpacity style={styles.negotiateButton}>
-            <Text style={styles.buttonText}>${selectedListing.price + 5}</Text>
+            <Text style={buttonStyles.buttonText}>
+              ${selectedListing.price + 5}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.negotiateButton}>
-            <Text style={styles.buttonText}>${selectedListing.price + 10}</Text>
+            <Text style={buttonStyles.buttonText}>
+              ${selectedListing.price + 10}
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.negotiateButton} disabled={true}>
+          <TouchableOpacity
+            style={[styles.negotiateButton, { width: "32%" }]}
+            disabled={true}
+          >
             <View style={styles.customButtonContainer}>
-              <Icon
+              <AntDesign
                 style={styles.pencilIcon}
-                name="pencil"
+                name="edit"
                 size={16}
                 color="white"
               />
               <TextInput
-                style={styles.buttonText}
+                style={buttonStyles.buttonText}
                 placeholder="Custom"
                 placeholderTextColor="rgba(255, 255, 255, 0.5)"
                 keyboardType="numeric"
@@ -187,14 +200,15 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
         {/* Buttons and Views */}
         <View style={styles.buttonContainer}>
           <View style={styles.views}>
-            <Icon name="eye" size={20} color="black" />
-            <Text style={styles.numViews}>{selectedListing?.views}</Text>
+            <AntDesign name="eyeo" size={20} color="black" />
+            <Text style={fontStyles.text}>{selectedListing?.views}</Text>
           </View>
+
           <TouchableOpacity
-            style={[styles.button, { backgroundColor: "#6EC175" }]}
+            style={buttonStyles.primaryButton}
             onPress={() => newOrder(selectedListing)}
           >
-            <Text style={styles.buttonText}>Accept Initial Offer</Text>
+            <Text style={buttonStyles.buttonText}>Accept Initial Offer</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -205,21 +219,19 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
         transparent={true}
       >
         <View style={modalStyles.modalContainer}>
-          <View style={[modalStyles.modalContent, styles.modifiedModalStyle]}>
-            <TouchableOpacity
-              style={modalStyles.closeButton}
-              onPress={() => handleAccept()}
-            >
-              <Text style={modalStyles.closeButtonText}>X</Text>
-            </TouchableOpacity>
-            <Text style={[styles.confirmationText, { fontWeight: "bold" }]}>
-              {"Delivery Accepted!\n"}
-            </Text>
-            <Text style={styles.confirmationText}>
-              Navigate to active deliveries to view order information.
-            </Text>
-          </View>
+          {/* <View style={[modalStyles.modalContent, styles.modifiedModalStyle]}> */}
+          <TouchableOpacity
+            style={modalStyles.closeButton}
+            onPress={() => handleAccept()}
+          >
+            <Text style={modalStyles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+          <Text style={fontStyles.greenText}>{"Delivery Accepted!\n"}</Text>
+          <Text style={fontStyles.text}>
+            Navigate to active deliveries to view order information.
+          </Text>
         </View>
+        {/* </View> */}
       </Modal>
     </View>
   );
@@ -274,15 +286,6 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     flex: 1,
   },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  cardData: {
-    fontSize: 16,
-    color: "#666",
-  },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -295,35 +298,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginHorizontal: 5,
   },
-  numViews: {
-    color: "black",
-    fontSize: 16,
-  },
-  button: {
-    width: "90%",
-    alignItems: "center",
-    padding: 10,
-    borderRadius: 5,
-    marginHorizontal: 5,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
   negotiateHeader: {
-    paddingLeft: 10,
-    marginBottom: 10,
-  },
-  negotiateHeaderText: {
-    fontWeight: "bold",
-    fontSize: 16,
+    alignContent: "center",
+    justifyContent: "center",
+    flexDirection: "row",
   },
   negotiationButtonsContainer: {
+    marginTop: 10,
     flexDirection: "row",
     justifyContent: "center",
   },
@@ -332,7 +313,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 5,
-    backgroundColor: "#808080",
+    backgroundColor: "#07181D",
     marginHorizontal: 5,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
@@ -346,16 +327,7 @@ const styles = StyleSheet.create({
   pencilIcon: {
     paddingRight: 5,
   },
-  confirmationText: {
-    fontFamily: "Avenir",
-    fontSize: 16,
-    textAlign: "center",
-  },
-  modifiedModalStyle: {
-    height: "20%",
-    width: "80%",
-    justifyContent: "center",
-  },
+
 });
 
 export default AcceptDelivery;

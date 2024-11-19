@@ -34,6 +34,11 @@ const fontStyles = StyleSheet.create({
     color: "#5DE49B",
     textAlign: "center",
   },
+  whiteText: {
+    fontSize: 16,
+    color: "white",
+    textAlign: "center",
+  },
 
   // Special text
   boldedText: {
