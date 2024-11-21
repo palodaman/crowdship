@@ -123,7 +123,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
           <View style={styles.card}>
             <AntDesign name="infocirlceo" size={24} color="black" />
             <View style={styles.cardContent}>
-              <Text style={fontStyles.h1}>Item Description</Text>
+              <Text style={fontStyles.boldedText}>Item Description</Text>
               <Text style={fontStyles.greyText}>
                 {selectedListing.itemdescription || "Not available"}
               </Text>
@@ -133,7 +133,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
           <View style={styles.card}>
             <AntDesign name="enviroment" size={24} color="black" />
             <View style={styles.cardContent}>
-              <Text style={fontStyles.h1}>Pickup From</Text>
+              <Text style={fontStyles.boldedText}>Pickup From</Text>
               <Text style={fontStyles.greyText}>
                 {selectedListing.startingaddress || "Not available"}{" "}
               </Text>
@@ -143,7 +143,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
           <View style={styles.card}>
             <AntDesign name="enviromento" size={24} color="black" />
             <View style={styles.cardContent}>
-              <Text style={fontStyles.h1}>Deliver To</Text>
+              <Text style={fontStyles.boldedText}>Deliver To</Text>
               <Text style={fontStyles.greyText}>
                 {selectedListing.destinationaddress || "Not available"}
               </Text>
@@ -153,7 +153,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
           <View style={styles.card}>
             <Feather name="dollar-sign" size={24} color="black" />
             <View style={styles.cardContent}>
-              <Text style={fontStyles.h1}>You'll Earn</Text>
+              <Text style={fontStyles.boldedText}>You'll Earn</Text>
               <Text style={fontStyles.greyText}>
                 ${selectedListing.price || "Not available"}
               </Text>
