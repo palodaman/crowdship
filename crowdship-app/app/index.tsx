@@ -1,16 +1,20 @@
 import Auth from "../components/Auth";
-import Account from "../components/Account";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import React from "react";
 import Header from "../components/header";
 import { useSession } from "../hooks/useSession";
+import { useState, useEffect } from 'react';
 import "./cryptoPolyfill.js";
+import Account from "../components/Account";
+import Path from "../components/Path";
+
 
 export default function App() {
   const session = useSession();
 
   // Render the selected page based on currentPage state
   const renderPage = () => {
+
     if (!session || !session.user) return <Auth />;
     return <Account key={session.user.id} session={session} />;
   };
