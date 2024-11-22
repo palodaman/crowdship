@@ -26,34 +26,34 @@ const TabBarButton = (props: {
   }, [scale, isFocused]);
 
   const animatedIconStyle = useAnimatedStyle(() => {
-    const scaleValue = interpolate(scale.value, [0, 1], [1, 1.4]);
-    const top = interpolate(scale.value, [0, 1], [0, 8]);
+    // const scaleValue = interpolate(scale.value, [0, 1], [1, 1.2]);
+    const top = interpolate(scale.value, [0, 1], [-5, 3]); // Adjusted to move the icon up
+
+    const color = isFocused ? "#5DE49B" : "black";
 
     return {
       // styles
-      transform: [{ scale: scaleValue }],
+      color,
+      // transform: [{ scale: scaleValue }],
       top,
     };
   });
-  const animatedTextStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(scale.value, [0, 1], [1, 0]);
 
-    return {
-      // styles
-      opacity,
-    };
-  });
   return (
     <Pressable {...props} style={styles.container}>
-      <Animated.View style={[animatedIconStyle]}>{icon}</Animated.View>
+      <Animated.View style={[animatedIconStyle]}>
+        {React.cloneElement(icon as React.ReactElement, {
+          color: isFocused ? "#5DE49B" : "black",
+        })}
+      </Animated.View>
 
       <Animated.Text
         style={[
           {
-            color,
-            fontSize: 11,
+            color: isFocused ? "#5DE49B" : "black",
+            fontSize: 10,
+            alignContent: "center",
           },
-          animatedTextStyle,
         ]}
       >
         {label}

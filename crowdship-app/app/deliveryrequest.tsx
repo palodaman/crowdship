@@ -10,11 +10,11 @@ import {
   ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import Entypo from "@expo/vector-icons/Entypo";
-import Foundation from "@expo/vector-icons/Foundation";
+import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { supabase } from "../lib/supabase";
 import { useSession } from "../hooks/useSession";
+import buttonStyles from "../styles/buttonStyles";
 
 export default function DeliveryRequest() {
   const [itemDescription, setItemDescription] = useState("");
@@ -93,7 +93,6 @@ export default function DeliveryRequest() {
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.textContainer}>
-
         {/* Upload Button or Image */}
         <View
           style={[
@@ -101,80 +100,82 @@ export default function DeliveryRequest() {
             itemImageUrl && styles.uploadedContainer,
           ]}
         >
-          {itemImageUrl ? (
-            <View style={styles.imageContainer}>
+          <View style={styles.imageContainer}>
+            {itemImageUrl ? (
               <Image source={{ uri: itemImageUrl }} style={styles.itemImage} />
-              <TouchableOpacity
-                style={styles.reuploadButton}
-                onPress={pickImage}
-              >
-                <FontAwesome6 name="camera" size={18} color="white" />
-                <Text style={styles.reuploadButtonText}>Re-upload</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
-              <Text style={styles.uploadButtonText}>Upload Item Picture</Text>
-            </TouchableOpacity>
-          )}
+            ) : (
+              <AntDesign name="upload" size={24} color="black" />
+            )}
+          </View>
         </View>
+
+        <TouchableOpacity
+          style={buttonStyles.secondaryButton}
+          onPress={pickImage}
+        >
+          <Text style={buttonStyles.buttonText}>Upload Image</Text>
+        </TouchableOpacity>
 
         {/* Input Fields as Cards */}
-        <View style={styles.card}>
-          <FontAwesome6 name="edit" size={24} color="black" />
-          <TextInput
-            style={styles.inputWithIcon}
-            placeholder="Enter item description"
-            value={itemDescription}
-            onChangeText={setItemDescription}
-          />
-        </View>
+        <View style={{ marginTop: 10 }}>
+          <View style={styles.card}>
+            <AntDesign name="edit" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder="Enter item description"
+              value={itemDescription}
+              onChangeText={setItemDescription}
+            />
+          </View>
 
-        <View style={styles.card}>
-          <FontAwesome6 name="location-arrow" size={24} color="black" />
-          <TextInput
-            style={styles.inputWithIcon}
-            placeholder="Enter starting address"
-            value={startingAddress}
-            onChangeText={setStartingAddress}
-          />
-        </View>
+          <View style={styles.card}>
+            <AntDesign name="enviroment" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder="Enter starting address"
+              value={startingAddress}
+              onChangeText={setStartingAddress}
+            />
+          </View>
 
-        <View style={styles.card}>
-          <Entypo name="location-pin" size={24} color="black" />
-          <TextInput
-            style={styles.inputWithIcon}
-            placeholder="Enter destination address"
-            value={destinationAddress}
-            onChangeText={setDestinationAddress}
-          />
-        </View>
+          <View style={styles.card}>
+            <AntDesign name="enviromento" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder="Enter destination address"
+              value={destinationAddress}
+              onChangeText={setDestinationAddress}
+            />
+          </View>
 
-        <View style={styles.card}>
-          <Foundation name="info" size={24} color="black" />
-          <TextInput
-            style={styles.inputWithIcon}
-            placeholder="Add notes (instructions or extra info)"
-            value={notes}
-            onChangeText={setNotes}
-            multiline={true}
-            numberOfLines={2}
-          />
-        </View>
+          <View style={styles.card}>
+            <AntDesign name="infocirlceo" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder="Add notes (instructions or extra info)"
+              value={notes}
+              onChangeText={setNotes}
+              multiline={true}
+              numberOfLines={2}
+            />
+          </View>
 
-        <View style={styles.card}>
-          <Foundation name="dollar" size={24} color="black" />
-          <TextInput
-            style={styles.inputWithIcon}
-            placeholder="Set price"
-            value={price}
-            onChangeText={setPrice}
-            keyboardType="numeric"
-          />
+          <View style={styles.card}>
+            <Feather name="dollar-sign" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder="Set a price for the delivery"
+              value={price}
+              onChangeText={setPrice}
+              keyboardType="numeric"
+            />
+          </View>
         </View>
-
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit Delivery Request</Text>
+        <TouchableOpacity
+          style={buttonStyles.primaryButton}
+          onPress={handleSubmit}
+        >
+          <Text style={buttonStyles.buttonText}>Submit Delivery Request</Text>
         </TouchableOpacity>
 
         {isLoading && <ActivityIndicator size="large" color="#d3d3d3" />}
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
   uploadContainer: {
     width: "75%",
     height: 150,
-    backgroundColor: "#dde8ff",
+    backgroundColor: "#7F8A9480",
     borderRadius: 10,
     padding: 15,
     marginVertical: 10,
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderStyle: "dashed",
     borderWidth: 2,
-    borderColor: "#4a90e2",
+    borderColor: "#07181D",
   },
   uploadedContainer: {
     padding: 0, //ensures padding remains consistent after upload
@@ -220,41 +221,17 @@ const styles = StyleSheet.create({
     height: 175, //adjusts height to fit the image better
     borderWidth: 0, //removes the border once the image is uploaded
   },
-  uploadButton: {
-    backgroundColor: "#4a90e2",
-    padding: 15,
-    borderRadius: 10,
-  },
-  uploadButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
   imageContainer: {
     width: "100%",
     height: "100%",
     position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
   },
   itemImage: {
     width: "100%",
     height: "100%",
     borderRadius: 10,
-  },
-  reuploadButton: {
-    position: "absolute",
-    bottom: 5,
-    right: 5,
-    backgroundColor: "#4a90e2",
-    padding: 5,
-    borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  reuploadButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    marginLeft: 5,
-    fontSize: 12,
   },
   card: {
     flexDirection: "row",
@@ -276,23 +253,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "black",
   },
-  submitButton: {
-    marginTop: 20,
-    backgroundColor: "#4a90e2",
-    padding: 15,
-    borderRadius: 10,
-    width: "90%",
-    alignItems: "center",
-  },
-  submitButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 18,
-  },
   message: {
     marginTop: 20,
     fontSize: 16,
-    color: "green",
+    color: "#5DE49B",
     textAlign: "center",
   },
 });

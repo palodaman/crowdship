@@ -14,6 +14,7 @@ import Card from "./Card";
 import modalStyles from "../styles/modalStyles";
 import SenderModal from "./SenderModal";
 import EditDeliveryModal from "./EditDeliveryModal";
+import fontStyles from "../styles/fontStyles";
 
 interface Listing {
   delivererid: string;
@@ -102,23 +103,26 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                         </View>
                       }
                       <View style={styles.itemDescription}>
-                        <Text style={styles.itemText}>
+                        <Text style={fontStyles.boldedText}>
                           {item.itemdescription}
                         </Text>
-                        <Text>{item.status}</Text>
+                        <Text style={fontStyles.greyText}>{item.status}</Text>
                         <View style={styles.itemPrice}>
                           <Ionicons
                             name="pricetag-outline"
                             size={16}
-                            color="#4CAF50"
+                            color="#5DE49B"
                           />
-                          <Text style={styles.priceText}>${item.price}</Text>
+                          <Text style={fontStyles.greenText}>
+                            ${item.price}
+                          </Text>
                         </View>
                       </View>
                       <Button
                         onPress={() => {
                           handleEditPress(item, true);
                         }}
+                        color={"#5DE49B"}
                       >
                         Edit
                       </Button>
@@ -129,9 +133,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
             ))
           ) : (
             <View style={styles.noDeliveriesContainer}>
-              <Text style={styles.noDeliveriesText}>
-                No shipments in progress
-              </Text>
+              <Text style={fontStyles.text}>No shipments in progress</Text>
             </View>
           )}
         </View>
@@ -156,19 +158,21 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                         </View>
                       }
                       <View style={styles.itemDescription}>
-                        <Text style={styles.itemText}>
+                        <Text style={fontStyles.boldedText}>
                           {item.itemdescription}
                         </Text>
                         <View style={styles.itemPrice}>
                           <Ionicons
                             name="pricetag-outline"
                             size={16}
-                            color="#4CAF50"
+                            color="#5DE49B"
                           />
-                          <Text style={styles.priceText}>${item.price}</Text>
+                          <Text style={fontStyles.greenText}>
+                            ${item.price}
+                          </Text>
                         </View>
                       </View>
-                      <Text>CLAIMED</Text>
+                      <Text style={fontStyles.greyText}>CLAIMED</Text>
                     </View>
                   </Card>
                 </View>
@@ -176,9 +180,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
             ))
           ) : (
             <View style={styles.noDeliveriesContainer}>
-              <Text style={styles.noDeliveriesText}>
-                No shipments in progress
-              </Text>
+              <Text style={fontStyles.text}>No shipments in progress</Text>
             </View>
           )}
         </View>
@@ -203,7 +205,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                         </View>
                       }
                       <View style={styles.itemDescription}>
-                        <Text style={styles.itemText}>
+                        <Text style={fontStyles.boldedText}>
                           {item.itemdescription}
                         </Text>
                         <View style={styles.itemPrice}>
@@ -212,7 +214,9 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                             size={16}
                             color="#4CAF50"
                           />
-                          <Text style={styles.priceText}>${item.price}</Text>
+                          <Text style={fontStyles.greenText}>
+                            ${item.price}
+                          </Text>
                         </View>
                       </View>
                       <Text>SHIPPED</Text>
@@ -223,7 +227,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
             ))
           ) : (
             <View style={styles.noDeliveriesContainer}>
-              <Text style={styles.noDeliveriesText}>
+              <Text style={fontStyles.text}>
                 No shipments have been completed
               </Text>
             </View>
@@ -309,29 +313,14 @@ const styles = StyleSheet.create({
   itemDescription: {
     flex: 1,
   },
-  itemText: {
-    color: "#333",
-    fontSize: 16,
-    fontWeight: "600",
-  },
   itemPrice: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 4,
   },
-  priceText: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#4CAF50",
-    marginLeft: 5,
-  },
   noDeliveriesContainer: {
     alignItems: "center",
     padding: "10%",
-  },
-  noDeliveriesText: {
-    fontSize: 16,
-    fontWeight: "bold",
   },
 });
 

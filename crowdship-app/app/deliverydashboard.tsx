@@ -120,7 +120,7 @@ const DeliveryDashboard = () => {
           style={{
             paddingRight: 1,
             backgroundColor:
-              activeTab === "deliveries" ? "#2089DC" : "lightgray",
+              activeTab === "deliveries" ? "#5DE49B" : "#7F8A9480",
           }}
           onPress={() => {
             setActiveTab("deliveries");
@@ -132,7 +132,7 @@ const DeliveryDashboard = () => {
         <Button
           style={{
             paddingRight: 1,
-            backgroundColor: activeTab === "packages" ? "#2089DC" : "lightgray",
+            backgroundColor: activeTab === "packages" ? "#5DE49B" : "#7F8A9480",
           }}
           onPress={() => {
             setActiveTab("packages");

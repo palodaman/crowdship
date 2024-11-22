@@ -12,9 +12,9 @@ import {
   TextInput,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import Entypo from "@expo/vector-icons/Entypo";
-import Foundation from "@expo/vector-icons/Foundation";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import buttonStyles from "../styles/buttonStyles";
+import fontStyles from "../styles/fontStyles";
 
 interface Listing {
   listingid: string;
@@ -149,105 +149,113 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
   return (
     <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
       <View style={styles.textContainer}>
+        <Text style={fontStyles.title}>Edit Delivery</Text>
         {/* Upload Button or Image */}
-        {message !== "" && <Text style={styles.message}>{message}</Text>}
         <View
           style={[
             styles.uploadContainer,
             itemImageUrl && styles.uploadedContainer,
           ]}
         >
-          {itemImageUrl ? (
-            <View style={styles.imageContainer}>
+          <View style={styles.imageContainer}>
+            {itemImageUrl ? (
               <Image source={{ uri: itemImageUrl }} style={styles.itemImage} />
-              <TouchableOpacity
-                style={styles.reuploadButton}
-                onPress={pickImage}
-              >
-                <FontAwesome6 name="camera" size={18} color="white" />
-                <Text style={styles.reuploadButtonText}>Re-upload</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
-              <Text style={styles.uploadButtonText}>Upload New Picture</Text>
-            </TouchableOpacity>
-          )}
+            ) : (
+              <AntDesign name="upload" size={24} color="black" />
+            )}
+          </View>
         </View>
 
-        {/* Input Fields as Cards */}
-        <View style={styles.card}>
-          <FontAwesome6 name="edit" size={24} color="black" />
-          <TextInput
-            style={styles.inputWithIcon}
-            placeholder={selectedListing.itemdescription}
-            value={itemDescription}
-            onChangeText={setItemDescription}
-          />
-        </View>
-
-        <View style={styles.card}>
-          <FontAwesome6 name="location-arrow" size={24} color="black" />
-          <TextInput
-            style={styles.inputWithIcon}
-            placeholder={selectedListing.startingaddress}
-            value={startingAddress}
-            onChangeText={setStartingAddress}
-          />
-        </View>
-
-        <View style={styles.card}>
-          <Entypo name="location-pin" size={24} color="black" />
-          <TextInput
-            style={styles.inputWithIcon}
-            placeholder={selectedListing.destinationaddress}
-            value={destinationAddress}
-            onChangeText={setDestinationAddress}
-          />
-        </View>
-
-        <View style={styles.card}>
-          <Foundation name="info" size={24} color="black" />
-          <TextInput
-            style={styles.inputWithIcon}
-            placeholder={selectedListing.notes || "Add note"}
-            value={notes}
-            onChangeText={setNotes}
-            multiline={true}
-            numberOfLines={2}
-          />
-        </View>
-
-        <View style={styles.card}>
-          <Foundation name="dollar" size={24} color="black" />
-          <TextInput
-            style={styles.inputWithIcon}
-            placeholder={selectedListing.price.toString()}
-            value={price}
-            onChangeText={setPrice}
-            keyboardType="numeric"
-          />
-        </View>
-        {deleteMessage !== "" && (
-          <Text style={styles.deleteMessage}>{deleteMessage}</Text>
-        )}
-
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Submit Changes</Text>
+        <TouchableOpacity
+          style={buttonStyles.secondaryButton}
+          onPress={pickImage}
+        >
+          <Text style={buttonStyles.buttonText}>Upload Image</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.submitButton} onPress={handleDelete}>
-          <Text style={styles.submitButtonText}>Delete Listing</Text>
+        {/* Input Fields as Cards */}
+        <View style={{ marginTop: 10 }}>
+          <View style={styles.card}>
+            <AntDesign name="edit" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder={selectedListing.itemdescription}
+              value={itemDescription}
+              onChangeText={setItemDescription}
+            />
+          </View>
+
+          <View style={styles.card}>
+            <AntDesign name="enviroment" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder={selectedListing.startingaddress}
+              value={startingAddress}
+              onChangeText={setStartingAddress}
+            />
+          </View>
+
+          <View style={styles.card}>
+            <AntDesign name="enviromento" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder={selectedListing.destinationaddress}
+              value={destinationAddress}
+              onChangeText={setDestinationAddress}
+            />
+          </View>
+
+          <View style={styles.card}>
+            <AntDesign name="infocirlceo" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder={selectedListing.notes || "Add note"}
+              value={notes}
+              onChangeText={setNotes}
+              multiline={true}
+              numberOfLines={2}
+            />
+          </View>
+
+          <View style={styles.card}>
+            <Feather name="dollar-sign" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder={selectedListing.price.toString()}
+              value={price}
+              onChangeText={setPrice}
+              keyboardType="numeric"
+            />
+          </View>
+        </View>
+        {deleteMessage !== "" && (
+          <Text style={fontStyles.redText}>{deleteMessage}</Text>
+        )}
+
+        {message !== "" && <Text style={fontStyles.greenText}>{message}</Text>}
+
+        <TouchableOpacity
+          style={buttonStyles.primaryButton}
+          onPress={handleSubmit}
+        >
+          <Text style={buttonStyles.buttonText}>Submit Changes</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.submitButton}
+          style={buttonStyles.secondaryButton}
+          onPress={handleDelete}
+        >
+          <Text style={buttonStyles.buttonText}>Delete Listing</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={buttonStyles.tertiaryButton}
           onPress={() => {
             setRenderModal(false);
             setRenderEditDelivery(false);
           }}
         >
-          <Text style={styles.submitButtonText}>Cancel</Text>
+          <Text style={buttonStyles.tertiaryButtonText}>Cancel</Text>
         </TouchableOpacity>
 
         {isLoading && <ActivityIndicator size="large" color="#d3d3d3" />}
@@ -259,7 +267,6 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
   },
   textContainer: {
     alignItems: "center",
@@ -267,8 +274,8 @@ const styles = StyleSheet.create({
   },
   uploadContainer: {
     width: "75%",
-    height: 175,
-    backgroundColor: "#dde8ff",
+    height: 150,
+    backgroundColor: "#7F8A9480",
     borderRadius: 10,
     padding: 15,
     marginVertical: 10,
@@ -276,15 +283,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderStyle: "dashed",
     borderWidth: 2,
-    borderColor: "#4a90e2",
+    borderColor: "#07181D",
+  },
+  imageContainer: {
+    width: "100%",
+    height: "110%",
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
   },
   uploadedContainer: {
     backgroundColor: "transparent",
     borderWidth: 1,
   },
   itemImage: {
-    width: "125%",
-    height: "125%",
+    width: "120%",
+    height: "120%",
     borderRadius: 10,
   },
   card: {
@@ -305,113 +319,11 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     flex: 1,
   },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  cardData: {
-    fontSize: 16,
-    color: "#666",
-  },
-  chatButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#4a90e2",
-    padding: 15,
-    borderRadius: 10,
-    width: "90%",
-    justifyContent: "center",
-    marginTop: 20,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  buttonIcon: {
-    marginRight: 10,
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  button: {
-    width: "40%",
-    alignItems: "center",
-    padding: 10,
-    borderRadius: 5,
-    marginHorizontal: 5,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-  },
-  submitButton: {
-    marginTop: 20,
-    backgroundColor: "#4a90e2",
-    padding: 15,
-    borderRadius: 10,
-    width: "90%",
-    alignItems: "center",
-  },
-  submitButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-  message: {
-    top: 10,
-    marginBottom: 10,
-    width: "100%",
-    fontSize: 16,
-    color: "green",
-    textAlign: "center",
-  },
-  imageContainer: {
-    width: "100%",
-    height: "100%",
-    position: "relative",
-  },
-  reuploadButton: {
-    position: "absolute",
-    bottom: 5,
-    right: 5,
-    backgroundColor: "#4a90e2",
-    padding: 5,
-    borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  reuploadButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    marginLeft: 5,
-    fontSize: 12,
-  },
-  uploadButton: {
-    backgroundColor: "#4a90e2",
-    padding: 15,
-    borderRadius: 10,
-  },
-  uploadButtonText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
   inputWithIcon: {
     flex: 1,
     marginLeft: 15,
     fontSize: 16,
     color: "black",
-  },
-  deleteMessage: {
-    marginTop: 20,
-    fontSize: 16,
-    color: "red",
-    textAlign: "center",
   },
 });
 

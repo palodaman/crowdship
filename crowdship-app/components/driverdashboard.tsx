@@ -13,6 +13,7 @@ import Card from "./Card";
 import modalStyles from "../styles/modalStyles";
 import DefaultDeliveryModal from "./DefaultDeliveryModal";
 import CompleteDeliveryModal from "./CompleteDeliveryModal";
+import fontStyles from "../styles/fontStyles";
 
 interface Listing {
   delivererid: string;
@@ -85,20 +86,23 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
                       <Ionicons name="image-outline" size={30} color="#ccc" />
                     </View>
                     <View style={styles.itemDescription}>
-                      <Text style={styles.itemText}>
+                      <Text style={fontStyles.boldedText}>
                         {item.itemdescription}
                       </Text>
-                      <Text>{item.status}</Text>
+                      <Text style={fontStyles.greyText}>{item.status}</Text>
                       <View style={styles.itemPrice}>
                         <Ionicons
                           name="pricetag-outline"
                           size={16}
-                          color="#4CAF50"
+                          color="#5DE49B"
                         />
-                        <Text style={styles.priceText}>${item.price}</Text>
+                        <Text style={fontStyles.greenText}>${item.price}</Text>
                       </View>
                     </View>
-                    <Button onPress={() => handleCompleteButtonPress(item)}>
+                    <Button
+                      onPress={() => handleCompleteButtonPress(item)}
+                      color={"#5DE49B"}
+                    >
                       Complete
                     </Button>
                   </View>
@@ -108,9 +112,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
           ))
         ) : (
           <View style={styles.noDeliveriesContainer}>
-            <Text style={styles.noDeliveriesText}>
-              No deliveries in progress
-            </Text>
+            <Text style={fontStyles.text}>No deliveries in progress</Text>
           </View>
         )}
       </View>
@@ -129,19 +131,19 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
                       <Ionicons name="image-outline" size={30} color="#ccc" />
                     </View>
                     <View style={styles.itemDescription}>
-                      <Text style={styles.itemText}>
+                      <Text style={fontStyles.boldedText}>
                         {item.itemdescription}
                       </Text>
                       <View style={styles.itemPrice}>
                         <Ionicons
                           name="pricetag-outline"
                           size={16}
-                          color="#4CAF50"
+                          color="#5DE49B"
                         />
-                        <Text style={styles.priceText}>${item.price}</Text>
+                        <Text style={fontStyles.greenText}>${item.price}</Text>
                       </View>
                     </View>
-                    <Text>DELIVERED</Text>
+                    <Text style={fontStyles.greyText}>DELIVERED</Text>
                   </View>
                 </Card>
               </View>
@@ -149,7 +151,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
           ))
         ) : (
           <View style={styles.noDeliveriesContainer}>
-            <Text style={styles.noDeliveriesText}>
+            <Text style={fontStyles.text}>
               No deliveries have been completed
             </Text>
           </View>
@@ -224,29 +226,14 @@ const styles = StyleSheet.create({
   itemDescription: {
     flex: 1,
   },
-  itemText: {
-    color: "#333",
-    fontSize: 16,
-    fontWeight: "600",
-  },
   itemPrice: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 4,
   },
-  priceText: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "#4CAF50",
-    marginLeft: 5,
-  },
   noDeliveriesContainer: {
     alignItems: "center",
     padding: "10%",
-  },
-  noDeliveriesText: {
-    fontSize: 16,
-    fontWeight: "bold",
   },
 });
 

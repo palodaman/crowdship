@@ -18,7 +18,7 @@ const _layout = () => {
   }, [route, navbarVisible, router]);
 
   const handleButtonPress = (buttonRoute: string) => {
-    setNavbarVisible(true); 
+    setNavbarVisible(true);
     setRoute(buttonRoute);
   };
 
@@ -72,7 +72,7 @@ const _layout = () => {
               title: "Delivery Dashboard",
             }}
           />
-        </Tabs> 
+        </Tabs>
       )}
 
       {!navbarVisible && <Path onButtonPress={handleButtonPress} />}
