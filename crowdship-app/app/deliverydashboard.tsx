@@ -122,6 +122,9 @@ const DeliveryDashboard = () => {
             backgroundColor:
               activeTab === "deliveries" ? "#5DE49B" : "#7F8A9480",
           }}
+          titleStyle={{
+            fontWeight: activeTab === "deliveries" ? "bold" : "normal",
+          }}
           onPress={() => {
             setActiveTab("deliveries");
           }}
@@ -133,6 +136,9 @@ const DeliveryDashboard = () => {
           style={{
             paddingRight: 1,
             backgroundColor: activeTab === "packages" ? "#5DE49B" : "#7F8A9480",
+          }}
+          titleStyle={{
+            fontWeight: activeTab === "packages" ? "bold" : "normal",
           }}
           onPress={() => {
             setActiveTab("packages");
