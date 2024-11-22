@@ -101,7 +101,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView persistentScrollbar={true}>
         <View style={styles.textContainer}>
           <Text style={fontStyles.title}>Accept Delivery</Text>
           {/* Display the local image */}
@@ -327,7 +327,6 @@ const styles = StyleSheet.create({
   pencilIcon: {
     paddingRight: 5,
   },
-
 });
 
 export default AcceptDelivery;

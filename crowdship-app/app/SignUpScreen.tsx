@@ -97,7 +97,7 @@ export default function SignUpScreen() {
   }
 
   return (
-    <ScrollView>
+    <ScrollView persistentScrollbar={true}>
       <View style={styles.container}>
         <Image
           source={require("../assets/logo.png")}
