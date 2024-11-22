@@ -51,13 +51,13 @@ const _layout = () => {
           <Tabs.Screen
             name="index"
             options={{
-              title: "Account",
+              title: "Profile",
             }}
           />
           <Tabs.Screen
             name="deliveryrequest"
             options={{
-              title: "Request Delivery",
+              title: "Send Packages",
             }}
           />
           <Tabs.Screen
@@ -69,7 +69,7 @@ const _layout = () => {
           <Tabs.Screen
             name="deliverydashboard"
             options={{
-              title: "Delivery Dashboard",
+              title: "Orders",
             }}
           />
         </Tabs>

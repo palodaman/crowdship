@@ -90,7 +90,7 @@ export default function DeliveryRequest() {
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
       bounces={false}
-      showsVerticalScrollIndicator={false}
+      persistentScrollbar={true}
     >
       <View style={styles.textContainer}>
         {/* Upload Button or Image */}
@@ -113,7 +113,7 @@ export default function DeliveryRequest() {
           style={buttonStyles.secondaryButton}
           onPress={pickImage}
         >
-          <Text style={buttonStyles.buttonText}>Upload Image</Text>
+          <Text style={buttonStyles.buttonText}>Upload Item Image</Text>
         </TouchableOpacity>
 
         {/* Input Fields as Cards */}

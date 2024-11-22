@@ -68,7 +68,7 @@ export default function GoogleMapScreen() {
       <View style={styles.autocompleteContainer}>
         <View style={{ flex: 0.5 }}>
           <GooglePlacesAutocomplete
-            placeholder="Origin"
+            placeholder="Enter starting point"
             fetchDetails={true}
             onPress={(data, details = null) => {
               if (
@@ -94,7 +94,7 @@ export default function GoogleMapScreen() {
         </View>
         <View style={{ flex: 0.5 }}>
           <GooglePlacesAutocomplete
-            placeholder="Destination"
+            placeholder="Enter destination"
             fetchDetails={true}
             onPress={(data, details = null) => {
               if (

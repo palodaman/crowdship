@@ -183,7 +183,9 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
                     </View>
                   </View>
                   <View style={styles.itemDistance}>
-                    <Text style={fontStyles.greyText}>Offset Distance </Text>
+                    <Text style={[fontStyles.greyText, { textAlign: "right" }]}>
+                      Distance from destination
+                    </Text>
                     <Text style={fontStyles.greyText}>
                       {" "}
                       <Ionicons
@@ -262,6 +264,7 @@ const styles = StyleSheet.create({
   },
   itemDistance: {
     alignItems: "flex-end",
+    textAlign: "right",
     flex: 1,
   },
   itemPrice: {
