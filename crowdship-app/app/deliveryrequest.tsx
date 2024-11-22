@@ -149,6 +149,17 @@ export default function DeliveryRequest() {
           </View>
 
           <View style={styles.card}>
+            <Feather name="dollar-sign" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder="Set a price for the delivery"
+              value={price}
+              onChangeText={setPrice}
+              keyboardType="numeric"
+            />
+          </View>
+
+          <View style={styles.card}>
             <AntDesign name="infocirlceo" size={24} color="black" />
             <TextInput
               style={styles.inputWithIcon}
@@ -157,17 +168,6 @@ export default function DeliveryRequest() {
               onChangeText={setNotes}
               multiline={true}
               numberOfLines={2}
-            />
-          </View>
-
-          <View style={styles.card}>
-            <Feather name="dollar-sign" size={24} color="black" />
-            <TextInput
-              style={styles.inputWithIcon}
-              placeholder="Set a price for the delivery"
-              value={price}
-              onChangeText={setPrice}
-              keyboardType="numeric"
             />
           </View>
         </View>
