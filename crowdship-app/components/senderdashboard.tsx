@@ -214,7 +214,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                             size={16}
                             color="#4CAF50"
                           />
-                          <Text style={fontfontStyles.greenText}>
+                          <Text style={fontStyles.greenText}>
                             ${item.price}
                           </Text>
                         </View>
