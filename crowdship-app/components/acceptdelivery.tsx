@@ -58,10 +58,6 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
   const [selectedButton, setSelectedButton] = useState<number | null>(null);
   const session = useSession();
 
-  const handleButtonPress = (index: number) => {
-    setSelectedButton(index);
-  };
-
   const newOrder = async (selectedListing: Listing) => {
     try {
       const { data: userData, error: userError } =
@@ -186,10 +182,14 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
         </View>
 
         <View style={styles.negotiationButtonsContainer}>
-          <View style={styles.buttonWithLabel}>
+          <View>
             <TouchableOpacity
-              style={[styles.negotiateButton, { width: "100%" }]}
-              onPress={() => handleButtonPress(2)}
+              style={[
+                selectedButton === 0
+                  ? styles.selectedButton
+                  : styles.negotiateButton,
+              ]}
+              onPress={() => setSelectedButton(0)}
             >
               <Text style={buttonStyles.tertiaryButtonText}>
                 ${selectedListing.price * 1.1}
@@ -197,24 +197,32 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
             </TouchableOpacity>
             <Text style={styles.labelText}>10% increase</Text>
           </View>
-          <View style={styles.buttonWithLabel}>
+          <View>
             <TouchableOpacity
-              style={[styles.negotiateButton, { width: "100%" }]}
-              onPress={() => handleButtonPress(1)}
+              style={[
+                selectedButton === 1
+                  ? styles.selectedButton
+                  : styles.negotiateButton,
+              ]}
+              onPress={() => setSelectedButton(1)}
             >
-              <Text style={buttonStyles.buttonText}>
+              <Text style={buttonStyles.tertiaryButtonText}>
                 ${selectedListing.price * 1.15}
               </Text>
             </TouchableOpacity>
             <Text style={styles.labelText}>15% increase</Text>
           </View>
-          <View style={styles.buttonWithLabel}>
+          <View>
             <TouchableOpacity
-              style={[styles.negotiateButton, { width: "100%" }]}
-              onPress={() => handleButtonPress(2)}
+              style={[
+                selectedButton === 2
+                  ? styles.selectedButton
+                  : styles.negotiateButton,
+              ]}
+              onPress={() => setSelectedButton(2)}
             >
-              <Text style={buttonStyles.buttonText}>
-                ${selectedListing.price * 1.15}
+              <Text style={buttonStyles.tertiaryButtonText}>
+                ${selectedListing.price * 1.2}
               </Text>
             </TouchableOpacity>
             <Text style={styles.labelText}>20% increase</Text>
@@ -236,7 +244,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
         </View>
 
         <TouchableOpacity
-          style={buttonStyles.primaryButton}
+          style={buttonStyles.secondaryButton}
           onPress={() => newOrder(selectedListing)}
         >
           <Text style={buttonStyles.buttonText}>Send New Offer</Text>
@@ -278,7 +286,7 @@ const styles = StyleSheet.create({
   uploadContainer: {
     width: "75%",
     height: 175,
-    backgroundColor: "#dde8ff", // Initial background before image is uploaded
+    backgroundColor: "#dde8ff",
     borderRadius: 10,
     padding: 15,
     marginVertical: 10,
@@ -289,8 +297,8 @@ const styles = StyleSheet.create({
     borderColor: "#4a90e2",
   },
   uploadedContainer: {
-    backgroundColor: "transparent", // Remove the hue once image is uploaded
-    borderWidth: 1, // Remove the dashed border once image is uploaded
+    backgroundColor: "transparent",
+    borderWidth: 1,
   },
   itemImage: {
     width: "125%",
@@ -335,24 +343,38 @@ const styles = StyleSheet.create({
   negotiationButtonsContainer: {
     marginTop: 10,
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-around", 
+    width: "100%",
   },
   negotiateButton: {
-    width: "29%",
+    width: "100%",
     alignItems: "center",
     padding: 10,
     borderRadius: 5,
-    // backgroundColor: "#07181D",
     marginHorizontal: 5,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
-    color: "black",
+    borderWidth: 2,
+    borderColor: "#7F8A94",
+  },
+  selectedButton: {
+    width: "100%",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    borderWidth: 2,
+    borderColor: "#5DE49B",
   },
   buttonWithLabel: {
     alignItems: "center",
-    width: "30%", // Adjust width as needed
+    width: "100%",
   },
   labelText: {
     marginTop: 5,
