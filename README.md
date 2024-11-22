@@ -88,7 +88,7 @@ CrowdShip is a collaborative effort by a dedicated team of six individuals, cons
 - **Aman Palod** - palod.aman@gmail.com
 - **Isabella Tsui** - isabellacmtsui@gmail.com
 - **Neeraj Nandakumar** - neerajnand911@gmail.com
-- **Omar Madhani** - omar.madhani@gmail.com
+- **Omar Madhani** - https://github.com/OmarMadhani
 
 ### Business Students
 
