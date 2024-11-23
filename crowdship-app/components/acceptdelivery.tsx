@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     borderWidth: 2,
-    borderColor: "#5DE49B",
+    borderColor: "#47BF7E",
   },
   buttonWithLabel: {
     alignItems: "center",

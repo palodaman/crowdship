@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 const buttonStyles = StyleSheet.create({
   primaryButton: {
-    backgroundColor: "#5DE49A",
+    backgroundColor: "#47BF7E",
     padding: 10,
     borderRadius: 10,
     width: "90%",
@@ -44,7 +44,7 @@ const buttonStyles = StyleSheet.create({
   chatButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#5DE49A",
+    backgroundColor: "#47BF7E",
     padding: 15,
     borderRadius: 10,
     width: "90%",

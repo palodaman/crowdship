@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
   message: {
     marginTop: 20,
     fontSize: 16,
-    color: "#5DE49B",
+    color: "#47BF7E",
     textAlign: "center",
   },
 });
