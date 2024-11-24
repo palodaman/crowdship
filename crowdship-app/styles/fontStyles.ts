@@ -31,7 +31,7 @@ const fontStyles = StyleSheet.create({
   },
   greenText: {
     fontSize: 16,
-    color: "#5DE49B",
+    color: "#47BF7E",
     textAlign: "center",
   },
   whiteText: {

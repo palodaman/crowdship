@@ -54,6 +54,8 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
     renderAcceptDeliveryConfirmation,
     setRenderAcceptDeliveryConfirmation,
   ] = useState(false);
+  const [customPrice, setCustomPrice] = useState<string>("");
+  const [selectedButton, setSelectedButton] = useState<number | null>(null);
   const session = useSession();
 
   const newOrder = async (selectedListing: Listing) => {
@@ -101,7 +103,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView persistentScrollbar={true}>
         <View style={styles.textContainer}>
           <Text style={fontStyles.title}>Accept Delivery</Text>
           {/* Display the local image */}
@@ -161,43 +163,6 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
           </View>
         </View>
 
-        <View style={styles.negotiateHeader}>
-          <Text style={fontStyles.h1}>Negotiate Offer</Text>
-        </View>
-
-        <View style={styles.negotiationButtonsContainer}>
-          <TouchableOpacity style={styles.negotiateButton}>
-            <Text style={buttonStyles.buttonText}>
-              ${selectedListing.price + 5}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.negotiateButton}>
-            <Text style={buttonStyles.buttonText}>
-              ${selectedListing.price + 10}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.negotiateButton, { width: "32%" }]}
-            disabled={true}
-          >
-            <View style={styles.customButtonContainer}>
-              <AntDesign
-                style={styles.pencilIcon}
-                name="edit"
-                size={16}
-                color="white"
-              />
-              <TextInput
-                style={buttonStyles.buttonText}
-                placeholder="Custom"
-                placeholderTextColor="rgba(255, 255, 255, 0.5)"
-                keyboardType="numeric"
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {/* Buttons and Views */}
         <View style={styles.buttonContainer}>
           <View style={styles.views}>
             <AntDesign name="eyeo" size={20} color="black" />
@@ -211,6 +176,79 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
             <Text style={buttonStyles.buttonText}>Accept Initial Offer</Text>
           </TouchableOpacity>
         </View>
+
+        <View style={styles.negotiateHeader}>
+          <Text style={fontStyles.h1}>Negotiate Offer</Text>
+        </View>
+
+        <View style={styles.negotiationButtonsContainer}>
+          <View>
+            <TouchableOpacity
+              style={[
+                selectedButton === 0
+                  ? styles.selectedButton
+                  : styles.negotiateButton,
+              ]}
+              onPress={() => setSelectedButton(0)}
+            >
+              <Text style={buttonStyles.tertiaryButtonText}>
+                ${selectedListing.price * 1.1}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.labelText}>10% increase</Text>
+          </View>
+          <View>
+            <TouchableOpacity
+              style={[
+                selectedButton === 1
+                  ? styles.selectedButton
+                  : styles.negotiateButton,
+              ]}
+              onPress={() => setSelectedButton(1)}
+            >
+              <Text style={buttonStyles.tertiaryButtonText}>
+                ${selectedListing.price * 1.15}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.labelText}>15% increase</Text>
+          </View>
+          <View>
+            <TouchableOpacity
+              style={[
+                selectedButton === 2
+                  ? styles.selectedButton
+                  : styles.negotiateButton,
+              ]}
+              onPress={() => setSelectedButton(2)}
+            >
+              <Text style={buttonStyles.tertiaryButtonText}>
+                ${selectedListing.price * 1.2}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.labelText}>20% increase</Text>
+          </View>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <View style={styles.card}>
+            <Feather name="dollar-sign" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder="Add custom price"
+              value={customPrice}
+              onChangeText={(text) => setCustomPrice(text)}
+              multiline={true}
+              numberOfLines={2}
+            />
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={buttonStyles.secondaryButton}
+          onPress={() => newOrder(selectedListing)}
+        >
+          <Text style={buttonStyles.buttonText}>Send New Offer</Text>
+        </TouchableOpacity>
       </ScrollView>
 
       <Modal
@@ -244,12 +282,11 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     alignItems: "center",
-    paddingVertical: 20,
   },
   uploadContainer: {
     width: "75%",
     height: 175,
-    backgroundColor: "#dde8ff", // Initial background before image is uploaded
+    backgroundColor: "#dde8ff",
     borderRadius: 10,
     padding: 15,
     marginVertical: 10,
@@ -260,8 +297,8 @@ const styles = StyleSheet.create({
     borderColor: "#4a90e2",
   },
   uploadedContainer: {
-    backgroundColor: "transparent", // Remove the hue once image is uploaded
-    borderWidth: 1, // Remove the dashed border once image is uploaded
+    backgroundColor: "transparent",
+    borderWidth: 1,
   },
   itemImage: {
     width: "125%",
@@ -281,6 +318,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
+    justifyContent: "center",
   },
   cardContent: {
     marginLeft: 15,
@@ -289,8 +327,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 20,
-    marginBottom: "10%",
   },
   views: {
     flexDirection: "column",
@@ -302,32 +338,55 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "center",
     flexDirection: "row",
+    marginTop: 20,
   },
   negotiationButtonsContainer: {
     marginTop: 10,
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-around", 
+    width: "100%",
   },
   negotiateButton: {
-    width: "29%",
+    width: "100%",
     alignItems: "center",
     padding: 10,
     borderRadius: 5,
-    backgroundColor: "#07181D",
     marginHorizontal: 5,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
+    borderWidth: 2,
+    borderColor: "#7F8A94",
   },
-  customButtonContainer: {
-    flexDirection: "row",
+  selectedButton: {
+    width: "100%",
     alignItems: "center",
+    padding: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    borderWidth: 2,
+    borderColor: "#47BF7E",
   },
-  pencilIcon: {
-    paddingRight: 5,
+  buttonWithLabel: {
+    alignItems: "center",
+    width: "100%",
   },
-
+  labelText: {
+    marginTop: 5,
+    fontSize: 12,
+    color: "#666",
+  },
+  inputWithIcon: {
+    flex: 1,
+    marginLeft: 15,
+    fontSize: 16,
+    color: "black",
+  },
 });
 
 export default AcceptDelivery;

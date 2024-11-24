@@ -147,7 +147,7 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
   }
 
   return (
-    <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+    <ScrollView bounces={false} persistentScrollbar={true}>
       <View style={styles.textContainer}>
         <Text style={fontStyles.title}>Edit Delivery</Text>
         {/* Upload Button or Image */}
@@ -170,7 +170,7 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
           style={buttonStyles.secondaryButton}
           onPress={pickImage}
         >
-          <Text style={buttonStyles.buttonText}>Upload Image</Text>
+          <Text style={buttonStyles.buttonText}>Upload Item Image</Text>
         </TouchableOpacity>
 
         {/* Input Fields as Cards */}

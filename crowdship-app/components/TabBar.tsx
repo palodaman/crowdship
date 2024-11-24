@@ -79,7 +79,7 @@ const TabBar = ({
             onLongPress={onLongPress}
             isFocused={isFocused}
             routeName={route.name}
-            color={isFocused ? "#5DE49B" : greyColor}
+            color={isFocused ? "#47BF7E" : greyColor}
             label={label}
           />
         );

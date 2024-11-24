@@ -52,7 +52,7 @@ const SenderModal: React.FC<SenderModalProps> = ({
   console.log("transactionComplete", transactionComplete);
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView persistentScrollbar={true}>
         {renderEditDelivery === false ? (
           <View style={styles.textContainer}>
             <Text style={fontStyles.title}>Shipment Information</Text>

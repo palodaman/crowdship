@@ -90,7 +90,7 @@ export default function DeliveryRequest() {
     <ScrollView
       contentContainerStyle={styles.scrollContainer}
       bounces={false}
-      showsVerticalScrollIndicator={false}
+      persistentScrollbar={true}
     >
       <View style={styles.textContainer}>
         {/* Upload Button or Image */}
@@ -113,7 +113,7 @@ export default function DeliveryRequest() {
           style={buttonStyles.secondaryButton}
           onPress={pickImage}
         >
-          <Text style={buttonStyles.buttonText}>Upload Image</Text>
+          <Text style={buttonStyles.buttonText}>Upload Item Image</Text>
         </TouchableOpacity>
 
         {/* Input Fields as Cards */}
@@ -149,6 +149,17 @@ export default function DeliveryRequest() {
           </View>
 
           <View style={styles.card}>
+            <Feather name="dollar-sign" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder="Set a price for the delivery"
+              value={price}
+              onChangeText={setPrice}
+              keyboardType="numeric"
+            />
+          </View>
+
+          <View style={styles.card}>
             <AntDesign name="infocirlceo" size={24} color="black" />
             <TextInput
               style={styles.inputWithIcon}
@@ -157,17 +168,6 @@ export default function DeliveryRequest() {
               onChangeText={setNotes}
               multiline={true}
               numberOfLines={2}
-            />
-          </View>
-
-          <View style={styles.card}>
-            <Feather name="dollar-sign" size={24} color="black" />
-            <TextInput
-              style={styles.inputWithIcon}
-              placeholder="Set a price for the delivery"
-              value={price}
-              onChangeText={setPrice}
-              keyboardType="numeric"
             />
           </View>
         </View>
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
   message: {
     marginTop: 20,
     fontSize: 16,
-    color: "#5DE49B",
+    color: "#47BF7E",
     textAlign: "center",
   },
 });

@@ -132,7 +132,7 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView persistentScrollbar={true}>
         <View style={styles.textContainer}>
           <Text style={fontStyles.title}>Delivery Confirmation</Text>
           <Text style={fontStyles.text}>
@@ -165,7 +165,7 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
             style={[buttonStyles.secondaryButton]}
             onPress={pickImage}
           >
-            <Text style={buttonStyles.buttonText}>Upload Image</Text>
+            <Text style={buttonStyles.buttonText}>Upload Item Image</Text>
           </TouchableOpacity>
           <Text style={[fontStyles.h1, { marginTop: 20 }]}>
             In Person Delivery

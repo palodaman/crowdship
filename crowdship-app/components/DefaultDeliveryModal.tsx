@@ -47,7 +47,7 @@ const DefaultDeliveryModal: React.FC<DefaultDeliveryModalProps> = ({
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView persistentScrollbar={true}>
         <View style={styles.textContainer}>
           <Text style={fontStyles.title}>Delivery Information</Text>
           {/* Display the local image */}

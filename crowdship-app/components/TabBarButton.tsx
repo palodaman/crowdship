@@ -29,7 +29,7 @@ const TabBarButton = (props: {
     // const scaleValue = interpolate(scale.value, [0, 1], [1, 1.2]);
     const top = interpolate(scale.value, [0, 1], [-5, 3]); // Adjusted to move the icon up
 
-    const color = isFocused ? "#5DE49B" : "black";
+    const color = isFocused ? "#47BF7E" : "black";
 
     return {
       // styles
@@ -43,14 +43,14 @@ const TabBarButton = (props: {
     <Pressable {...props} style={styles.container}>
       <Animated.View style={[animatedIconStyle]}>
         {React.cloneElement(icon as React.ReactElement, {
-          color: isFocused ? "#5DE49B" : "black",
+          color: isFocused ? "#47BF7E" : "black",
         })}
       </Animated.View>
 
       <Animated.Text
         style={[
           {
-            color: isFocused ? "#5DE49B" : "black",
+            color: isFocused ? "#47BF7E" : "black",
             fontSize: 10,
             alignContent: "center",
           },

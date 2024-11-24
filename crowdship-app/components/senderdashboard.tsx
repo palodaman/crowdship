@@ -81,9 +81,9 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView persistentScrollbar={true}>
         <View>
-          <Text style={styles.header}>Unclaimed Shipments</Text>
+          <Text style={styles.header}>Unclaimed Packages</Text>
           {activeShipments.length > 0 ? (
             activeShipments.map((item) => (
               <TouchableOpacity
@@ -111,7 +111,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                           <Ionicons
                             name="pricetag-outline"
                             size={16}
-                            color="#5DE49B"
+                            color="#47BF7E"
                           />
                           <Text style={fontStyles.greenText}>
                             ${item.price}
@@ -122,7 +122,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                         onPress={() => {
                           handleEditPress(item, true);
                         }}
-                        color={"#5DE49B"}
+                        color={"#47BF7E"}
                       >
                         Edit
                       </Button>
@@ -133,12 +133,12 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
             ))
           ) : (
             <View style={styles.noDeliveriesContainer}>
-              <Text style={fontStyles.text}>No shipments in progress</Text>
+              <Text style={fontStyles.text}>No packages have been sent</Text>
             </View>
           )}
         </View>
         <View>
-          <Text style={styles.header}>In Progress Shipments</Text>
+          <Text style={styles.header}>Packages in Delivery</Text>
           {inProgressShipments.length > 0 ? (
             inProgressShipments.map((item) => (
               <TouchableOpacity
@@ -165,7 +165,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                           <Ionicons
                             name="pricetag-outline"
                             size={16}
-                            color="#5DE49B"
+                            color="#47BF7E"
                           />
                           <Text style={fontStyles.greenText}>
                             ${item.price}
@@ -180,12 +180,12 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
             ))
           ) : (
             <View style={styles.noDeliveriesContainer}>
-              <Text style={fontStyles.text}>No shipments in progress</Text>
+              <Text style={fontStyles.text}>No packages have been sent</Text>
             </View>
           )}
         </View>
         <View>
-          <Text style={styles.header}>Past Shipments</Text>
+          <Text style={styles.header}>Sent Packages</Text>
           {pastShipments.length > 0 ? (
             pastShipments.map((item) => (
               <TouchableOpacity
@@ -227,9 +227,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
             ))
           ) : (
             <View style={styles.noDeliveriesContainer}>
-              <Text style={fontStyles.text}>
-                No shipments have been completed
-              </Text>
+              <Text style={fontStyles.text}>No packages have been sent</Text>
             </View>
           )}
         </View>

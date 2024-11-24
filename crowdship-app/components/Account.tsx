@@ -182,7 +182,7 @@ export default function Account({ session }: { session: Session }) {
           style={buttonStyles.secondaryButton}
           onPress={pickImage}
         >
-          <Text style={buttonStyles.buttonText}>Upload New Image</Text>
+          <Text style={buttonStyles.buttonText}>Upload Profile Picture</Text>
         </TouchableOpacity>
       </View>
 
