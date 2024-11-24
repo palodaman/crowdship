@@ -143,7 +143,12 @@ const DefaultDeliveryModal: React.FC<DefaultDeliveryModalProps> = ({
               }
             }}
           >
-            <AntDesign size={20} color="white" style={{ marginRight: 10 }} />
+            <AntDesign
+              name="message1"
+              size={20}
+              color="white"
+              style={{ marginRight: 10 }}
+            />
             <Text style={buttonStyles.buttonText}>Chat With Sender</Text>
           </TouchableOpacity>
         </View>
