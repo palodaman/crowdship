@@ -174,6 +174,7 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
             title="I confirm that the item was delivered in person."
             checked={check}
             onPress={handleCheck}
+            checkedColor="#47BF7E"
           />
 
           <TouchableOpacity

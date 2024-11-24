@@ -5,8 +5,6 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import MapViewDirections from "react-native-maps-directions";
 import DeliveriesList from "../components/DeliveriesList";
 import Snackbar from "../components/SnackBar";
-import fontStyles from "../styles/fontStyles";
-import GetLocation from "react-native-get-location";
 import * as Location from "expo-location";
 
 const styles = StyleSheet.create({
@@ -64,7 +62,9 @@ export default function GoogleMapScreen() {
       });
       console.log("latitude: ", location.coords.latitude);
       console.log("longitude: ", location.coords.longitude);
-      zoomToLocation(origin);
+      if (origin) {
+        zoomToLocation(origin);
+      }
     }
 
     getLocationPermission();
