@@ -1,10 +1,13 @@
-import React, { useRef, useState } from "react";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import React, { useEffect, useRef, useState } from "react";
+import MapView, { Marker } from "react-native-maps";
 import { StyleSheet, View, Text } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapViewDirections from "react-native-maps-directions";
 import DeliveriesList from "../components/DeliveriesList";
 import Snackbar from "../components/SnackBar";
+import fontStyles from "../styles/fontStyles";
+import GetLocation from "react-native-get-location";
+import * as Location from "expo-location";
 
 const styles = StyleSheet.create({
   container: {
@@ -45,6 +48,44 @@ export default function GoogleMapScreen() {
   } | null>(null);
 
   const [snackBarVisible, setSnackBarVisible] = useState(false);
+
+  useEffect(() => {
+    async function getLocationPermission() {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        alert("Location permission is required for this feature.");
+        console.log("Permission to access location was denied");
+        return;
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      setOrigin({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+      console.log("latitude: ", location.coords.latitude);
+      console.log("longitude: ", location.coords.longitude);
+      zoomToLocation(origin);
+    }
+
+    getLocationPermission();
+  }, []);
+
+  const zoomToLocation = (location: {
+    latitude: number;
+    longitude: number;
+  }) => {
+    if (mapRef.current) {
+      mapRef.current.animateToRegion(
+        {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        },
+        1000
+      );
+    }
+  };
 
   async function changeLocation(coordinates: {
     latitude: number | undefined;

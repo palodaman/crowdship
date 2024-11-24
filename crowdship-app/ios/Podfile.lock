@@ -6,7 +6,9 @@ PODS:
   - EXImageLoader (4.7.0):
     - ExpoModulesCore
     - React-Core
-  - Expo (51.0.37):
+  - EXLocation (17.0.1):
+    - ExpoModulesCore
+  - Expo (51.0.39):
     - ExpoModulesCore
   - ExpoAsset (10.0.10):
     - ExpoModulesCore
@@ -14,13 +16,13 @@ PODS:
     - ExpoModulesCore
   - ExpoFont (12.0.10):
     - ExpoModulesCore
-  - ExpoHead (3.5.23):
+  - ExpoHead (3.5.24):
     - ExpoModulesCore
   - ExpoImagePicker (15.0.7):
     - ExpoModulesCore
   - ExpoKeepAwake (13.0.2):
     - ExpoModulesCore
-  - ExpoModulesCore (1.12.25):
+  - ExpoModulesCore (1.12.26):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -43,7 +45,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - EXSplashScreen (0.27.5):
+  - EXSplashScreen (0.27.7):
     - DoubleConversion
     - ExpoModulesCore
     - glog
@@ -68,29 +70,12 @@ PODS:
   - FBLazyVector (0.74.5)
   - fmt (9.1.0)
   - glog (0.3.5)
-  - Google-Maps-iOS-Utils (4.2.2):
-    - Google-Maps-iOS-Utils/Clustering (= 4.2.2)
-    - Google-Maps-iOS-Utils/Geometry (= 4.2.2)
-    - Google-Maps-iOS-Utils/GeometryUtils (= 4.2.2)
-    - Google-Maps-iOS-Utils/Heatmap (= 4.2.2)
-    - Google-Maps-iOS-Utils/QuadTree (= 4.2.2)
-    - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/Clustering (4.2.2):
-    - Google-Maps-iOS-Utils/QuadTree
-    - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/Geometry (4.2.2):
-    - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/GeometryUtils (4.2.2):
-    - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/Heatmap (4.2.2):
-    - Google-Maps-iOS-Utils/QuadTree
-    - GoogleMaps (~> 7.3)
-  - Google-Maps-iOS-Utils/QuadTree (4.2.2):
-    - GoogleMaps (~> 7.3)
-  - GoogleMaps (7.4.0):
-    - GoogleMaps/Maps (= 7.4.0)
-  - GoogleMaps/Base (7.4.0)
-  - GoogleMaps/Maps (7.4.0):
+  - Google-Maps-iOS-Utils (5.0.0):
+    - GoogleMaps (~> 8.0)
+  - GoogleMaps (8.4.0):
+    - GoogleMaps/Maps (= 8.4.0)
+  - GoogleMaps/Base (8.4.0)
+  - GoogleMaps/Maps (8.4.0):
     - GoogleMaps/Base
   - hermes-engine (0.74.5):
     - hermes-engine/Pre-built (= 0.74.5)
@@ -1023,11 +1008,11 @@ PODS:
   - React-Mapbuffer (0.74.5):
     - glog
     - React-debug
-  - react-native-google-maps (1.18.0):
-    - Google-Maps-iOS-Utils (= 4.2.2)
-    - GoogleMaps (= 7.4.0)
+  - react-native-google-maps (1.20.0):
+    - Google-Maps-iOS-Utils (= 5.0.0)
+    - GoogleMaps (= 8.4.0)
     - React-Core
-  - react-native-maps (1.18.0):
+  - react-native-maps (1.20.0):
     - React-Core
   - react-native-safe-area-context (4.10.5):
     - React-Core
@@ -1260,6 +1245,8 @@ PODS:
     - React-logger (= 0.74.5)
     - React-perflogger (= 0.74.5)
     - React-utils (= 0.74.5)
+  - ReactNativeGetLocation (5.0.0):
+    - React-Core
   - RNCAsyncStorage (1.23.1):
     - React-Core
   - RNReanimated (3.10.1):
@@ -1313,6 +1300,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
+  - EXLocation (from `../node_modules/expo-location/ios`)
   - Expo (from `../node_modules/expo`)
   - ExpoAsset (from `../node_modules/expo-asset/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
@@ -1378,6 +1366,7 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeGetLocation (from `../node_modules/react-native-get-location`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -1398,6 +1387,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-constants/ios"
   EXImageLoader:
     :path: "../node_modules/expo-image-loader/ios"
+  EXLocation:
+    :path: "../node_modules/expo-location/ios"
   Expo:
     :path: "../node_modules/expo"
   ExpoAsset:
@@ -1525,6 +1516,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeGetLocation:
+    :path: "../node_modules/react-native-get-location"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNReanimated:
@@ -1539,20 +1532,21 @@ SPEC CHECKSUMS:
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   EXConstants: 409690fbfd5afea964e5e9d6c4eb2c2b59222c59
   EXImageLoader: ab589d67d6c5f2c33572afea9917304418566334
-  Expo: 67b60b3b80a3c8e9f3bcaaa84d06d140229a246d
+  EXLocation: 43e9b582ca63a23c6f0a18d8cbe2145b3a388b55
+  Expo: 8c995afb875c15bf8439af0b20bcb9ed8f90d0bd
   ExpoAsset: 323700f291684f110fb55f0d4022a3362ea9f875
   ExpoFileSystem: 80bfe850b1f9922c16905822ecbf97acd711dc51
   ExpoFont: 00756e6c796d8f7ee8d211e29c8b619e75cbf238
-  ExpoHead: fcb28a68ed4ba28f177394d2dfb8a0a8824cd103
+  ExpoHead: a79e263b73039b41940c220dd67b83572e7cac09
   ExpoImagePicker: 12a420923383ae38dccb069847218f27a3b87816
   ExpoKeepAwake: 3b8815d9dd1d419ee474df004021c69fdd316d08
-  ExpoModulesCore: 0e7d4d5c13169bbbd53496721d811adbcc5d600a
-  EXSplashScreen: fbf0ec78e9cee911df188bf17b4fe51d15a84b87
+  ExpoModulesCore: 831ece8311a489418746925820bbffdda587d6f4
+  EXSplashScreen: 3cad09949c2ca6730cbb2801b8c51cb87692425a
   FBLazyVector: ac12dc084d1c8ec4cc4d7b3cf1b0ebda6dab85af
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: fdfdfe5479092de0c4bdbebedd9056951f092c4f
-  Google-Maps-iOS-Utils: f77eab4c4326d7e6a277f8e23a0232402731913a
-  GoogleMaps: 032f676450ba0779bd8ce16840690915f84e57ac
+  Google-Maps-iOS-Utils: 66d6de12be1ce6d3742a54661e7a79cb317a9321
+  GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
   hermes-engine: 8c1577f3fdb849cbe7729c2e7b5abc4b845e88f8
   RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
   RCTDeprecation: 3afceddffa65aee666dafd6f0116f1d975db1584
@@ -1578,8 +1572,8 @@ SPEC CHECKSUMS:
   React-jsitracing: 3b6060bbf5317663667e1dd93560c7943ab86ccc
   React-logger: 257858bd55f3a4e1bc0cf07ddc8fb9faba6f8c7c
   React-Mapbuffer: 6c1cacdbf40b531f549eba249e531a7d0bfd8e7f
-  react-native-google-maps: ee48410bb3f1390abfa20592a44db5d6ada83e4d
-  react-native-maps: 2e6e9896195781327ee15b33e3e84bf73c08207a
+  react-native-google-maps: 7e82d047dbdba9d4dbc8fc7df2eaba08f274cafd
+  react-native-maps: cb754208646ef20406b41af816a88fd5318a4403
   react-native-safe-area-context: a240ad4b683349e48b1d51fed1611138d1bdad97
   React-nativeconfig: ba9a2e54e2f0882cf7882698825052793ed4c851
   React-NativeModulesApple: 8d11ff8955181540585c944cf48e9e7236952697
@@ -1604,12 +1598,13 @@ SPEC CHECKSUMS:
   React-runtimescheduler: cfbe85c3510c541ec6dc815c7729b41304b67961
   React-utils: f242eb7e7889419d979ca0e1c02ccc0ea6e43b29
   ReactCommon: f7da14a8827b72704169a48c929bcde802698361
+  ReactNativeGetLocation: 7e019e0a10ccc3fe082cd9b02b28899512c1b2a5
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNReanimated: 35f9ac9c3ac42d0497ebd1cce5c39d7687a8493e
   RNScreens: b32a9ff15bea7fcdbe5dff6477bc503f792b1208
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: 950bbfd7e6f04790fdb51149ed51df41f329fcc8
 
-PODFILE CHECKSUM: 5ebc5bf4b3ca4895a47c7c4a3104a98dbc5c0de0
+PODFILE CHECKSUM: b4b0dd2bf6f729e9928c6307eec54a052d4f31b7
 
 COCOAPODS: 1.15.2
