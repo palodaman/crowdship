@@ -14,6 +14,7 @@ import EditDeliveryModal from "./EditDeliveryModal";
 import buttonStyles from "../styles/buttonStyles";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import fontStyles from "../styles/fontStyles";
+import StepIndicator from "react-native-step-indicator";
 
 interface Listing {
   listingid: string;
@@ -43,6 +44,31 @@ const SenderModal: React.FC<SenderModalProps> = ({
 }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [renderEditDelivery, setRenderEditDelivery] = useState<boolean>(false);
+  const labels = ["Picked Up", "In Transit", "Delivered"];
+  const [currentPosition, setCurrentPosition] = useState(-1); // -1 to start at 0, 0 to start at 1, etc.
+  const customStyles = {
+    stepIndicatorSize: 25,
+    currentStepIndicatorSize: 30,
+    separatorStrokeWidth: 2,
+    currentStepStrokeWidth: 3,
+    stepStrokeCurrentColor: "#47BF7E",
+    stepStrokeWidth: 3,
+    stepStrokeFinishedColor: "#47BF7E",
+    stepStrokeUnFinishedColor: "#aaaaaa",
+    separatorFinishedColor: "#47BF7E",
+    separatorUnFinishedColor: "#aaaaaa",
+    stepIndicatorFinishedColor: "#47BF7E",
+    stepIndicatorUnFinishedColor: "#ffffff",
+    stepIndicatorCurrentColor: "#ffffff",
+    stepIndicatorLabelFontSize: 13,
+    currentStepIndicatorLabelFontSize: 13,
+    stepIndicatorLabelCurrentColor: "#47BF7E",
+    stepIndicatorLabelFinishedColor: "#ffffff",
+    stepIndicatorLabelUnFinishedColor: "#aaaaaa",
+    labelColor: "#999999",
+    labelSize: 13,
+    currentStepLabelColor: "#fe7013",
+  };
 
   const handleEditDelivery = () => {
     setRenderEditDelivery(true);
@@ -67,6 +93,15 @@ const SenderModal: React.FC<SenderModalProps> = ({
                 source={diningTableImage}
                 style={styles.itemImage}
                 resizeMode="cover"
+              />
+            </View>
+
+            <View style={{ width: "90%", alignSelf: "center" }}>
+              <StepIndicator
+                customStyles={customStyles}
+                currentPosition={currentPosition}
+                labels={labels}
+                stepCount={3}
               />
             </View>
 
