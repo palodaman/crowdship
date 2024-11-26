@@ -57,6 +57,17 @@ const buttonStyles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  reviewsButton: {
+    alignSelf: "flex-start",
+    marginLeft: 10,
+    marginTop: 10,
+    borderColor: "#7F8A94",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: "transparent", 
+  },
 });
 
 export default buttonStyles;

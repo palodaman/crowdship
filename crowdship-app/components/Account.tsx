@@ -167,6 +167,13 @@ export default function Account({ session }: { session: Session }) {
 
   return (
     <View style={styles.container}>
+      <View>
+        <TouchableOpacity
+            style={buttonStyles.reviewsButton}
+          >
+            <Text style={buttonStyles.tertiaryButtonText}>My Reviews</Text>
+          </TouchableOpacity>
+      </View>
       <View style={styles.avatarContainer}>
         {/* Render image if avatarUrl exists, otherwise display placeholder */}
         {avatarUrl ? (

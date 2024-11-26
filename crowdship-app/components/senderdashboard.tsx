@@ -15,6 +15,8 @@ import modalStyles from "../styles/modalStyles";
 import SenderModal from "./SenderModal";
 import EditDeliveryModal from "./EditDeliveryModal";
 import fontStyles from "../styles/fontStyles";
+import ReviewModal from "./ReviewModal";
+import { supabase } from "../lib/supabase";
 
 interface Listing {
   delivererid: string;
@@ -38,6 +40,13 @@ interface SenderDashboardProps {
   loading: boolean;
 }
 
+type ReviewData = {
+  orderid: string;
+  delivererid: string;
+  senderid: string;
+  reviewtype: string;
+};
+
 const SenderDashboard: React.FC<SenderDashboardProps> = ({
   activeShipments,
   pastShipments,
@@ -50,6 +59,38 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
   const [renderEditDelivery, setRenderEditDelivery] = useState<boolean>(false);
   const [transactionComplete, setTransactionComplete] = useState("inactive");
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [renderReviewModal, setRenderReviewModal] = useState<boolean>(false);
+  const [reviewData, setReviewData] = useState<ReviewData | null>(null);
+
+  const fetchOrderDetails = async (item: Listing) => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('orderid, delivererid')
+        .eq('listingid', item.listingid);
+  
+      if (error) {
+        console.error('Error fetching order details:', error);
+      }
+      
+      return data?.[0];
+    } catch (error) {
+    }
+  };
+
+  const handleReviewButtonPress = async (item: Listing) => {
+    setSelectedListing(item);
+    const data = await fetchOrderDetails(item);
+    if (data) {
+      setReviewData({
+        orderid: data.orderid,
+        delivererid: data.delivererid,
+        senderid: item.senderid,
+        reviewtype: "sendertodriver"
+      });
+      setRenderReviewModal(true);
+    }
+  };
 
   const handlePress = (item: Listing, edit: boolean) => {
     setSelectedListing(item);
@@ -208,6 +249,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                         <Text style={fontStyles.boldedText}>
                           {item.itemdescription}
                         </Text>
+                        <Text style={fontStyles.greyText}>SHIPPED</Text>
                         <View style={styles.itemPrice}>
                           <Ionicons
                             name="pricetag-outline"
@@ -219,7 +261,12 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                           </Text>
                         </View>
                       </View>
-                      <Text>SHIPPED</Text>
+                      <Button
+                          onPress={() => handleReviewButtonPress(item)}
+                          color={"#47BF7E"}
+                        >
+                          Review
+                        </Button>
                     </View>
                   </Card>
                 </View>
@@ -271,6 +318,29 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
             </View>
           </View>
         </Modal>
+        <Modal
+        visible={renderReviewModal}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setRenderReviewModal(false)}
+      >
+        <View style={modalStyles.modalContainer}>
+          <View style={{ width: "90%" }}>
+            <TouchableOpacity
+              style={modalStyles.closeButton}
+              onPress={() => setRenderReviewModal(false)}
+            >
+              <Text style={modalStyles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+            {selectedListing && reviewData && (
+              <ReviewModal
+                reviewData={reviewData}
+                onSubmitReview={() => setRenderReviewModal(false)}
+              />
+            )}
+          </View>
+        </View>
+      </Modal>
       </ScrollView>
     </View>
   );
