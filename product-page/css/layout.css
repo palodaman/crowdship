@@ -361,6 +361,64 @@ ul#nav li.current a {
   height: 100%;
 }
 
+/* ------------------------------------------------------------------ */
+/* e. Testimonials Section
+/* ------------------------------------------------------------------ */
+
+#testimonials {
+  background: #ebeeee;
+  padding-top: 90px;
+  padding-bottom: 60px;
+}
+#testimonials h1 {
+  color: black;
+}
+
+#testimonials-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.testimonial-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1000px;
+  padding: 10px;
+}
+
+/* Individual Testimonial Card */
+.testimonial-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Testimonial Text */
+.testimonial-text {
+  font-size: 16px;
+  font-style: italic;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+/* Testimonial Author */
+.testimonial-author {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  text-align: right;
+}
+
 /* Flex Slider
 /* ------------------------------------------------------------------ */
 
