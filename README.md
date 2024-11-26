@@ -41,7 +41,7 @@ Below is a brief overview of all the features that the app includes/will include
 | **Delivery Accepted**          | Allows senders to get a notification that their order has been accepted for delivery.          | Incomplete            |
 | **Review**                     | Allows drivers and senders to leave reviews on each other.                                     | WIP           |
 | **Splash Screen/Welcome Page** | Transition screen between login/sign up and the app’s terms and conditions.                    | Incomplete            |
-| **Payment**                    | Allows drivers to receive payment and allow senders to securely send mone.                     | Incomplete            |
+| **Payment**                    | Allows drivers to receive payment and allow senders to securely send money.                     | Incomplete            |
 | **Real Time Driver Tracking**  | Allows senders to track their deliveries in real time                                          | Incomplete            |
 | **Terms & Conditions**         | Transition screen between login/sign up and the app’s terms and conditions.                    | Incomplete            |
 | **Submit Feedback/Bug Report** | Provides users with an option to submit feedback or report bugs directly through the app.      | Incomplete            |
@@ -88,7 +88,7 @@ CrowdShip is a collaborative effort by a dedicated team of six individuals, cons
 - **Aman Palod** - palod.aman@gmail.com
 - **Isabella Tsui** - isabellacmtsui@gmail.com
 - **Neeraj Nandakumar** - neerajnand911@gmail.com
-- **Omar Madhani** - https://github.com/OmarMadhani
+- **Omar Madhani** - https://github.com/OmarMadhani - omar.madhani@outlook.com
 
 ### Business Students
 
