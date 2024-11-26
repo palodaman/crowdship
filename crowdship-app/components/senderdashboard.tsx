@@ -15,7 +15,7 @@ import modalStyles from "../styles/modalStyles";
 import SenderModal from "./SenderModal";
 import EditDeliveryModal from "./EditDeliveryModal";
 import fontStyles from "../styles/fontStyles";
-import ReviewModal from "./ReviewModal";
+import SubmitReviewModal from "./SubmitReviewModal";
 import { supabase } from "../lib/supabase";
 
 interface Listing {
@@ -333,7 +333,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
               <Text style={modalStyles.closeButtonText}>X</Text>
             </TouchableOpacity>
             {selectedListing && reviewData && (
-              <ReviewModal
+              <SubmitReviewModal
                 reviewData={reviewData}
                 onSubmitReview={() => setRenderReviewModal(false)}
               />

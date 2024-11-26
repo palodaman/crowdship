@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from "react-native";
 import { supabase } from '../lib/supabase';
 import buttonStyles from "../styles/buttonStyles"; 
 import fontStyles from "../styles/fontStyles";
@@ -15,9 +15,9 @@ interface ReviewModalProps {
   onSubmitReview: () => void; 
 }
 
-const MAX_REVIEW_LENGTH = 200;
+const MAX_REVIEW_LENGTH = 500;
 
-const ReviewModal: React.FC<ReviewModalProps> = ({
+const SubmitReviewModal: React.FC<ReviewModalProps> = ({
   reviewData,
   onSubmitReview
 }) => {
@@ -25,7 +25,9 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   const [username, setUsername] = useState<string | null>(null);
   const [rating, setRating] = useState<number>(0);
   const [reviewText, setReviewText] = useState<string>("");
+  const [submittedAt, setSubmittedAt] = useState('');
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const userIdToFetch = 
     reviewData.reviewtype === "sendertodriver" ? reviewData.delivererid : reviewData.senderid;
@@ -43,15 +45,15 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
       .single();
 
     if (data) {
-      setUsername(data.username);
       setAvatar(data.avatar_url);
+      setUsername(data.username);  
     }
   };
 
   const checkIfReviewExists = async () => {
     const { data, error } = await supabase
       .from('reviews')
-      .select('rating, reviewtext')
+      .select('rating, reviewtext, createdat')
       .eq('orderid', reviewData.orderid)
       .eq('reviewtype', reviewData.reviewtype)
       .single();
@@ -59,8 +61,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     if (data) {
       setRating(data.rating);
       setReviewText(data.reviewtext);
+      setSubmittedAt(data.createdat);
       setHasSubmitted(true);
     }
+    setLoading(false);
   };
 
   const handleStarPress = (star: number) => setRating(star);
@@ -80,10 +84,11 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
           },
         ]);
       if (!error) {
+        setSubmittedAt(new Date().toISOString());
         setHasSubmitted(true);
         setTimeout(() => {
           onSubmitReview();
-        }, 1000);
+        }, 1500);
       }
     } else {
       alert("Please select a rating before submitting.");
@@ -92,6 +97,14 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
   const reviewPrompt = 
     reviewData.reviewtype === "sendertodriver" ? "Driver Rating & Review" : "Sender Rating & Review";
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.modal}>
@@ -118,18 +131,23 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
         ))}
       </View>
 
-      <TextInput
-        style={styles.textInput}
-        placeholder="Write an optional review..."
-        multiline
-        value={reviewText}
-        onChangeText={(text) => setReviewText(text.length <= MAX_REVIEW_LENGTH ? text : reviewText)}
-        editable={!hasSubmitted}
-        maxLength={MAX_REVIEW_LENGTH}
-      />
-      <Text style={styles.characterCount}>
-        {reviewText.length}/{MAX_REVIEW_LENGTH} characters
-      </Text>
+      {!hasSubmitted || (hasSubmitted && reviewText.length > 0) ? (
+        <>
+          <TextInput
+            style={[styles.textInput, styles.scrollableInput]}
+            placeholder="Write an optional review..."
+            multiline
+            scrollEnabled
+            value={reviewText}
+            onChangeText={(text) => setReviewText(text.length <= MAX_REVIEW_LENGTH ? text : reviewText)}
+            editable={!hasSubmitted}
+            maxLength={MAX_REVIEW_LENGTH}
+          />
+          <Text style={styles.characterCount}>
+            {reviewText.length}/{MAX_REVIEW_LENGTH} characters
+          </Text>
+        </>
+      ) : null}
 
       {!hasSubmitted && (
         <TouchableOpacity
@@ -140,7 +158,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
         </TouchableOpacity>
       )}
       {hasSubmitted && (
-        <Text style={fontStyles.text}>You have already submitted your review.</Text>
+        <View style={{ alignItems: "center"}}>
+          <Text style={fontStyles.text}>Review succesfully submitted</Text>
+          <Text style={fontStyles.text}> {submittedAt ? new Date(submittedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : ''}</Text>
+        </View>
       )}
     </View>
   );
@@ -204,11 +225,28 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlignVertical: "top",
   },
+  scrollableInput: {
+    height: 100,
+    maxHeight: 150,
+    textAlignVertical: "top",
+  },  
   characterCount: {
     fontSize: 12,
     color: "#7F8A94",
     paddingBottom: 10,
   },
+  reviewTextContainer: {
+    marginVertical: 10,
+    padding: 10,
+    backgroundColor: '#F2F6F3',
+    borderRadius: 8,
+    borderColor: '#7F8A94',
+    borderWidth: 1,
+  },
+  reviewText: {
+    fontSize: 14,
+    color: '#07181D',
+  },  
 });
 
-export default ReviewModal;
+export default SubmitReviewModal;

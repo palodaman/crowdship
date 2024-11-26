@@ -14,7 +14,7 @@ import modalStyles from "../styles/modalStyles";
 import DefaultDeliveryModal from "./DefaultDeliveryModal";
 import CompleteDeliveryModal from "./CompleteDeliveryModal";
 import fontStyles from "../styles/fontStyles";
-import ReviewModal from "./ReviewModal";
+import SubmitReviewModal from "./SubmitReviewModal";
 import { supabase } from "../lib/supabase";
 
 interface Listing {
@@ -248,7 +248,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
               <Text style={modalStyles.closeButtonText}>X</Text>
             </TouchableOpacity>
             {selectedListing && reviewData && (
-              <ReviewModal
+              <SubmitReviewModal
                 reviewData={reviewData}
                 onSubmitReview={() => setRenderReviewModal(false)}
               />
