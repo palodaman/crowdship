@@ -39,7 +39,7 @@ Below is a brief overview of all the features that the app includes/will include
 | **Chat**                       | Enables communication between the sender and driver.                                           | WIP                   |
 | **Delivery Dashboard**         | Allows users to view their current/past deliveries and current/past delivery requests.         | WIP                   |
 | **Delivery Accepted**          | Allows senders to get a notification that their order has been accepted for delivery.          | Incomplete            |
-| **Review**                     | Allows drivers and senders to leave reviews on each other.                                     | Incomplete            |
+| **Review**                     | Allows drivers and senders to leave reviews on each other.                                     | WIP           |
 | **Splash Screen/Welcome Page** | Transition screen between login/sign up and the app’s terms and conditions.                    | Incomplete            |
 | **Payment**                    | Allows drivers to receive payment and allow senders to securely send mone.                     | Incomplete            |
 | **Real Time Driver Tracking**  | Allows senders to track their deliveries in real time                                          | Incomplete            |
