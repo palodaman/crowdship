@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const apiKey = "AIzaSyCIUk8AvslqD49GmsyLs19xaxvREx1R9PE"; // Replace with your actual API key
+const apiKey = "AIzaSyC8_Y5Me5BZ_9_74fhy1Lbk9Lz8PiWBseA"; // Replace with your actual API key
 
 export default function GoogleMapScreen() {
   const mapRef = useRef<MapView>(null);
