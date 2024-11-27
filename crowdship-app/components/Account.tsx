@@ -18,7 +18,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 interface review {
-  rating_id: string;
+  ratingid: string;
   orderid: string;
   senderid: string;
   delivererid: string;
@@ -108,7 +108,7 @@ export default function Account({ session }: { session: Session }) {
         .select(
           `
       *,
-      profiles!reviews_senderid_fkey(username, first_name, last_name)
+     profiles!reviews_delivererid_fkey(username, first_name, last_name)
     `
         )
         .eq("delivererid", session?.user.id);
@@ -308,6 +308,8 @@ export default function Account({ session }: { session: Session }) {
     );
   }
 
+  console.log("senderReviews", senderReviews);
+  console.log("delivererReviews", delivererReviews);
   return (
     <ScrollView>
       <View>
@@ -324,7 +326,7 @@ export default function Account({ session }: { session: Session }) {
             <Image source={{ uri: avatarUrl }} style={styles.avatar} />
           ) : (
             <View style={styles.avatarPlaceholder}>
-              <Text style={styles.placeholderText}>No Image</Text>
+              <AntDesign name="user" size={50} color="#555" />
             </View>
           )}
         </View>
@@ -333,20 +335,34 @@ export default function Account({ session }: { session: Session }) {
         </Text>
 
         <View style={styles.ratingContainer}>
-          <View style={styles.bioInfo}>
-            <Text style={fontStyles.text}>{averageSenderRating} ★</Text>
-            <Text style={fontStyles.text}>Sender Rating</Text>
-          </View>
-          <View style={styles.verticalDivider} />
+          {senderReviews.length > 0 ? (
+            <View style={styles.bioInfo}>
+              <Text style={fontStyles.text}>{averageSenderRating} ★</Text>
+              <Text style={fontStyles.text}>Sender Rating</Text>
+            </View>
+          ) : (
+            <Text style={[fontStyles.text, { width: "30%", marginLeft: 20 }]}>
+              {profile?.first_name} left no reviews
+            </Text>
+          )}
 
-          <View style={styles.bioInfo}>
-            <Text style={fontStyles.text}>{averageDelivererRating} ★</Text>
-            <Text style={fontStyles.text}>Driver Rating</Text>
-          </View>
+          <View style={styles.verticalDivider} />
+          {delivererReviews.length > 0 ? (
+            <View style={styles.bioInfo}>
+              <Text style={fontStyles.text}>{averageDelivererRating} ★</Text>
+              <Text style={fontStyles.text}>Driver Rating</Text>
+            </View>
+          ) : (
+            <Text style={[fontStyles.text, { width: "30%" }]}>
+              No drivers left reviews yet for {profile?.first_name}
+            </Text>
+          )}
 
           <View style={styles.verticalDivider} />
           {getJoinDateMessage(profile?.created_at) === "0" ? (
-            <Text style={fontStyles.text}>Joined this year</Text>
+            <Text style={[fontStyles.text, { width: "30%" }]}>
+              Joined this year
+            </Text>
           ) : (
             <View style={styles.bioInfo}>
               <Text style={fontStyles.text}>
@@ -357,33 +373,46 @@ export default function Account({ session }: { session: Session }) {
           )}
         </View>
 
-        <Divider style={{ marginBottom: 40 }} />
+        <Divider style={{ marginBottom: 20 }} />
 
-        <View style={styles.buttonContainer}>
-          <Text style={fontStyles.h1}>Reviews From Senders</Text>
-          {senderReviews.map((review) => (
-            <View key={review.rating_id} style={styles.card}>
-              {renderStars(review.rating)}
-              <Text style={fontStyles.text}>{review.reviewtext}</Text>
-              <Text style={fontStyles.greyText}>
-                - {review.profiles.first_name}
-              </Text>
-            </View>
-          ))}
-
-          {/* Render deliverer review cards */}
-          <Text style={[fontStyles.h1, { marginTop: 20 }]}>
-            Reviews From Drivers
+        <Text style={[fontStyles.h1, { marginTop: 20 }]}>
+          What Drivers Say About {profile?.first_name}
+        </Text>
+        {delivererReviews.length === 0 ? (
+          <Text style={fontStyles.text}>
+            {profile?.first_name} has no reviews from other drivers.
           </Text>
-          {delivererReviews.map((driverReview) => (
-            <View key={driverReview.rating_id} style={styles.card}>
+        ) : (
+          delivererReviews.map((driverReview) => (
+            <View key={driverReview.ratingid} style={styles.card}>
               {renderStars(driverReview.rating)}
               <Text style={fontStyles.text}>{driverReview.reviewtext}</Text>
               <Text style={fontStyles.greyText}>
                 - {driverReview.profiles.first_name}
               </Text>
             </View>
-          ))}
+          ))
+        )}
+
+        <View style={styles.buttonContainer}>
+          <Text style={[fontStyles.h1, { marginTop: 40 }]}>
+            Reviews Left by {profile?.first_name}
+          </Text>
+          {senderReviews.length === 0 ? (
+            <Text style={fontStyles.text}>
+              {profile?.first_name} has not left any reviews.
+            </Text>
+          ) : (
+            senderReviews.map((review) => (
+              <View key={review.ratingid} style={styles.card}>
+                {renderStars(review.rating)}
+                <Text style={fontStyles.text}>{review.reviewtext}</Text>
+                <Text style={fontStyles.greyText}>
+                  - {review.profiles.first_name}
+                </Text>
+              </View>
+            ))
+          )}
         </View>
       </View>
     </ScrollView>
@@ -445,7 +474,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   star: {
-    fontSize: 30,
+    fontSize: 15,
     color: "#ccc",
     marginHorizontal: 5,
   },
