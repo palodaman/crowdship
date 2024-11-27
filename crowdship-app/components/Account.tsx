@@ -108,10 +108,11 @@ export default function Account({ session }: { session: Session }) {
         .select(
           `
       *,
-     profiles!reviews_delivererid_fkey(username, first_name, last_name)
+     profiles!reviews_senderid_fkey(username, first_name, last_name)
     `
         )
-        .eq("delivererid", session?.user.id);
+        .eq("delivererid", session?.user.id)
+        .eq("reviewtype", "sendertodriver");
 
       if (senderError) {
         throw senderError;
@@ -127,7 +128,8 @@ export default function Account({ session }: { session: Session }) {
       profiles!reviews_delivererid_fkey(username, first_name, last_name)
     `
           )
-          .eq("senderid", session?.user.id);
+          .eq("senderid", session?.user.id)
+          .eq("reviewtype", "drivertosender");
 
       if (delivererError) {
         throw delivererError;
@@ -338,11 +340,11 @@ export default function Account({ session }: { session: Session }) {
           {senderReviews.length > 0 ? (
             <View style={styles.bioInfo}>
               <Text style={fontStyles.text}>{averageSenderRating} ★</Text>
-              <Text style={fontStyles.text}>Sender Rating</Text>
+              <Text style={fontStyles.text}>Driver Rating</Text>
             </View>
           ) : (
             <Text style={[fontStyles.text, { width: "30%", marginLeft: 20 }]}>
-              {profile?.first_name} left no reviews
+              No Driver Ratings
             </Text>
           )}
 
@@ -350,18 +352,18 @@ export default function Account({ session }: { session: Session }) {
           {delivererReviews.length > 0 ? (
             <View style={styles.bioInfo}>
               <Text style={fontStyles.text}>{averageDelivererRating} ★</Text>
-              <Text style={fontStyles.text}>Driver Rating</Text>
+              <Text style={fontStyles.text}>Sender Rating</Text>
             </View>
           ) : (
             <Text style={[fontStyles.text, { width: "30%" }]}>
-              No drivers left reviews yet for {profile?.first_name}
+              No Sender Ratings
             </Text>
           )}
 
           <View style={styles.verticalDivider} />
           {getJoinDateMessage(profile?.created_at) === "0" ? (
             <Text style={[fontStyles.text, { width: "30%" }]}>
-              Joined this year
+              Joined {new Date(profile?.created_at).getFullYear()}
             </Text>
           ) : (
             <View style={styles.bioInfo}>
@@ -373,10 +375,31 @@ export default function Account({ session }: { session: Session }) {
           )}
         </View>
 
-        <Divider style={{ marginBottom: 20 }} />
+        <Divider style={{ marginBottom: 15 }} />
 
-        <Text style={[fontStyles.h1, { marginTop: 20 }]}>
-          What Drivers Say About {profile?.first_name}
+        <View style={styles.buttonContainer}>
+          <Text style={[fontStyles.h1, { marginTop: 20 }]}>
+            Sender Experiences with {profile?.first_name} as a Driver
+          </Text>
+          {senderReviews.length === 0 ? (
+            <Text style={fontStyles.text}>
+              {profile?.first_name} has no reviews from other senders.
+            </Text>
+          ) : (
+            senderReviews.map((review) => (
+              <View key={review.ratingid} style={styles.card}>
+                {renderStars(review.rating)}
+                <Text style={fontStyles.text}>{review.reviewtext}</Text>
+                <Text style={fontStyles.greyText}>
+                  - {review.profiles.first_name}
+                </Text>
+              </View>
+            ))
+          )}
+        </View>
+
+        <Text style={[fontStyles.h1, { marginTop: 10 }]}>
+          Driver Experiences with {profile?.first_name} as a Sender
         </Text>
         {delivererReviews.length === 0 ? (
           <Text style={fontStyles.text}>
@@ -393,27 +416,6 @@ export default function Account({ session }: { session: Session }) {
             </View>
           ))
         )}
-
-        <View style={styles.buttonContainer}>
-          <Text style={[fontStyles.h1, { marginTop: 40 }]}>
-            Reviews Left by {profile?.first_name}
-          </Text>
-          {senderReviews.length === 0 ? (
-            <Text style={fontStyles.text}>
-              {profile?.first_name} has not left any reviews.
-            </Text>
-          ) : (
-            senderReviews.map((review) => (
-              <View key={review.ratingid} style={styles.card}>
-                {renderStars(review.rating)}
-                <Text style={fontStyles.text}>{review.reviewtext}</Text>
-                <Text style={fontStyles.greyText}>
-                  - {review.profiles.first_name}
-                </Text>
-              </View>
-            ))
-          )}
-        </View>
       </View>
     </ScrollView>
   );
