@@ -84,12 +84,9 @@ export default function Account({ session }: { session: Session }) {
         .select("*")
         .eq("userid", session?.user.id);
 
-      console.log("data", data);
-
       if (data) {
         setAvatarUrl(data[0].avatar_url); // Set the avatar URL from the profile data
         setProfile(data[0]);
-        console.log("profile: ", data[0]);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -138,12 +135,10 @@ export default function Account({ session }: { session: Session }) {
 
       if (senderReviewData) {
         setSenderReviews(senderReviewData);
-        console.log("senderReviewData", senderReviewData);
       }
 
       if (delivererReviewData) {
         setDelivererReviews(delivererReviewData);
-        console.log("delivererReviewData", delivererReviewData);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -247,8 +242,6 @@ export default function Account({ session }: { session: Session }) {
       (sum, review) => sum + review?.rating,
       0
     );
-    console.log("totalRating", totalRating);
-    console.log("reviews.length", reviews?.length);
     return (totalRating / reviews?.length).toFixed(1).toString();
   };
 
@@ -315,8 +308,6 @@ export default function Account({ session }: { session: Session }) {
     );
   }
 
-  console.log("averageSenderRating", averageSenderRating);
-  console.log("averageDelivererRating", averageDelivererRating);
   return (
     <ScrollView>
       <View>
