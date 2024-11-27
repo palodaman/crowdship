@@ -379,7 +379,7 @@ export default function Account({ session }: { session: Session }) {
 
         <View style={styles.buttonContainer}>
           <Text style={[fontStyles.h1, { marginTop: 20 }]}>
-            Sender Experiences with {profile?.first_name} as a Driver
+            How {profile?.first_name} is as a driver?
           </Text>
           {senderReviews.length === 0 ? (
             <Text style={fontStyles.text}>
@@ -399,7 +399,7 @@ export default function Account({ session }: { session: Session }) {
         </View>
 
         <Text style={[fontStyles.h1, { marginTop: 10 }]}>
-          Driver Experiences with {profile?.first_name} as a Sender
+          How {profile?.first_name} is as a sender?
         </Text>
         {delivererReviews.length === 0 ? (
           <Text style={fontStyles.text}>

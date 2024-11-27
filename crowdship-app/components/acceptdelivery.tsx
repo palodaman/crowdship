@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   negotiationButtonsContainer: {
-    marginTop: 10,
+    marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
@@ -380,6 +380,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 12,
     color: "#666",
+    marginLeft: 15,
   },
   inputWithIcon: {
     flex: 1,
