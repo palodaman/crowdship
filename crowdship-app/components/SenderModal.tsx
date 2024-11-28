@@ -80,19 +80,7 @@ const SenderModal: React.FC<SenderModalProps> = ({
         return;
       }
 
-      // First verify Supabase connection
-      // const { data: testConnection, error: connectionError } = await supabase
-      //   .from('orders')
-      //   .select('*');
-      //   // .limit(1);
-
-      // if (connectionError) {
-      //   console.log( "inside here" );
-      //   console.error("Supabase connection error:", connectionError);
-      //   return;
-      // }
-
-      // Then fetch the order
+      //fetch the order
       const { data: orderData, error: connectionError } = await supabase
         .from('orders')
         .select(`
@@ -119,7 +107,7 @@ const SenderModal: React.FC<SenderModalProps> = ({
 
       setRenderModal(false);
       
-      // Use replace instead of push to avoid navigation stack issues
+      //Use replace instead of push
       await router.replace({
         pathname: "/chatscreen",
         params: {

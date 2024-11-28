@@ -150,7 +150,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
             ]}
           >
             <Image
-              source={diningTableImage} // Using the imported image here
+              source={diningTableImage} //using the imported image here
               style={styles.itemImage}
               resizeMode="cover"
             />

@@ -47,7 +47,7 @@ const ChatScreen = () => {
   const initializeChat = async () => {
     if (!currentUserId || !senderId) return;
     
-    // First check if a chat session exists
+    //first check if a chat session exists
     const { data: existingSession } = await supabase
       .from('chat_sessions')
       .select('id')
