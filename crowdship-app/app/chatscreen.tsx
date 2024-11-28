@@ -16,30 +16,77 @@ type RootStackParamList = {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ChatScreen'>;
 
+interface ChatMessage {
+  id: string;
+  chat_session_id: string;
+  sender_id: string;
+  receiver_id: string;
+  message_text: string;
+  sent_at: string;
+}
+
 const ChatScreen = () => {
   const router = useRouter();
   const { orderId, senderId } = useLocalSearchParams();
   const session = useSession();
   const currentUserId = session?.user?.id;
 
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
+  const [chatSessionId, setChatSessionId] = useState<string | null>(null);
   const flatListRef = useRef<any>(null);
   const [requesterUsername, setRequesterUsername] = useState<string | null>(null);
   const [requesterAvatar, setRequesterAvatar] = useState<string | null>(null);
+  const [isDriver, setIsDriver] = useState<boolean>(false);
 
   useEffect(() => {
+    initializeChat();
+    checkUserRole();
+  }, []);
+
+  const initializeChat = async () => {
+    if (!currentUserId || !senderId) return;
+    
+    // First check if a chat session exists
+    const { data: existingSession } = await supabase
+      .from('chat_sessions')
+      .select('id')
+      .or(`user1_id.eq.${currentUserId},user2_id.eq.${currentUserId}`)
+      .or(`user1_id.eq.${senderId},user2_id.eq.${senderId}`)
+      .single();
+
+    if (existingSession) {
+      setChatSessionId(existingSession.id);
+
+    } else {
+      // Create new chat session
+      const { data: newSession, error } = await supabase
+        .from('chat_sessions')
+        .insert([{
+          user1_id: currentUserId,
+          user2_id: senderId,
+        }])
+        .select()
+        .single();
+
+      if (newSession) {
+        setChatSessionId(newSession.id);
+      }
+    }
+    
     fetchMessages();
     setupSubscription();
     fetchRequesterInfo();
-  }, []);
+  };
 
   const fetchMessages = async () => {
-    const { data, error } = await supabase
+    if (!chatSessionId) return;
+
+    const { data } = await supabase
       .from('chat_messages')
       .select('*')
-      .eq('order_id', orderId)
-      .order('created_at', { ascending: true });
+      .eq('chat_session_id', chatSessionId)
+      .order('sent_at', { ascending: true });
 
     if (data) setMessages(data);
   };
@@ -53,7 +100,7 @@ const ChatScreen = () => {
           event: '*',
           schema: 'public',
           table: 'chat_messages',
-          filter: `order_id=eq.${orderId}`,
+          filter: `chat_session_id=eq.${chatSessionId}`,
         },
         (payload) => {
           fetchMessages();
@@ -66,21 +113,19 @@ const ChatScreen = () => {
     };
   };
 
-  const sendMessage =  async () => {
-    console.log("this is the message", newMessage);
-    if (!newMessage.trim() || !currentUserId) return;
-    console.log(orderId, 'hello')
+  const sendMessage = async () => {
+    if (!newMessage.trim() || !currentUserId || !chatSessionId || !senderId) return;
+    console.log("hetting in here");
     const { error } = await supabase
       .from('chat_messages')
-      .insert([
-        {
-          order_id: orderId,
-          sender_id: currentUserId,
-          content: newMessage.trim(),
-        },
-      ]);
+      .insert([{
+        chat_session_id: chatSessionId,
+        sender_id: currentUserId,
+        receiver_id: senderId,
+        message_text: newMessage.trim(),
+      }]);
+
     if (!error) {
-    
       setNewMessage('');
     }
   };
@@ -98,7 +143,23 @@ const ChatScreen = () => {
 
     if (data) {
       setRequesterUsername(data.username);
+      console.log(data.username);
       setRequesterAvatar(data.avatar_url);
+    }
+  };
+
+  const checkUserRole = async () => {
+    if (!currentUserId || !orderId) return;
+    
+    // Check if current user is the driver by querying orders table
+    const { data: orderData } = await supabase
+      .from('orders')
+      .select('delivererid')
+      .eq('orderid', orderId)
+      .single();
+
+    if (orderData) {
+      setIsDriver(orderData.delivererid === currentUserId);
     }
   };
 
@@ -123,8 +184,12 @@ const ChatScreen = () => {
             </View>
           )}
           <View style={styles.headerText}>
-            <Text style={styles.headerTitle}>Chat with Delivery Requester</Text>
-            <Text style={styles.senderName}>{requesterUsername || 'Loading...'}</Text>
+            <Text style={styles.headerTitle}>
+              Chat with {isDriver ? 'Delivery Requester' : 'Driver'}
+            </Text>
+            <Text style={styles.headerText}>
+              {requesterUsername || 'Loading...'}
+            </Text>
           </View>
         </View>
       </View>
@@ -132,7 +197,7 @@ const ChatScreen = () => {
       <FlatList
         ref={flatListRef}
         data={messages}
-        keyExtractor={(item) => item.message_id}
+        keyExtractor={(item) => item.id}
         onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
         renderItem={({ item }) => (
           <View style={[
@@ -147,7 +212,7 @@ const ChatScreen = () => {
                 ? styles.sentMessageText 
                 : styles.receivedMessageText
             ]}>
-              {item.content}
+              {item.message_text}
             </Text>
           </View>
         )}

@@ -1,20 +1,14 @@
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import React from "react";
-import {
-  View,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from "react-native";
+import {View, ScrollView,  Text,TouchableOpacity,  StyleSheet,  Image,} from "react-native";
 import diningTableImage from "../assets/diningTable.png";
 import EditDeliveryModal from "./EditDeliveryModal";
 import buttonStyles from "../styles/buttonStyles";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import fontStyles from "../styles/fontStyles";
 import StepIndicator from "react-native-step-indicator";
+import { supabase } from "../utils/supabase";
 
 interface Listing {
   listingid: string;
@@ -42,6 +36,7 @@ const SenderModal: React.FC<SenderModalProps> = ({
   transactionComplete,
   setEditMode,
 }) => {
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [renderEditDelivery, setRenderEditDelivery] = useState<boolean>(false);
   const labels = ["Picked Up", "In Transit", "Delivered"];
@@ -72,6 +67,74 @@ const SenderModal: React.FC<SenderModalProps> = ({
 
   const handleEditDelivery = () => {
     setRenderEditDelivery(true);
+  };
+
+  const handleChatWithDriver = async () => {
+    try {
+      console.log("Starting chat with driver...");
+      console.log("Listing ID:", selectedListing?.listingid);
+      
+      if (!selectedListing?.listingid) {
+        console.log("inside th eerror");
+        console.error("No listing ID available");
+        return;
+      }
+
+      // First verify Supabase connection
+      // const { data: testConnection, error: connectionError } = await supabase
+      //   .from('orders')
+      //   .select('*');
+      //   // .limit(1);
+
+      // if (connectionError) {
+      //   console.log( "inside here" );
+      //   console.error("Supabase connection error:", connectionError);
+      //   return;
+      // }
+
+      // Then fetch the order
+      const { data: orderData, error: connectionError } = await supabase
+        .from('orders')
+        .select(`
+          orderid,
+          delivererid,
+          status
+        `)
+        .eq('listingid', selectedListing.listingid)
+        .eq('status', 'ACCEPTED')
+        .maybeSingle();
+      
+
+      if (connectionError) {
+        console.error("Supabase connection error:", connectionError);
+        return;
+      }
+
+      console.log("Full order data:", orderData);
+
+      if (!orderData?.delivererid) {
+        console.error("No driver found for this listing");
+        return;
+      }
+
+      setRenderModal(false);
+      
+      // Use replace instead of push to avoid navigation stack issues
+      await router.replace({
+        pathname: "/chatscreen",
+        params: {
+          orderId: orderData.orderid,
+          senderId: orderData.delivererid,
+        },
+      });
+    } catch (error) {
+      console.error("Detailed error in chat button handler:", error);
+      if (error instanceof Error) {
+        console.error("Error name:", error.name);
+        console.error("Error message:", error.message);
+        console.error("Error stack:", error.stack);
+      }
+    }
   };
 
   console.log("renderEditDelivery", renderEditDelivery);
@@ -150,18 +213,7 @@ const SenderModal: React.FC<SenderModalProps> = ({
               transactionComplete === "inactive") && (
               <TouchableOpacity
                 style={buttonStyles.chatButton}
-                onPress={() => {
-                  if (selectedListing?.listingid && selectedListing?.senderid) {
-                    setRenderModal(false); //close the modal
-                    router.push({
-                      pathname: "/chatscreen",
-                      params: {
-                        orderId: selectedListing.listingid,
-                        senderId: selectedListing.senderid,
-                      },
-                    });
-                  }
-                }}
+                onPress={handleChatWithDriver}
               >
                 <AntDesign
                   name="message1"
