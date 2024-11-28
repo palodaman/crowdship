@@ -45,7 +45,7 @@ const buttonStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#47BF7E",
-    padding: 15,
+    padding: 10,
     borderRadius: 10,
     width: "90%",
     justifyContent: "center",
@@ -56,6 +56,17 @@ const buttonStyles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  reviewsButton: {
+    alignSelf: "flex-start",
+    marginLeft: 10,
+    marginTop: 10,
+    borderColor: "#7F8A94",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: "transparent", 
   },
 });
 

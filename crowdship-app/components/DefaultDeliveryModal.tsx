@@ -38,6 +38,15 @@ const DefaultDeliveryModal: React.FC<DefaultDeliveryModalProps> = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+
+  const handleStartDelivery = () => {
+    setMessage("Sucessfully started delivery!");
+    setTimeout(() => {
+      setLoading(false);
+      setMessage(null);
+    }, 3000);
+  };
 
   if (loading) {
     <View style={{ flex: 1, justifyContent: "center" }}>
@@ -105,8 +114,22 @@ const DefaultDeliveryModal: React.FC<DefaultDeliveryModalProps> = ({
           </View>
 
           {/* Chat Button */}
+
           <TouchableOpacity
-            style={buttonStyles.chatButton}
+            style={buttonStyles.primaryButton}
+            onPress={handleStartDelivery}
+          >
+            <Text style={buttonStyles.buttonText}>Start Delivery</Text>
+          </TouchableOpacity>
+
+          {message && (
+            <Text style={[fontStyles.greenText, { marginTop: 10 }]}>
+              {message}
+            </Text>
+          )}
+
+          <TouchableOpacity
+            style={[buttonStyles.chatButton, { backgroundColor: "#07181D" }]}
             onPress={() => {
               if (selectedListing?.listingid && selectedListing?.senderid) {
                 setRenderModal(false); //close the modal

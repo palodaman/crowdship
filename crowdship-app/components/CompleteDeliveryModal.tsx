@@ -104,15 +104,25 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
   const handleCompleteDelivery = async () => {
     if (!check && !itemImageUrl) {
       setMessage(
-        "Please upload a picture of the item or confirm in person delivery."
+        "Please upload a picture of the item or confirm in-person delivery."
       );
       return;
     } else {
       try {
-        const { error } = await supabase
+        const { error: orderError } = await supabase
           .from("orders")
           .update({ status: "COMPLETE" })
           .eq("listingid", selectedListing.listingid);
+  
+        if (orderError) throw orderError;
+  
+        const { error: listingError } = await supabase
+          .from("listings")
+          .update({ status: "INACTIVE" })
+          .eq("listingid", selectedListing.listingid);
+  
+        if (listingError) throw listingError;
+  
       } catch (error) {
         console.error(error);
       } finally {
@@ -120,7 +130,7 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
         fetchAllOrders();
       }
     }
-  };
+  };  
 
   const handleCheck = () => {
     if (check) {
@@ -174,6 +184,7 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
             title="I confirm that the item was delivered in person."
             checked={check}
             onPress={handleCheck}
+            checkedColor="#47BF7E"
           />
 
           <TouchableOpacity

@@ -14,6 +14,8 @@ import modalStyles from "../styles/modalStyles";
 import DefaultDeliveryModal from "./DefaultDeliveryModal";
 import CompleteDeliveryModal from "./CompleteDeliveryModal";
 import fontStyles from "../styles/fontStyles";
+import SubmitReviewModal from "./SubmitReviewModal";
+import { supabase } from "../lib/supabase";
 
 interface Listing {
   delivererid: string;
@@ -36,6 +38,13 @@ interface DriverDashboardProps {
   loading: boolean;
 }
 
+type ReviewData = {
+  orderid: string;
+  delivererid: string;
+  senderid: string;
+  reviewtype: string;
+};
+
 const DriverDashboard: React.FC<DriverDashboardProps> = ({
   activeOrders,
   pastOrders,
@@ -44,8 +53,9 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
 }) => {
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [renderModal, setRenderModal] = useState<boolean>(false);
-  const [renderCompleteDelivery, setRenderCompleteDelivery] =
-    useState<boolean>(false);
+  const [renderCompleteDelivery, setRenderCompleteDelivery] = useState<boolean>(false);
+  const [renderReviewModal, setRenderReviewModal] = useState<boolean>(false);
+  const [reviewData, setReviewData] = useState<ReviewData | null>(null); // New state for fetched order details
 
   const handlePress = (item: Listing) => {
     setSelectedListing(item);
@@ -57,6 +67,36 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
     setRenderCompleteDelivery(true);
     setSelectedListing(item);
     setRenderModal(true);
+  };
+
+  const fetchOrderDetails = async (item: Listing) => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('orderid, delivererid')
+        .eq('listingid', item.listingid);
+  
+      if (error) {
+        console.error('Error fetching order details:', error);
+      }
+  
+      return data?.[0];
+    } catch (error) {
+    }
+  };
+
+  const handleReviewButtonPress = async (item: Listing) => {
+    setSelectedListing(item);
+    const data = await fetchOrderDetails(item);
+    if (data) {
+      setReviewData({
+        orderid: data.orderid,
+        delivererid: data.delivererid,
+        senderid: item.senderid,
+        reviewtype: "drivertosender"
+      });
+      setRenderReviewModal(true);
+    }
   };
 
   if (loading) {
@@ -134,6 +174,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
                       <Text style={fontStyles.boldedText}>
                         {item.itemdescription}
                       </Text>
+                      <Text style={fontStyles.greyText}>DELIVERED</Text>
                       <View style={styles.itemPrice}>
                         <Ionicons
                           name="pricetag-outline"
@@ -143,7 +184,12 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
                         <Text style={fontStyles.greenText}>${item.price}</Text>
                       </View>
                     </View>
-                    <Text style={fontStyles.greyText}>DELIVERED</Text>
+                    <Button
+                     onPress={() => handleReviewButtonPress(item)}
+                     color={"#47BF7E"}
+                    >
+                      Review
+                    </Button>    
                   </View>
                 </Card>
               </View>
@@ -184,6 +230,29 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
                   setRenderModal={setRenderModal}
                 />
               ))}
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        visible={renderReviewModal}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setRenderReviewModal(false)}
+      >
+        <View style={modalStyles.modalContainer}>
+          <View style={{ width: "90%" }}>
+            <TouchableOpacity
+              style={modalStyles.closeButton}
+              onPress={() => setRenderReviewModal(false)}
+            >
+              <Text style={modalStyles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+            {selectedListing && reviewData && (
+              <SubmitReviewModal
+                reviewData={reviewData}
+                onSubmitReview={() => setRenderReviewModal(false)}
+              />
+            )}
           </View>
         </View>
       </Modal>
