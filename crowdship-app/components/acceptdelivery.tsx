@@ -192,7 +192,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
               onPress={() => setSelectedButton(0)}
             >
               <Text style={buttonStyles.tertiaryButtonText}>
-                ${selectedListing.price * 1.1}
+                ${(selectedListing.price * 1.1).toFixed(2)}
               </Text>
             </TouchableOpacity>
             <Text style={styles.labelText}>10% increase</Text>
@@ -207,7 +207,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
               onPress={() => setSelectedButton(1)}
             >
               <Text style={buttonStyles.tertiaryButtonText}>
-                ${selectedListing.price * 1.15}
+                ${(selectedListing.price * 1.15).toFixed(2)}
               </Text>
             </TouchableOpacity>
             <Text style={styles.labelText}>15% increase</Text>
@@ -222,7 +222,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
               onPress={() => setSelectedButton(2)}
             >
               <Text style={buttonStyles.tertiaryButtonText}>
-                ${selectedListing.price * 1.2}
+                ${(selectedListing.price * 1.2).toFixed(2)}
               </Text>
             </TouchableOpacity>
             <Text style={styles.labelText}>20% increase</Text>
@@ -341,9 +341,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   negotiationButtonsContainer: {
-    marginTop: 10,
+    marginTop: 20,
     flexDirection: "row",
-    justifyContent: "space-around", 
+    justifyContent: "space-around",
     width: "100%",
   },
   negotiateButton: {
@@ -380,6 +380,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 12,
     color: "#666",
+    marginLeft: 15,
   },
   inputWithIcon: {
     flex: 1,

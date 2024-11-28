@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { StyleSheet, View, Text } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import MapView, { Marker } from "react-native-maps";
+import { StyleSheet, View, AppState, AppStateStatus } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapViewDirections from "react-native-maps-directions";
 import DeliveriesList from "../components/DeliveriesList";
 import Snackbar from "../components/SnackBar";
+import * as Location from "expo-location";
 
 const styles = StyleSheet.create({
   container: {
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const apiKey = "AIzaSyCIUk8AvslqD49GmsyLs19xaxvREx1R9PE"; // Replace with your actual API key
+const apiKey = "AIzaSyC8_Y5Me5BZ_9_74fhy1Lbk9Lz8PiWBseA"; // Replace with your actual API key
 
 export default function GoogleMapScreen() {
   const mapRef = useRef<MapView>(null);
@@ -45,6 +46,78 @@ export default function GoogleMapScreen() {
   } | null>(null);
 
   const [snackBarVisible, setSnackBarVisible] = useState(false);
+  const [locationGranted, setLocationGranted] = useState(false);
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+  useEffect(() => {
+    // Listener to detect app state changes
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange
+    );
+
+    checkLocationPermission(); // Initial permission check
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  const handleAppStateChange = (nextAppState: AppStateStatus) => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === "active"
+    ) {
+      console.log("App has come to the foreground");
+      checkLocationPermission(); // Recheck permissions when app becomes active
+    }
+    appState.current = nextAppState;
+    setAppStateVisible(appState.current);
+  };
+
+  const checkLocationPermission = async () => {
+    console.log("Getting location permission");
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      alert("Location permission is required for this feature.");
+      console.log("Permission to access location was denied");
+      return;
+    }
+    console.log("Permission to access location was granted");
+    let location = await Location.getCurrentPositionAsync({});
+    setOrigin({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    });
+    console.log("Location: ", location);
+    console.log("origin: ", origin);
+    if (location) {
+      zoomToLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+      console.log("destination: ", destination);
+    }
+    setLocationGranted(true);
+  };
+
+  const zoomToLocation = (location: {
+    latitude: number;
+    longitude: number;
+  }) => {
+    if (mapRef.current) {
+      mapRef.current.animateToRegion(
+        {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        },
+        1000
+      );
+    }
+  };
 
   async function changeLocation(coordinates: {
     latitude: number | undefined;
