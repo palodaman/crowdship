@@ -67,43 +67,55 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
     setRenderAcceptDelivery(true);
   };
 
-  const fetchListings = useCallback(async (latitude: number, longitude: number) => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("listings")
-        .select("*")
-        .eq("status", "ACTIVE")
-        .neq("senderid", user?.id);
-  
-      if (error) throw error;
-  
-      const listingsWithDistances = await Promise.all(
-        data.map(async (listing) => {
-          try {
-            const { lat, lng } = await getLatLngFromAddress(listing.destinationaddress);
-            const distance = getDistanceFromLatLonInKm(latitude, longitude, lat, lng);
-            listing.distance = distance;
-            return { ...listing, distance };
-          } catch (error) {
-            console.error("Error getting geolocation for listing:", error);
-            return listing;
-          }
-        })
-      );
-  
-      listingsWithDistances.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
-  
-      // Store listings in ref for later use without triggering re-renders
-      listingsRef.current = listingsWithDistances;
-  
-      setListings(listingsWithDistances);
-    } catch (error) {
-      console.error("Error fetching listings:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [user]);  
+  const fetchListings = useCallback(
+    async (latitude: number, longitude: number) => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("listings")
+          .select("*")
+          .eq("status", "ACTIVE")
+          .neq("senderid", user?.id);
+
+        if (error) throw error;
+
+        const listingsWithDistances = await Promise.all(
+          data.map(async (listing) => {
+            try {
+              const { lat, lng } = await getLatLngFromAddress(
+                listing.destinationaddress
+              );
+              const distance = getDistanceFromLatLonInKm(
+                latitude,
+                longitude,
+                lat,
+                lng
+              );
+              listing.distance = distance;
+              return { ...listing, distance };
+            } catch (error) {
+              console.error("Error getting geolocation for listing:", error);
+              return listing;
+            }
+          })
+        );
+
+        listingsWithDistances.sort(
+          (a, b) => (a.distance ?? 0) - (b.distance ?? 0)
+        );
+
+        // Store listings in ref for later use without triggering re-renders
+        listingsRef.current = listingsWithDistances;
+
+        setListings(listingsWithDistances);
+      } catch (error) {
+        console.error("Error fetching listings:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [user]
+  );
 
   async function getLatLngFromAddress(address: string) {
     const response = await fetch(
@@ -152,6 +164,7 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
     );
   }
 
+  console.log("listings", listings);
   return (
     <View style={{ flex: 1, padding: 10 }}>
       <FlatList

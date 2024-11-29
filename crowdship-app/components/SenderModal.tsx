@@ -15,6 +15,7 @@ import buttonStyles from "../styles/buttonStyles";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import fontStyles from "../styles/fontStyles";
 import StepIndicator from "react-native-step-indicator";
+import { format, addHours, parseISO } from "date-fns";
 
 interface Listing {
   listingid: string;
@@ -27,6 +28,7 @@ interface Listing {
   itemdescription: string;
   itemimageurl: string | null;
   notes: string | null;
+  pickupdatetime: string;
 }
 
 interface SenderModalProps {
@@ -76,6 +78,10 @@ const SenderModal: React.FC<SenderModalProps> = ({
 
   console.log("renderEditDelivery", renderEditDelivery);
   console.log("transactionComplete", transactionComplete);
+  function utcToZonedTime(arg0: Date, arg1: string): string | number | Date {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView persistentScrollbar={true}>
@@ -141,6 +147,21 @@ const SenderModal: React.FC<SenderModalProps> = ({
                 <Text style={fontStyles.boldedText}>You'll Earn</Text>
                 <Text style={fontStyles.greyText}>
                   ${selectedListing.price || "Not available"}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.card}>
+              <AntDesign name="clockcircleo" size={24} color="black" />
+              <View style={styles.cardContent}>
+                <Text style={fontStyles.boldedText}>Pick Up Date and Time</Text>
+                <Text style={fontStyles.greyText}>
+                  {selectedListing.pickupdatetime
+                    ? format(
+                        addHours(parseISO(selectedListing.pickupdatetime), 24),
+                        "yyyy-MM-dd HH:mm a"
+                      )
+                    : "Not available"}
                 </Text>
               </View>
             </View>
