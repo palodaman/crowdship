@@ -379,11 +379,11 @@ export default function Account({ session }: { session: Session }) {
 
         <View style={styles.buttonContainer}>
           <Text style={[fontStyles.h1, { marginTop: 20 }]}>
-            How {profile?.first_name} is as a driver?
+            How others find me as a driver?
           </Text>
           {senderReviews.length === 0 ? (
             <Text style={fontStyles.text}>
-              {profile?.first_name} has no reviews from other senders.
+              I have no reviews from other senders.
             </Text>
           ) : (
             senderReviews.map((review) => (
@@ -399,11 +399,11 @@ export default function Account({ session }: { session: Session }) {
         </View>
 
         <Text style={[fontStyles.h1, { marginTop: 10 }]}>
-          How {profile?.first_name} is as a sender?
+          How others find me as a sender?
         </Text>
         {delivererReviews.length === 0 ? (
           <Text style={fontStyles.text}>
-            {profile?.first_name} has no reviews from other drivers.
+            I have no reviews from other drivers.
           </Text>
         ) : (
           delivererReviews.map((driverReview) => (
