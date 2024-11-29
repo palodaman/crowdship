@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Modal,
+  ScrollView,
 } from "react-native";
 import { Button } from "@rneui/themed";
 import { Ionicons } from "@expo/vector-icons";
@@ -111,151 +112,153 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({
   console.log("selectedListing", selectedListing);
   return (
     <View style={styles.container}>
-      <View style={{ flexShrink: 1 }}>
-        <Text style={styles.header}>In Progress Deliveries</Text>
-        {activeOrders.length > 0 ? (
-          activeOrders.map((item) => (
-            <TouchableOpacity
-              key={item.listingid}
-              onPress={() => handlePress(item)}
-            >
-              <View style={{ alignItems: "center" }}>
-                <Card>
-                  <View style={styles.itemContainer}>
-                    <View style={styles.itemImage}>
-                      <Ionicons name="image-outline" size={30} color="#ccc" />
-                    </View>
-                    <View style={styles.itemDescription}>
-                      <Text style={fontStyles.boldedText}>
-                        {item.itemdescription}
-                      </Text>
-                      <Text style={fontStyles.greyText}>{item.status}</Text>
-                      <View style={styles.itemPrice}>
-                        <Ionicons
-                          name="pricetag-outline"
-                          size={16}
-                          color="#47BF7E"
-                        />
-                        <Text style={fontStyles.greenText}>${item.price}</Text>
+      <ScrollView persistentScrollbar={true}>
+        <View style={{ flexShrink: 1 }}>
+          <Text style={styles.header}>In Progress Deliveries</Text>
+          {activeOrders.length > 0 ? (
+            activeOrders.map((item) => (
+              <TouchableOpacity
+                key={item.listingid}
+                onPress={() => handlePress(item)}
+              >
+                <View style={{ alignItems: "center" }}>
+                  <Card>
+                    <View style={styles.itemContainer}>
+                      <View style={styles.itemImage}>
+                        <Ionicons name="image-outline" size={30} color="#ccc" />
                       </View>
+                      <View style={styles.itemDescription}>
+                        <Text style={fontStyles.boldedText}>
+                          {item.itemdescription}
+                        </Text>
+                        <Text style={fontStyles.greyText}>{item.status}</Text>
+                        <View style={styles.itemPrice}>
+                          <Ionicons
+                            name="pricetag-outline"
+                            size={16}
+                            color="#47BF7E"
+                          />
+                          <Text style={fontStyles.greenText}>${item.price}</Text>
+                        </View>
+                      </View>
+                      <Button
+                        onPress={() => handleCompleteButtonPress(item)}
+                        color={"#47BF7E"}
+                      >
+                        Complete
+                      </Button>
                     </View>
-                    <Button
-                      onPress={() => handleCompleteButtonPress(item)}
+                  </Card>
+                </View>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <View style={styles.noDeliveriesContainer}>
+              <Text style={fontStyles.text}>No deliveries in progress</Text>
+            </View>
+          )}
+        </View>
+        <View style={{ flexShrink: 1 }}>
+          <Text style={styles.header}>Past Deliveries</Text>
+          {pastOrders.length > 0 ? (
+            pastOrders.map((item) => (
+              <TouchableOpacity
+                key={item.listingid}
+                onPress={() => handlePress(item)}
+              >
+                <View style={{ alignItems: "center" }}>
+                  <Card>
+                    <View style={styles.itemContainer}>
+                      <View style={styles.itemImage}>
+                        <Ionicons name="image-outline" size={30} color="#ccc" />
+                      </View>
+                      <View style={styles.itemDescription}>
+                        <Text style={fontStyles.boldedText}>
+                          {item.itemdescription}
+                        </Text>
+                        <Text style={fontStyles.greyText}>DELIVERED</Text>
+                        <View style={styles.itemPrice}>
+                          <Ionicons
+                            name="pricetag-outline"
+                            size={16}
+                            color="#47BF7E"
+                          />
+                          <Text style={fontStyles.greenText}>${item.price}</Text>
+                        </View>
+                      </View>
+                      <Button
+                      onPress={() => handleReviewButtonPress(item)}
                       color={"#47BF7E"}
-                    >
-                      Complete
-                    </Button>
-                  </View>
-                </Card>
-              </View>
-            </TouchableOpacity>
-          ))
-        ) : (
-          <View style={styles.noDeliveriesContainer}>
-            <Text style={fontStyles.text}>No deliveries in progress</Text>
-          </View>
-        )}
-      </View>
-      <View style={{ flexShrink: 1 }}>
-        <Text style={styles.header}>Past Deliveries</Text>
-        {pastOrders.length > 0 ? (
-          pastOrders.map((item) => (
-            <TouchableOpacity
-              key={item.listingid}
-              onPress={() => handlePress(item)}
-            >
-              <View style={{ alignItems: "center" }}>
-                <Card>
-                  <View style={styles.itemContainer}>
-                    <View style={styles.itemImage}>
-                      <Ionicons name="image-outline" size={30} color="#ccc" />
+                      >
+                        Review
+                      </Button>    
                     </View>
-                    <View style={styles.itemDescription}>
-                      <Text style={fontStyles.boldedText}>
-                        {item.itemdescription}
-                      </Text>
-                      <Text style={fontStyles.greyText}>DELIVERED</Text>
-                      <View style={styles.itemPrice}>
-                        <Ionicons
-                          name="pricetag-outline"
-                          size={16}
-                          color="#47BF7E"
-                        />
-                        <Text style={fontStyles.greenText}>${item.price}</Text>
-                      </View>
-                    </View>
-                    <Button
-                     onPress={() => handleReviewButtonPress(item)}
-                     color={"#47BF7E"}
-                    >
-                      Review
-                    </Button>    
-                  </View>
-                </Card>
-              </View>
-            </TouchableOpacity>
-          ))
-        ) : (
-          <View style={styles.noDeliveriesContainer}>
-            <Text style={fontStyles.text}>
-              No deliveries have been completed
-            </Text>
-          </View>
-        )}
-      </View>
-      <Modal
-        visible={renderModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setRenderModal(false)}
-      >
-        <View style={modalStyles.modalContainer}>
-          <View style={modalStyles.modalContent}>
-            <TouchableOpacity
-              style={modalStyles.closeButton}
-              onPress={() => setRenderModal(false)}
-            >
-              <Text style={modalStyles.closeButtonText}>X</Text>
-            </TouchableOpacity>
-            {selectedListing &&
-              (renderCompleteDelivery ? (
-                <CompleteDeliveryModal
-                  selectedListing={selectedListing}
-                  setRenderModal={setRenderModal}
-                  fetchAllOrders={fetchAllOrders}
-                />
-              ) : (
-                <DefaultDeliveryModal
-                  selectedListing={selectedListing}
-                  setRenderModal={setRenderModal}
-                />
-              ))}
-          </View>
+                  </Card>
+                </View>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <View style={styles.noDeliveriesContainer}>
+              <Text style={fontStyles.text}>
+                No deliveries have been completed
+              </Text>
+            </View>
+          )}
         </View>
-      </Modal>
-      <Modal
-        visible={renderReviewModal}
-        animationType="fade"
-        transparent={true}
-        onRequestClose={() => setRenderReviewModal(false)}
-      >
-        <View style={modalStyles.modalContainer}>
-          <View style={{ width: "90%" }}>
-            <TouchableOpacity
-              style={modalStyles.closeButton}
-              onPress={() => setRenderReviewModal(false)}
-            >
-              <Text style={modalStyles.closeButtonText}>X</Text>
-            </TouchableOpacity>
-            {selectedListing && reviewData && (
-              <SubmitReviewModal
-                reviewData={reviewData}
-                onSubmitReview={() => setRenderReviewModal(false)}
-              />
-            )}
+        <Modal
+          visible={renderModal}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setRenderModal(false)}
+        >
+          <View style={modalStyles.modalContainer}>
+            <View style={modalStyles.modalContent}>
+              <TouchableOpacity
+                style={modalStyles.closeButton}
+                onPress={() => setRenderModal(false)}
+              >
+                <Text style={modalStyles.closeButtonText}>X</Text>
+              </TouchableOpacity>
+              {selectedListing &&
+                (renderCompleteDelivery ? (
+                  <CompleteDeliveryModal
+                    selectedListing={selectedListing}
+                    setRenderModal={setRenderModal}
+                    fetchAllOrders={fetchAllOrders}
+                  />
+                ) : (
+                  <DefaultDeliveryModal
+                    selectedListing={selectedListing}
+                    setRenderModal={setRenderModal}
+                  />
+                ))}
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+        <Modal
+          visible={renderReviewModal}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={() => setRenderReviewModal(false)}
+        >
+          <View style={modalStyles.modalContainer}>
+            <View style={{ width: "90%" }}>
+              <TouchableOpacity
+                style={modalStyles.closeButton}
+                onPress={() => setRenderReviewModal(false)}
+              >
+                <Text style={modalStyles.closeButtonText}>X</Text>
+              </TouchableOpacity>
+              {selectedListing && reviewData && (
+                <SubmitReviewModal
+                  reviewData={reviewData}
+                  onSubmitReview={() => setRenderReviewModal(false)}
+                />
+              )}
+            </View>
+          </View>
+        </Modal>
+      </ScrollView>
     </View>
   );
 };

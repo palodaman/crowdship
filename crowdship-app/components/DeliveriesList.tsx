@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   FlatList,
@@ -11,7 +11,6 @@ import {
 import { supabase } from "../lib/supabase";
 import Card from "./Card";
 import AcceptDelivery from "./acceptdelivery";
-import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import modalStyles from "../styles/modalStyles";
 import { User } from "@supabase/supabase-js";
@@ -39,26 +38,27 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [renderAcceptDelivery, setRenderAcceptDelivery] = useState(false);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
-  const [handleAccept, setHandleAccept] = useState(false);
   const GOOGLE_MAPS_API_KEY = "AIzaSyC8_Y5Me5BZ_9_74fhy1Lbk9Lz8PiWBseA";
 
+  const listingsRef = useRef<Listing[]>([]); // Use a ref to store listings without triggering re-renders
+
   useEffect(() => {
-    fetchUser();
-  });
+    fetchUser().catch(console.error);
+  }, []);
 
   useEffect(() => {
     if (user) {
-      fetchListings(latitude, longitude);
+      fetchListings(latitude, longitude).catch(console.error);
     }
   }, [user, latitude, longitude]);
 
   const fetchUser = async () => {
     try {
       const { data, error } = await supabase.auth.getUser();
-      setUser(data.user);
       if (error) throw error;
+      setUser(data.user);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching user:", error);
     }
   };
 
@@ -67,44 +67,43 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
     setRenderAcceptDelivery(true);
   };
 
-  async function fetchListings(latitude: number, longitude: number) {
+  const fetchListings = useCallback(async (latitude: number, longitude: number) => {
     try {
-      // Fetch listings from Supabase
+      setLoading(true);
       const { data, error } = await supabase
         .from("listings")
         .select("*")
         .eq("status", "ACTIVE")
         .neq("senderid", user?.id);
-
+  
       if (error) throw error;
-
-      // Calculate distances
+  
       const listingsWithDistances = await Promise.all(
         data.map(async (listing) => {
-          const { lat, lng } = await getLatLngFromAddress(
-            listing.destinationaddress
-          );
-
-          const distance = getDistanceFromLatLonInKm(
-            latitude,
-            longitude,
-            lat,
-            lng
-          );
-          listing.distance = distance;
-          return { ...listing, distance };
+          try {
+            const { lat, lng } = await getLatLngFromAddress(listing.destinationaddress);
+            const distance = getDistanceFromLatLonInKm(latitude, longitude, lat, lng);
+            listing.distance = distance;
+            return { ...listing, distance };
+          } catch (error) {
+            console.error("Error getting geolocation for listing:", error);
+            return listing;
+          }
         })
       );
-      // Sort listings by distance
-      listingsWithDistances.sort(
-        (a, b) => (a.distance ?? 0) - (b.distance ?? 0)
-      );
+  
+      listingsWithDistances.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
+  
+      // Store listings in ref for later use without triggering re-renders
+      listingsRef.current = listingsWithDistances;
+  
       setListings(listingsWithDistances);
     } catch (error) {
+      console.error("Error fetching listings:", error);
     } finally {
       setLoading(false);
     }
-  }
+  }, [user]);  
 
   async function getLatLngFromAddress(address: string) {
     const response = await fetch(
