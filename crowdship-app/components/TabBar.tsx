@@ -27,7 +27,7 @@ const TabBar = ({
         let icon;
         if (route.name === "deliveryrequest") {
           label = "Send Packages";
-          icon = <AntDesign name="gift" size={24} color="black" />;
+          icon = <AntDesign name="dropbox" size={24} color="black" />;
         }
         if (route.name === "googlemapscreen") {
           label = "Find Deliveries";
