@@ -48,6 +48,9 @@ const TabBar = ({
         if (route.name === "chatscreen") {
           return null;
         }
+        if (route.name == "feedback"){
+          return null;
+        }
         if (["_sitemap", "+not-found"].includes(route.name)) return null;
 
         const isFocused = state.index === index;
