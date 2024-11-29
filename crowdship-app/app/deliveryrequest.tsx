@@ -333,6 +333,7 @@ export default function DeliveryRequest() {
         >
           <View style={styles.stepContainer}>
             <Text style={styles.paymentText}>Payment powered by Stripe</Text>
+            <Text style={[styles.h1, { paddingTop: 10 }]}>Note: You will only be charged when a delivery is marked as complete</Text>
 
             <View style={styles.cardDetailsContainer}>
               <View style={styles.inputContainer}>
