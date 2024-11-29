@@ -14,7 +14,6 @@ import {
   Modal,
   TextInput,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import modalStyles from "../styles/modalStyles";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -23,6 +22,7 @@ import { Feather } from "@expo/vector-icons";
 import diningTableImage from "../assets/diningTable.png";
 import fontStyles from "../styles/fontStyles";
 import buttonStyles from "../styles/buttonStyles";
+import { format, addHours, parseISO } from "date-fns";
 
 interface Listing {
   listingid: string;
@@ -34,6 +34,7 @@ interface Listing {
   destinationaddress: string;
   itemdescription: string;
   itemimageurl: string | null;
+  pickupdatetime: string;
 }
 
 interface AcceptDeliveryProps {
@@ -101,6 +102,14 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
     </View>;
   }
 
+  console.log("time", selectedListing.pickupdatetime);
+  console.log(
+    "new time",
+    format(
+      addHours(parseISO(selectedListing.pickupdatetime), 24),
+      "yyyy-MM-dd HH:mm:ss"
+    )
+  );
   return (
     <View style={styles.container}>
       <ScrollView persistentScrollbar={true}>
@@ -158,6 +167,20 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
               <Text style={fontStyles.boldedText}>You'll Earn</Text>
               <Text style={fontStyles.greyText}>
                 ${selectedListing.price || "Not available"}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.card}>
+            <AntDesign name="clockcircleo" size={24} color="black" />
+            <View style={styles.cardContent}>
+              <Text style={fontStyles.boldedText}>Pick Up Date and Time</Text>
+              <Text style={fontStyles.greyText}>
+                {selectedListing.pickupdatetime
+                  ? format(
+                      addHours(parseISO(selectedListing.pickupdatetime), 24),
+                      "yyyy-MM-dd HH:mm a"
+                    )
+                  : "Not available"}
               </Text>
             </View>
           </View>
@@ -257,7 +280,9 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
         transparent={true}
       >
         <View style={modalStyles.modalContainer}>
-          <View style={[modalStyles.modalContent, {width: "90%", height: "20%"}]}>
+          <View
+            style={[modalStyles.modalContent, { width: "90%", height: "20%" }]}
+          >
             <TouchableOpacity
               style={modalStyles.closeButton}
               onPress={() => handleAccept()}
