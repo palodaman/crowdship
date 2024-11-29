@@ -38,7 +38,7 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [renderAcceptDelivery, setRenderAcceptDelivery] = useState(false);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
-  const GOOGLE_MAPS_API_KEY = "AIzaSyC8_Y5Me5BZ_9_74fhy1Lbk9Lz8PiWBseA";
+  const GOOGLE_MAPS_API_KEY = "AIzaSyA8yVKKxYNkohpxjYrcZjDb1UlpH5mLR1M";
 
   const listingsRef = useRef<Listing[]>([]); // Use a ref to store listings without triggering re-renders
 
