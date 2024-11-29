@@ -15,7 +15,7 @@ Check out the progress of the app:
 - [Project Proposal](https://docs.google.com/presentation/d/1peil1iJRbVo_JsmiLLo1Ui51M7B2C_nOO8ybEi26i7I/edit?usp=sharing)
 - [Milestone 1](https://www.canva.com/design/DAGTBPuQ0hA/XS5Hs-V7oXsaTxTl7JmsUg/view?utm_content=DAGTBPuQ0hA&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 - [Milestone 2](https://www.canva.com/design/DAGUn4-0RUc/vmg020h-dukKPFfQMnRNJg/view?utm_content=DAGUn4-0RUc&utm_campaign=designshare&utm_medium=link&utm_source=editor)
-- [Milestone 3](https://docs.google.com/presentation/d/1ezSd52Tok1ssmX1XNv-7VHrFeTb0dTx0/edit?usp=sharing&ouid=108195452724558730826&rtpof=true&sd=true)
+- [Milestone 3](https://docs.google.com/document/d/1b9FrmSNGkEhcOvePmVpHOdPgPnyCju_JA-OCCkgSVtI/edit?usp=sharing)
 
 ## Wiki
 
