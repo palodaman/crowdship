@@ -15,6 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import buttonStyles from "../styles/buttonStyles";
 import fontStyles from "../styles/fontStyles";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 interface Listing {
   listingid: string;
@@ -27,6 +28,7 @@ interface Listing {
   itemdescription: string;
   itemimageurl: string | null;
   notes: string | null;
+  pickupdatetime: string;
 }
 
 interface EditDeliveryModalProps {
@@ -63,6 +65,8 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
   const [message, setMessage] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(0);
   const [deleteMessage, setDeleteMessage] = useState("");
+  const [pickupDateTime, setPickupDateTime] = useState<Date | null>(null);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const pickImage = async () => {
     let permissionResult =
@@ -124,6 +128,7 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
           notes: notes,
           itemimageurl: itemImageUrl,
           price: parseFloat(price),
+          pickupdatetime: pickupDateTime ? pickupDateTime.toISOString() : null,
         })
         .eq("listingid", selectedListing.listingid);
 
@@ -138,6 +143,19 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const showDateTimePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDateTimePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setPickupDateTime(date);
+    hideDateTimePicker();
   };
 
   if (loading) {
@@ -227,6 +245,28 @@ const EditDeliveryModal: React.FC<EditDeliveryModalProps> = ({
               keyboardType="numeric"
             />
           </View>
+
+          <View style={styles.card}>
+            <AntDesign name="calendar" size={24} color="black" />
+            <TouchableOpacity
+              style={[styles.inputWithIcon, styles.dateTimeButton]}
+              onPress={showDateTimePicker}
+            >
+              <Text style={styles.dateTimeText}>
+                {pickupDateTime
+                  ? pickupDateTime.toLocaleString()
+                  : "Set a pickup date & time"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* DateTimePicker Modal */}
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="datetime"
+            onConfirm={handleConfirm}
+            onCancel={hideDateTimePicker}
+          />
         </View>
         {deleteMessage !== "" && (
           <Text style={fontStyles.redText}>{deleteMessage}</Text>
@@ -324,6 +364,16 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     fontSize: 16,
     color: "black",
+  },
+  dateTimeButton: {
+    borderColor: "#ccc",
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 8,
+  },
+  dateTimeText: {
+    fontSize: 16,
+    color: "#444",
   },
 });
 
