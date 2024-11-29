@@ -145,10 +145,12 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   backButton: {
-    marginRight: 15,
+    marginRight: 0,
   },
   headerTitle: {
-    flex: 1,
+    flex: 1, // Allow title to take remaining space
+    textAlign: 'center', // Center the title within its flexbox
+    marginTop:15
   },
   form: {
     flex: 1,
