@@ -27,11 +27,35 @@ export default function SignUpScreen() {
   const [otp, setOtp] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [inputErrors, setInputErrors] = useState({});
   const router = useRouter();
 
   const termsScrollViewRef = useRef<ScrollView>(null);
 
+  const validateInputs = () => {
+    let errors = {};
+
+    if (!firstname) errors.firstname = "First name is required";
+    if (!lastname) errors.lastname = "Last name is required";
+    if (!username) errors.username = "Username is required";
+    if (!email) errors.email = "Email is required";
+    if (!password) errors.password = "Password is required";
+
+    setInputErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   async function signUpWithEmail() {
+    if (!validateInputs()) {
+      Alert.alert("Error", "Please fill in all required fields.");
+      return;
+    }
+    const {data, error} = await supabase.from('profiles').select('*').eq('email', email)
+    if(data){
+      Alert.alert("Error", "You are already signed up please login")
+      return
+    }
+
     if (!agreedToTerms) {
       Alert.alert("Error", "You must agree to the Terms and Conditions to sign up.");
       return;
@@ -114,61 +138,87 @@ export default function SignUpScreen() {
           style={{ width: 100, height: 100, alignSelf: "center" }}
         />
         <View style={[styles.verticallySpaced, styles.mt20]}>
-          <Input
-            label="First Name"
-            onChangeText={(text) => setFirstname(text)}
-            value={firstname}
-            placeholder="First name"
-            autoCapitalize={"none"}
-            disabled={showOTPInput}
-            labelStyle={fontStyles.h1}
-          />
-        </View>
-        <View style={styles.verticallySpaced}>
-          <Input
-            label="Last Name"
-            onChangeText={(text) => setLastname(text)}
-            value={lastname}
-            placeholder="Last name"
-            autoCapitalize={"none"}
-            disabled={showOTPInput}
-            labelStyle={fontStyles.h1}
-          />
-        </View>
-        <View style={styles.verticallySpaced}>
-          <Input
-            label="Username"
-            onChangeText={(text) => setUsername(text)}
-            value={username}
-            placeholder="Username"
-            autoCapitalize={"none"}
-            disabled={showOTPInput}
-            labelStyle={fontStyles.h1}
-          />
-        </View>
-        <View style={styles.verticallySpaced}>
-          <Input
-            label="Email"
-            onChangeText={(text) => setEmail(text)}
-            value={email}
-            placeholder="email@address.com"
-            autoCapitalize={"none"}
-            disabled={showOTPInput}
-            labelStyle={fontStyles.h1}
-          />
-        </View>
-        <View style={styles.verticallySpaced}>
-          <Input
-            label="Password"
-            onChangeText={(text) => setPassword(text)}
-            value={password}
-            secureTextEntry={true}
-            placeholder="Password"
-            autoCapitalize={"none"}
-            disabled={showOTPInput}
-            labelStyle={fontStyles.h1}
-          />
-        </View>
+        <Input
+          label="First Name *"
+          onChangeText={(text) => {
+            setFirstname(text);
+            setInputErrors({ ...inputErrors, firstname: undefined });
+          }}
+          value={firstname}
+          placeholder="First name"
+          autoCapitalize={"none"}
+          disabled={showOTPInput}
+          labelStyle={fontStyles.h1}
+          errorMessage={inputErrors.firstname}
+          inputContainerStyle={styles.inputContainerBox}
+        />
+      </View>
+      <View style={styles.verticallySpaced}>
+        <Input
+          label="Last Name *"
+          onChangeText={(text) => {
+            setLastname(text);
+            setInputErrors({ ...inputErrors, lastname: undefined });
+          }}
+          value={lastname}
+          placeholder="Last name"
+          autoCapitalize={"none"}
+          disabled={showOTPInput}
+          labelStyle={fontStyles.h1}
+          errorMessage={inputErrors.lastname}
+          inputContainerStyle={styles.inputContainerBox}
+        />
+      </View>
+      <View style={styles.verticallySpaced}>
+        <Input
+          label="Username *"
+          onChangeText={(text) => {
+            setUsername(text);
+            setInputErrors({ ...inputErrors, username: undefined });
+          }}
+          value={username}
+          placeholder="Username"
+          autoCapitalize={"none"}
+          disabled={showOTPInput}
+          labelStyle={fontStyles.h1}
+          errorMessage={inputErrors.username}
+          inputContainerStyle={styles.inputContainerBox}
+        />
+      </View>
+      <View style={styles.verticallySpaced}>
+        <Input
+          label="Email *"
+          onChangeText={(text) => {
+            setEmail(text);
+            setInputErrors({ ...inputErrors, email: undefined });
+          }}
+          value={email}
+          placeholder="email@address.com"
+          autoCapitalize={"none"}
+          disabled={showOTPInput}
+          labelStyle={fontStyles.h1}
+          errorMessage={inputErrors.email}
+          inputContainerStyle={styles.inputContainerBox}
+        />
+      </View>
+      <View style={styles.verticallySpaced}>
+        <Input
+          label="Password *"
+          onChangeText={(text) => {
+            setPassword(text);
+            setInputErrors({ ...inputErrors, password: undefined });
+          }}
+          value={password}
+          secureTextEntry={true}
+          placeholder="Password"
+          autoCapitalize={"none"}
+          disabled={showOTPInput}
+          labelStyle={fontStyles.h1}
+          errorMessage={inputErrors.password}
+          inputContainerStyle={styles.inputContainerBox}
+        />
+      </View>
+
 
         {/* Terms and Conditions Checkbox and Modal */}
         <View style={[styles.verticallySpaced, styles.mt20, styles.termsContainer]}>
@@ -176,9 +226,10 @@ export default function SignUpScreen() {
             value={agreedToTerms}
             onValueChange={() => setIsModalVisible(true)}
             disabled={!agreedToTerms}
+            color="#47BF7E"
           />
           <TouchableOpacity onPress={() => setIsModalVisible(true)}>
-            <Text style={{ textDecorationLine: "underline", color: "#007BFF", marginLeft: 10 }}>
+            <Text style={{ textDecorationLine: "underline", color: "#47BF7E", marginLeft: 10 }}>
               Terms and Conditions
             </Text>
           </TouchableOpacity>
@@ -232,12 +283,13 @@ export default function SignUpScreen() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
-            <View style={styles.modalHeader}>
-              <TouchableOpacity onPress={() => setIsModalVisible(false)}>
-                <Text style={styles.closeButton}>✕</Text>
-              </TouchableOpacity>
-              <Text style={styles.modalTitle}>Terms and Conditions</Text>
-            </View>
+            <TouchableOpacity
+              onPress={() => setIsModalVisible(false)}
+              style={styles.closeButtonContainer}
+            >
+              <Text style={styles.closeButton}>✕</Text>
+            </TouchableOpacity>
+            <Text style={styles.modalTitle}>Terms and Conditions</Text>
             <ScrollView
               ref={termsScrollViewRef}
               style={styles.modalScrollView}
@@ -269,8 +321,6 @@ export default function SignUpScreen() {
                   - Ensure timely pick-up and delivery of packages.{"\n"}
                   - Do not tamper with or damage packages.{"\n"}
                   - Follow traffic regulations and ensure transportation safety.{"\n\n"}
-
-                {/* Add more sections as needed */}
               </Text>
             </ScrollView>
             <TouchableOpacity
@@ -324,23 +374,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
   },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 15,
+  closeButtonContainer: {
+    position: "absolute",
+    top: 10,
+    right: 10,
   },
   closeButton: {
     fontSize: 24,
     color: "red",
     fontWeight: "bold",
-    padding: 5,
   },
   modalTitle: {
-    flex: 1,
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
+    marginTop: 20,
   },
   modalScrollView: {
     flex: 1,
@@ -368,6 +416,6 @@ const styles = StyleSheet.create({
   termsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingLeft: 10,
+    paddingLeft: 20,
   },
 });
