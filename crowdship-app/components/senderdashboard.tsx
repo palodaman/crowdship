@@ -319,28 +319,28 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
           </View>
         </Modal>
         <Modal
-        visible={renderReviewModal}
-        animationType="fade"
-        transparent={true}
-        onRequestClose={() => setRenderReviewModal(false)}
-      >
-        <View style={modalStyles.modalContainer}>
-          <View style={{ width: "90%" }}>
-            <TouchableOpacity
-              style={modalStyles.closeButton}
-              onPress={() => setRenderReviewModal(false)}
-            >
-              <Text style={modalStyles.closeButtonText}>X</Text>
-            </TouchableOpacity>
-            {selectedListing && reviewData && (
-              <SubmitReviewModal
-                reviewData={reviewData}
-                onSubmitReview={() => setRenderReviewModal(false)}
-              />
-            )}
+          visible={renderReviewModal}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={() => setRenderReviewModal(false)}
+        >
+          <View style={modalStyles.modalContainer}>
+            <View style={{ width: "90%" }}>
+              <TouchableOpacity
+                style={modalStyles.closeButton}
+                onPress={() => setRenderReviewModal(false)}
+              >
+                <Text style={modalStyles.closeButtonText}>X</Text>
+              </TouchableOpacity>
+              {selectedListing && reviewData && (
+                <SubmitReviewModal
+                  reviewData={reviewData}
+                  onSubmitReview={() => setRenderReviewModal(false)}
+                />
+              )}
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
       </ScrollView>
     </View>
   );

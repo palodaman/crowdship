@@ -17,6 +17,7 @@ import axios from "axios";
 import { supabase } from "../lib/supabase";
 import { useSession } from "../hooks/useSession";
 import buttonStyles from "../styles/buttonStyles";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 // Your Google API Key
 const GOOGLE_API_KEY = "AIzaSyC8_Y5Me5BZ_9_74fhy1Lbk9Lz8PiWBseA";
@@ -32,6 +33,8 @@ export default function DeliveryRequest() {
   const [itemImageUrl, setItemImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [pickupDateTime, setPickupDateTime] = useState<Date | null>(null);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const session = useSession();
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
@@ -201,6 +204,7 @@ export default function DeliveryRequest() {
           itemimageurl: itemImageUrl,
           notes: notes,
           views: 0,
+          pickupdatetime: pickupDateTime ? pickupDateTime.toISOString() : null,
         },
       ]);
 
@@ -214,11 +218,25 @@ export default function DeliveryRequest() {
       setPrice("");
       setNotes("");
       setItemImageUrl(null);
+      setPickupDateTime(null);
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const showDateTimePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDateTimePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setPickupDateTime(date);
+    hideDateTimePicker();
   };
 
   return (
@@ -320,6 +338,29 @@ export default function DeliveryRequest() {
               <MaterialIcons name="info-outline" size={24} color="black" />
             </TouchableOpacity>
           </View>
+
+          {/* Pickup Date & Time Button */}
+          <View style={styles.card}>
+            <AntDesign name="calendar" size={24} color="black" />
+            <TouchableOpacity
+              style={[styles.inputWithIcon, styles.dateTimeButton]}
+              onPress={showDateTimePicker}
+            >
+              <Text style={styles.dateTimeText}>
+                {pickupDateTime
+                  ? pickupDateTime.toLocaleString()
+                  : "Set a pickup date & time"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* DateTimePicker Modal */}
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="datetime"
+            onConfirm={handleConfirm}
+            onCancel={hideDateTimePicker}
+          />
 
           <View style={styles.card}>
             <AntDesign name="infocirlceo" size={24} color="black" />
@@ -533,6 +574,16 @@ const styles = StyleSheet.create({
     marginLeft: 25,
     marginTop: -10,
     marginBottom: 10,
+  },
+  dateTimeButton: {
+    borderColor: "#ccc",
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 8,
+  },
+  dateTimeText: {
+    fontSize: 16,
+    color: "#444",
   },
   message: {
     marginTop: 20,

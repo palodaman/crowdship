@@ -15,6 +15,7 @@ Check out the progress of the app:
 - [Project Proposal](https://docs.google.com/presentation/d/1peil1iJRbVo_JsmiLLo1Ui51M7B2C_nOO8ybEi26i7I/edit?usp=sharing)
 - [Milestone 1](https://www.canva.com/design/DAGTBPuQ0hA/XS5Hs-V7oXsaTxTl7JmsUg/view?utm_content=DAGTBPuQ0hA&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 - [Milestone 2](https://www.canva.com/design/DAGUn4-0RUc/vmg020h-dukKPFfQMnRNJg/view?utm_content=DAGUn4-0RUc&utm_campaign=designshare&utm_medium=link&utm_source=editor)
+- [Milestone 3](https://docs.google.com/document/d/1b9FrmSNGkEhcOvePmVpHOdPgPnyCju_JA-OCCkgSVtI/edit?usp=sharing)
 
 ## Wiki
 
@@ -24,27 +25,24 @@ You can access the wiki here: [CrowdShip Wiki](https://drive.google.com/drive/fo
 
 ## Features
 
-Below is a brief overview of all the features that the app includes/will include. Any feature that are marked as incomplete will be worked on in the next milestone. To see what features were worked on/implmented for the most recent milestone, refer to this [document](https://docs.google.com/document/d/1JhgStE6bvh5WCnZVKJHhdOWX9sznecLxRSmc5AKlf7Y/edit?usp=sharing). For further details on feature requirements, time estimates, roadmap, etc., see this [document](https://docs.google.com/document/d/1SQmtoYWRm86sPubjcFzEQUktxFt1g6xE-WH2qUgW5bs/edit?usp=sharing).
+Below is a brief overview of all the features in our app and their status at the end of milestone 3. Any feature that are marked as incomplete will be worked on in the future. For further details on features, see this [document](https://docs.google.com/document/d/1b9FrmSNGkEhcOvePmVpHOdPgPnyCju_JA-OCCkgSVtI/edit?usp=sharing).
 
-
-| Feature                        | Description                                                                                    | Implementation Status |
-| ------------------------------ | ---------------------------------------------------------------------------------------------- | --------------------- |
-| **Sign up & Login**            | Ensures secure access to the app for authenticated users.                                      | Complete              |
-| **Navigation Bar**             | Navigate between the profile, chat, accept delivery, and request delivery pages.               | Complete              |
-| **Authorization**              | Provides users with a way to securely log in using email and password authentication.          | Complete              |
-| **Accept Delivery Page**       | Allows drivers to see the deliveries closest to their destination and accept/decline requests. | Complete              |
-| **Request Delivery Page**      | Allows senders to put their packages out to be delivered.                                      | Complete              |
-| **Profile Page**               | Displays user-specific information that they can update.                                       | Complete              |
-| **Delivery Completed**         | Allows drivers to complete the delilvery and notify the sender.                                | Complete              |
-| **Chat**                       | Enables communication between the sender and driver.                                           | WIP                   |
-| **Delivery Dashboard**         | Allows users to view their current/past deliveries and current/past delivery requests.         | WIP                   |
-| **Delivery Accepted**          | Allows senders to get a notification that their order has been accepted for delivery.          | Incomplete            |
-| **Review**                     | Allows drivers and senders to leave reviews on each other.                                     | WIP           |
-| **Splash Screen/Welcome Page** | Transition screen between login/sign up and the app’s terms and conditions.                    | Incomplete            |
-| **Payment**                    | Allows drivers to receive payment and allow senders to securely send money.                     | Incomplete            |
-| **Real Time Driver Tracking**  | Allows senders to track their deliveries in real time                                          | Incomplete            |
-| **Terms & Conditions**         | Transition screen between login/sign up and the app’s terms and conditions.                    | Incomplete            |
-| **Submit Feedback/Bug Report** | Provides users with an option to submit feedback or report bugs directly through the app.      | Incomplete            |
+| Feature                             | Description                                                                                    | Implementation Status |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------- | --------------------- |
+| **(1 & 2) Sign up & Login**         | Ensures secure access to the app for authenticated users.                                      | Complete              |
+| **(3) Authorization**               | Provides users with a way to securely log in using email and password authentication.          | Complete              |
+| **(4) Navigation Bar**              | Navigate between the profile, chat, accept delivery, and request delivery pages.               | Complete              |
+| **(5) Request Delivery Page**       | Allows senders to put their packages out to be delivered.                                      | Complete              |
+| **(6) Chat**                        | Enables communication between the sender and driver.                                           | Complete              |
+| **(7) Accept Delivery Page**        | Allows drivers to see the deliveries closest to their destination and accept/decline requests. | Complete              |
+| **(8)Profile Page**                 | Displays user-specific information that they can update.                                       | Complete              |
+| **(9) Review**                      | Allows drivers and senders to leave reviews on each other.                                     | Complete              |
+| **(10) Splash Screen**              | Transition screen between login/sign up and the app’s terms and conditions.                    | Complete              |
+| **(11) Terms & Conditions**         | Transition screen between login/sign up and the app’s terms and conditions.                    | Complete              |
+| **(12) Real Time Tracking**         | Allows senders to track their deliveries in real time                                          | Incomplete            |
+| **(13) Orders Dashboard**           | Allows users to view their current/past deliveries and current/past delivery requests.         | Complete              |
+| **(14) Payment**                    | Allows drivers to receive payment and allow senders to securely send money.                    | Incomplete            |
+| **(15) Submit Feedback/Bug Report** | Provides users with an option to submit feedback or report bugs directly through the app.      | Complete              |
 
 ## Project Setup
 
@@ -66,9 +64,9 @@ To run this project, follow the steps below:
 
 3. **Run the app**:
    Launch the app in development mode by running:
-   `bash
+   ```bash
     npm run start
-    `
+   ```
    Note: Ensure you have Xcode installed on your system with the IOS package.
 
 ## Technologies Used
