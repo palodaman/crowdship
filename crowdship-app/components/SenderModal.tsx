@@ -1,14 +1,21 @@
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
 import React from "react";
-import {View, ScrollView,  Text,TouchableOpacity,  StyleSheet,  Image,} from "react-native";
+import {
+  View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+} from "react-native";
 import diningTableImage from "../assets/diningTable.png";
 import EditDeliveryModal from "./EditDeliveryModal";
 import buttonStyles from "../styles/buttonStyles";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import fontStyles from "../styles/fontStyles";
 import StepIndicator from "react-native-step-indicator";
-import { supabase } from "../utils/supabase";
+import { format, addHours, parseISO } from "date-fns";
 
 interface Listing {
   listingid: string;
@@ -21,6 +28,7 @@ interface Listing {
   itemdescription: string;
   itemimageurl: string | null;
   notes: string | null;
+  pickupdatetime: string;
 }
 
 interface SenderModalProps {
@@ -36,7 +44,6 @@ const SenderModal: React.FC<SenderModalProps> = ({
   transactionComplete,
   setEditMode,
 }) => {
-  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [renderEditDelivery, setRenderEditDelivery] = useState<boolean>(false);
   const labels = ["Picked Up", "In Transit", "Delivered"];
@@ -69,64 +76,12 @@ const SenderModal: React.FC<SenderModalProps> = ({
     setRenderEditDelivery(true);
   };
 
-  const handleChatWithDriver = async () => {
-    try {
-      console.log("Starting chat with driver...");
-      console.log("Listing ID:", selectedListing?.listingid);
-      
-      if (!selectedListing?.listingid) {
-        console.log("inside th eerror");
-        console.error("No listing ID available");
-        return;
-      }
-
-      //fetch the order
-      const { data: orderData, error: connectionError } = await supabase
-        .from('orders')
-        .select(`
-          orderid,
-          delivererid,
-          status
-        `)
-        .eq('listingid', selectedListing.listingid)
-        .eq('status', 'ACCEPTED')
-        .maybeSingle();
-      
-
-      if (connectionError) {
-        console.error("Supabase connection error:", connectionError);
-        return;
-      }
-
-      console.log("Full order data:", orderData);
-
-      if (!orderData?.delivererid) {
-        console.error("No driver found for this listing");
-        return;
-      }
-
-      setRenderModal(false);
-      
-      //Use replace instead of push
-      await router.replace({
-        pathname: "/chatscreen",
-        params: {
-          orderId: orderData.orderid,
-          senderId: orderData.delivererid,
-        },
-      });
-    } catch (error) {
-      console.error("Detailed error in chat button handler:", error);
-      if (error instanceof Error) {
-        console.error("Error name:", error.name);
-        console.error("Error message:", error.message);
-        console.error("Error stack:", error.stack);
-      }
-    }
-  };
-
   console.log("renderEditDelivery", renderEditDelivery);
   console.log("transactionComplete", transactionComplete);
+  function utcToZonedTime(arg0: Date, arg1: string): string | number | Date {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView persistentScrollbar={true}>
@@ -196,12 +151,38 @@ const SenderModal: React.FC<SenderModalProps> = ({
               </View>
             </View>
 
+            <View style={styles.card}>
+              <AntDesign name="clockcircleo" size={24} color="black" />
+              <View style={styles.cardContent}>
+                <Text style={fontStyles.boldedText}>Pick Up Date and Time</Text>
+                <Text style={fontStyles.greyText}>
+                  {selectedListing.pickupdatetime
+                    ? format(
+                        addHours(parseISO(selectedListing.pickupdatetime), 24),
+                        "yyyy-MM-dd HH:mm a"
+                      )
+                    : "Not available"}
+                </Text>
+              </View>
+            </View>
+
             {/* Chat Button */}
             {(transactionComplete === "claimed" ||
               transactionComplete === "inactive") && (
               <TouchableOpacity
                 style={buttonStyles.chatButton}
-                onPress={handleChatWithDriver}
+                onPress={() => {
+                  if (selectedListing?.listingid && selectedListing?.senderid) {
+                    setRenderModal(false); //close the modal
+                    router.push({
+                      pathname: "/chatscreen",
+                      params: {
+                        orderId: selectedListing.listingid,
+                        senderId: selectedListing.senderid,
+                      },
+                    });
+                  }
+                }}
               >
                 <AntDesign
                   name="message1"

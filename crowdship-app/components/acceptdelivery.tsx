@@ -14,7 +14,6 @@ import {
   Modal,
   TextInput,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import modalStyles from "../styles/modalStyles";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -23,7 +22,7 @@ import { Feather } from "@expo/vector-icons";
 import diningTableImage from "../assets/diningTable.png";
 import fontStyles from "../styles/fontStyles";
 import buttonStyles from "../styles/buttonStyles";
-import { useRouter } from "expo-router";
+import { format, addHours, parseISO } from "date-fns";
 
 interface Listing {
   listingid: string;
@@ -35,6 +34,7 @@ interface Listing {
   destinationaddress: string;
   itemdescription: string;
   itemimageurl: string | null;
+  pickupdatetime: string;
 }
 
 interface AcceptDeliveryProps {
@@ -58,7 +58,6 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
   const [customPrice, setCustomPrice] = useState<string>("");
   const [selectedButton, setSelectedButton] = useState<number | null>(null);
   const session = useSession();
-  const router = useRouter();
 
   const newOrder = async (selectedListing: Listing) => {
     try {
@@ -73,7 +72,6 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
             delivererid: session?.user.id,
             listingid: selectedListing.listingid,
             status: "ACCEPTED",
-            itemdescription: selectedListing.itemdescription
           },
         ]);
 
@@ -98,45 +96,20 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
     await onAccept();
   };
 
- const handleChatWithSender = async () => {
-  try {
-    if (!selectedListing?.listingid || !session?.user?.id) {
-      console.error("Missing listing ID or user ID");
-      return;
-    }
-
-    // Create or get order first
-    const { data: orderData, error: orderError } = await supabase
-      .from("orders")
-      .insert([
-        {
-          delivererid: session.user.id,
-          listingid: selectedListing.listingid,
-          status: "ACCEPTED",
-          itemdescription: selectedListing.itemdescription
-        },
-      ])
-      .select()
-      .single();
-
-    if (orderError) {
-      console.error("Error creating order:", orderError);
-      return;
-    }
-
-    setRenderAcceptDelivery(false);
-    await router.push({
-      pathname: "/chatscreen",
-      params: {
-        orderId: orderData.orderid,
-        senderId: selectedListing.senderid,
-      },
-    });
-  } catch (error) {
-    console.error("Error in chat handler:", error);
+  if (loading) {
+    <View style={{ flex: 1, justifyContent: "center" }}>
+      <ActivityIndicator size="large" color="#d3d3d3" />
+    </View>;
   }
-};
 
+  // console.log("time", selectedListing.pickupdatetime);
+  // console.log(
+  //   "new time",
+  //   format(
+  //     addHours(parseISO(selectedListing.pickupdatetime), 24),
+  //     "yyyy-MM-dd HH:mm:ss"
+  //   )
+  // );
   return (
     <View style={styles.container}>
       <ScrollView persistentScrollbar={true}>
@@ -150,7 +123,7 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
             ]}
           >
             <Image
-              source={diningTableImage} //using the imported image here
+              source={diningTableImage} // Using the imported image here
               style={styles.itemImage}
               resizeMode="cover"
             />
@@ -197,6 +170,20 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
               </Text>
             </View>
           </View>
+          <View style={styles.card}>
+            <AntDesign name="clockcircleo" size={24} color="black" />
+            <View style={styles.cardContent}>
+              <Text style={fontStyles.boldedText}>Pick Up Date and Time</Text>
+              <Text style={fontStyles.greyText}>
+                {selectedListing.pickupdatetime
+                  ? format(
+                      addHours(parseISO(selectedListing.pickupdatetime), 24),
+                      "yyyy-MM-dd HH:mm a"
+                    )
+                  : "Not available"}
+              </Text>
+            </View>
+          </View>
         </View>
 
         <View style={styles.buttonContainer}>
@@ -206,26 +193,96 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
           </View>
 
           <TouchableOpacity
-            style={buttonStyles.chatButton}
-            onPress={handleChatWithSender}
+            style={buttonStyles.primaryButton}
+            onPress={() => newOrder(selectedListing)}
           >
-            <AntDesign
-              name="message1"
-              size={24}
-              color="white"
-              style={{ marginRight: 10 }}
-            />
-            <Text style={buttonStyles.buttonText}>Chat With Sender</Text>
+            <Text style={buttonStyles.buttonText}>Accept Initial Offer</Text>
           </TouchableOpacity>
         </View>
 
-        <Modal
-          visible={renderAcceptDeliveryConfirmation}
-          animationType="slide"
-          transparent={true}
+        <View style={styles.negotiateHeader}>
+          <Text style={fontStyles.h1}>Negotiate Offer</Text>
+        </View>
+
+        <View style={styles.negotiationButtonsContainer}>
+          <View>
+            <TouchableOpacity
+              style={[
+                selectedButton === 0
+                  ? styles.selectedButton
+                  : styles.negotiateButton,
+              ]}
+              onPress={() => setSelectedButton(0)}
+            >
+              <Text style={buttonStyles.tertiaryButtonText}>
+                ${(selectedListing.price * 1.1).toFixed(2)}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.labelText}>10% increase</Text>
+          </View>
+          <View>
+            <TouchableOpacity
+              style={[
+                selectedButton === 1
+                  ? styles.selectedButton
+                  : styles.negotiateButton,
+              ]}
+              onPress={() => setSelectedButton(1)}
+            >
+              <Text style={buttonStyles.tertiaryButtonText}>
+                ${(selectedListing.price * 1.15).toFixed(2)}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.labelText}>15% increase</Text>
+          </View>
+          <View>
+            <TouchableOpacity
+              style={[
+                selectedButton === 2
+                  ? styles.selectedButton
+                  : styles.negotiateButton,
+              ]}
+              onPress={() => setSelectedButton(2)}
+            >
+              <Text style={buttonStyles.tertiaryButtonText}>
+                ${(selectedListing.price * 1.2).toFixed(2)}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.labelText}>20% increase</Text>
+          </View>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <View style={styles.card}>
+            <Feather name="dollar-sign" size={24} color="black" />
+            <TextInput
+              style={styles.inputWithIcon}
+              placeholder="Add custom price"
+              value={customPrice}
+              onChangeText={(text) => setCustomPrice(text)}
+              multiline={true}
+              numberOfLines={2}
+            />
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={buttonStyles.secondaryButton}
+          onPress={() => newOrder(selectedListing)}
         >
-          <View style={modalStyles.modalContainer}>
-            {/* <View style={[modalStyles.modalContent, styles.modifiedModalStyle]}> */}
+          <Text style={buttonStyles.buttonText}>Send New Offer</Text>
+        </TouchableOpacity>
+      </ScrollView>
+
+      <Modal
+        visible={renderAcceptDeliveryConfirmation}
+        animationType="slide"
+        transparent={true}
+      >
+        <View style={modalStyles.modalContainer}>
+          <View
+            style={[modalStyles.modalContent, { width: "90%", height: "20%" }]}
+          >
             <TouchableOpacity
               style={modalStyles.closeButton}
               onPress={() => handleAccept()}
@@ -237,9 +294,8 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
               Navigate to active deliveries to view order information.
             </Text>
           </View>
-          {/* </View> */}
-        </Modal>
-      </ScrollView>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -310,9 +366,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   negotiationButtonsContainer: {
-    marginTop: 10,
+    marginTop: 20,
     flexDirection: "row",
-    justifyContent: "space-around", 
+    justifyContent: "space-around",
     width: "100%",
   },
   negotiateButton: {
@@ -349,6 +405,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 12,
     color: "#666",
+    marginLeft: 15,
   },
   inputWithIcon: {
     flex: 1,
