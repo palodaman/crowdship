@@ -70,7 +70,7 @@ const FeedbackScreen = () => {
       </View>
 
       <View style={styles.form}>
-        <Text style={fontStyles.boldedText}>      Feedback Type</Text>
+        <Text style={fontStyles.boldedText}>       Type</Text>
         <View style={styles.centeredContainer}>
           <TouchableOpacity
             style={styles.dropdown}
@@ -126,7 +126,7 @@ const FeedbackScreen = () => {
           style={buttonStyles.primaryButton}
           onPress={handleSubmit}
         >
-          <Text style={buttonStyles.buttonText}>Submit Feedback</Text>
+          <Text style={buttonStyles.buttonText}>Submit</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
