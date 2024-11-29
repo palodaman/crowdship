@@ -16,7 +16,6 @@ import { AntDesign, Feather } from "@expo/vector-icons";
 import fontStyles from "../styles/fontStyles";
 import StepIndicator from "react-native-step-indicator";
 import { format, addHours, parseISO } from "date-fns";
-import { utcToZonedTime } from "date-fns-tz";
 
 interface Listing {
   listingid: string;

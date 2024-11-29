@@ -102,14 +102,14 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
     </View>;
   }
 
-  console.log("time", selectedListing.pickupdatetime);
-  console.log(
-    "new time",
-    format(
-      addHours(parseISO(selectedListing.pickupdatetime), 24),
-      "yyyy-MM-dd HH:mm:ss"
-    )
-  );
+  // console.log("time", selectedListing.pickupdatetime);
+  // console.log(
+  //   "new time",
+  //   format(
+  //     addHours(parseISO(selectedListing.pickupdatetime), 24),
+  //     "yyyy-MM-dd HH:mm:ss"
+  //   )
+  // );
   return (
     <View style={styles.container}>
       <ScrollView persistentScrollbar={true}>
