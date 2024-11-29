@@ -293,7 +293,7 @@ export default function DeliveryRequest() {
               style={styles.datePickerButton}
               onPress={showDateTimePicker}
             >
-              <AntDesign name="calendar" size={24} color="#22C55E" />
+              <AntDesign name="calendar" size={24} color="#47BF7E" />
               <Text style={styles.datePickerButtonText}>
                 {pickupDateTime
                   ? pickupDateTime.toLocaleString()
@@ -566,7 +566,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   submitButton: {
-    backgroundColor: '#22C55E',
+    backgroundColor: '#47BF7E',
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 20,
@@ -643,11 +643,13 @@ const styles = StyleSheet.create({
     color: '#64748B',
   },
   estimateButton: {
-    backgroundColor: '#22C55E',
+    backgroundColor: '#47BF7E',
     borderRadius: 12,
     padding: 14,
     alignItems: 'center',
     marginTop: 10,
+    marginLeft: 50,
+    marginRight: 50,
   },
   estimateButtonText: {
     color: 'white',
