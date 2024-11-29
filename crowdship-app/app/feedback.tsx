@@ -14,6 +14,7 @@ import { supabase } from '../lib/supabase';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import fontStyles from '../styles/fontStyles';
 import { AntDesign } from '@expo/vector-icons';
+import buttonStyles from '../styles/buttonStyles';
 
 const FeedbackScreen = () => {
   const router = useRouter();
@@ -69,16 +70,18 @@ const FeedbackScreen = () => {
       </View>
 
       <View style={styles.form}>
-        <Text style={fontStyles.boldedText}>Feedback Type</Text>
-        <TouchableOpacity
-          style={styles.dropdown}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.dropdownText}>
-            {feedbackOptions.find(option => option.value === feedbackType)?.label}
-          </Text>
-          <AntDesign name="down" size={16} color="#333" />
-        </TouchableOpacity>
+        <Text style={fontStyles.boldedText}>      Feedback Type</Text>
+        <View style={styles.centeredContainer}>
+          <TouchableOpacity
+            style={styles.dropdown}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.dropdownText}>
+              {feedbackOptions.find(option => option.value === feedbackType)?.label}
+            </Text>
+            <AntDesign name="down" size={16} color="#333" />
+          </TouchableOpacity>
+        </View>
 
         <Modal
           visible={modalVisible}
@@ -107,21 +110,23 @@ const FeedbackScreen = () => {
           </View>
         </Modal>
 
-        <Text style={[fontStyles.boldedText, styles.label]}>Description</Text>
-        <TextInput
-          style={styles.input}
-          multiline
-          numberOfLines={6}
-          value={description}
-          onChangeText={setDescription}
-          placeholder="Please describe your feedback..."
-        />
+        <Text style={[fontStyles.boldedText, styles.label]}>      Description</Text>
+        <View style={styles.centeredContainer}>
+          <TextInput
+            style={styles.input}
+            multiline
+            numberOfLines={6}
+            value={description}
+            onChangeText={setDescription}
+            placeholder="Please describe your feedback..."
+          />
+        </View>
 
         <TouchableOpacity 
-          style={styles.submitButton}
+          style={buttonStyles.primaryButton}
           onPress={handleSubmit}
         >
-          <Text style={styles.submitButtonText}>Submit Feedback</Text>
+          <Text style={buttonStyles.buttonText}>Submit Feedback</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -148,6 +153,9 @@ const styles = StyleSheet.create({
   form: {
     flex: 1,
   },
+  centeredContainer: {
+    alignItems: 'center',
+  },
   dropdown: {
     borderWidth: 1,
     borderColor: '#ddd',
@@ -157,6 +165,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
+    width: '90%',
   },
   dropdownText: {
     fontSize: 16,
@@ -194,6 +203,7 @@ const styles = StyleSheet.create({
     height: 120,
     textAlignVertical: 'top',
     marginBottom: 30,
+    width: '90%',
   },
   submitButton: {
     backgroundColor: '#5DE49B',
