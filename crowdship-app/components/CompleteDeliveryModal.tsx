@@ -184,7 +184,7 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
             In-Person Delivery
           </Text>
           <CheckBox
-            title="I confirm that the item was delivered inperson."
+            title="I confirm that the item was delivered in person."
             checked={check}
             onPress={handleCheck}
             checkedColor="#47BF7E"
