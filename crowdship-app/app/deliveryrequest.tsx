@@ -10,11 +10,11 @@ import {
   ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import { supabase } from "../lib/supabase";
 import { useSession } from "../hooks/useSession";
 import buttonStyles from "../styles/buttonStyles";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export default function DeliveryRequest() {
   const [itemDescription, setItemDescription] = useState("");
@@ -25,6 +25,8 @@ export default function DeliveryRequest() {
   const [itemImageUrl, setItemImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [pickupDateTime, setPickupDateTime] = useState<Date | null>(null);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const session = useSession();
 
   const pickImage = async () => {
@@ -66,6 +68,7 @@ export default function DeliveryRequest() {
           itemimageurl: itemImageUrl,
           notes: notes,
           views: 0,
+          pickupdatetime: pickupDateTime ? pickupDateTime.toISOString() : null,
         },
       ]);
 
@@ -79,11 +82,25 @@ export default function DeliveryRequest() {
       setPrice("");
       setNotes("");
       setItemImageUrl(null);
+      setPickupDateTime(null);
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const showDateTimePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDateTimePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setPickupDateTime(date);
+    hideDateTimePicker();
   };
 
   return (
@@ -159,6 +176,29 @@ export default function DeliveryRequest() {
             />
           </View>
 
+          {/* Pickup Date & Time Button */}
+          <View style={styles.card}>
+            <AntDesign name="calendar" size={24} color="black" />
+            <TouchableOpacity
+              style={[styles.inputWithIcon, styles.dateTimeButton]}
+              onPress={showDateTimePicker}
+            >
+              <Text style={styles.dateTimeText}>
+                {pickupDateTime
+                  ? pickupDateTime.toLocaleString()
+                  : "Set a pickup date & time"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* DateTimePicker Modal */}
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="datetime"
+            onConfirm={handleConfirm}
+            onCancel={hideDateTimePicker}
+          />
+
           <View style={styles.card}>
             <AntDesign name="infocirlceo" size={24} color="black" />
             <TextInput
@@ -197,11 +237,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
   uploadContainer: {
     width: "75%",
     height: 150,
@@ -216,10 +251,10 @@ const styles = StyleSheet.create({
     borderColor: "#07181D",
   },
   uploadedContainer: {
-    padding: 0, //ensures padding remains consistent after upload
-    justifyContent: "center", //aligns the image in the center
-    height: 175, //adjusts height to fit the image better
-    borderWidth: 0, //removes the border once the image is uploaded
+    padding: 0,
+    justifyContent: "center",
+    height: 175,
+    borderWidth: 0,
   },
   imageContainer: {
     width: "100%",
@@ -252,6 +287,16 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     fontSize: 16,
     color: "black",
+  },
+  dateTimeButton: {
+    borderColor: "#ccc",
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 8,
+  },
+  dateTimeText: {
+    fontSize: 16,
+    color: "#444",
   },
   message: {
     marginTop: 20,
