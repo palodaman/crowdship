@@ -177,8 +177,11 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
           >
             <Text style={buttonStyles.buttonText}>Upload Item Image</Text>
           </TouchableOpacity>
-          <Text style={[fontStyles.h1, { marginTop: 20 }]}>
-            In Person Delivery
+          <Text style={[fontStyles.title, { marginTop: 20 }]}>
+            OR
+          </Text>
+          <Text style={fontStyles.h1}>
+            In-Person Delivery
           </Text>
           <CheckBox
             title="I confirm that the item was delivered in person."
