@@ -33,8 +33,10 @@ const SubmitReviewModal: React.FC<ReviewModalProps> = ({
     reviewData.reviewtype === "sendertodriver" ? reviewData.delivererid : reviewData.senderid;
 
   useEffect(() => {
+    console.log("waiting");
     fetchUserInfo(userIdToFetch);
     checkIfReviewExists();
+    console.log("made it here");
   }, [userIdToFetch]);
 
   const fetchUserInfo = async (id: string) => {

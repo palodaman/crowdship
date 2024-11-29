@@ -257,19 +257,19 @@ const AcceptDelivery: React.FC<AcceptDeliveryProps> = ({
         transparent={true}
       >
         <View style={modalStyles.modalContainer}>
-          {/* <View style={[modalStyles.modalContent, styles.modifiedModalStyle]}> */}
-          <TouchableOpacity
-            style={modalStyles.closeButton}
-            onPress={() => handleAccept()}
-          >
-            <Text style={modalStyles.closeButtonText}>X</Text>
-          </TouchableOpacity>
-          <Text style={fontStyles.greenText}>{"Delivery Accepted!\n"}</Text>
-          <Text style={fontStyles.text}>
-            Navigate to active deliveries to view order information.
-          </Text>
+          <View style={[modalStyles.modalContent, {width: "90%", height: "20%"}]}>
+            <TouchableOpacity
+              style={modalStyles.closeButton}
+              onPress={() => handleAccept()}
+            >
+              <Text style={modalStyles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+            <Text style={fontStyles.greenText}>{"Delivery Accepted!\n"}</Text>
+            <Text style={fontStyles.text}>
+              Navigate to active deliveries to view order information.
+            </Text>
+          </View>
         </View>
-        {/* </View> */}
       </Modal>
     </View>
   );

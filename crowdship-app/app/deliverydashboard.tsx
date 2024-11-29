@@ -27,7 +27,7 @@ const DeliveryDashboard = () => {
   const [inProgressShipments, setInProgressShipments] = useState<Listing[]>([]);
   const [activeOrders, setActiveOrders] = useState<Listing[]>([]);
   const [pastOrders, setPastOrders] = useState<Listing[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -46,7 +46,6 @@ const DeliveryDashboard = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
     }
   };
 
@@ -81,7 +80,6 @@ const DeliveryDashboard = () => {
 
   const fetchAllShipments = async () => {
     try {
-      setLoading(true);
       const { data, error } = await supabase.auth.getUser();
       console.log("fetchAllShipments user", data);
       const { data: listingsData, error: listingsError } = await supabase
@@ -109,7 +107,7 @@ const DeliveryDashboard = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
