@@ -16,6 +16,7 @@ import React from "react";
 import fontStyles from "../styles/fontStyles";
 import { AntDesign } from "@expo/vector-icons";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { router } from "expo-router";
 
 interface review {
   ratingid: string;
@@ -316,6 +317,13 @@ export default function Account({ session }: { session: Session }) {
     <ScrollView>
       <View>
         <View style={styles.header}>
+          <TouchableOpacity 
+            style={styles.feedbackButton} 
+            onPress={() => router.push('/feedback')}
+          >
+            <AntDesign name="form" size={24} color="black" />
+            <Text style={styles.feedbackText}>Feedback</Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => supabase.auth.signOut()}>
             <AntDesign name="logout" size={24} color="black" />
           </TouchableOpacity>
@@ -498,5 +506,15 @@ const styles = StyleSheet.create({
   bioInfo: {
     flexDirection: "column",
     alignItems: "center",
+  },
+  feedbackButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 'auto',
+    padding: 10,
+  },
+  feedbackText: {
+    marginLeft: 8,
+    fontSize: 16,
   },
 });
