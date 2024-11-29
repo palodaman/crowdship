@@ -166,9 +166,9 @@ export default function DeliveryRequest() {
   // Custom styling for the progress steps
   const progressStepsStyle = {
     activeStepIconBorderColor: '#22C55E',
-    activeLabelColor: '#22C55E',
+    activeLabelColor: '#47BF7E',
     activeStepNumColor: 'white',
-    activeStepIconColor: '#22C55E',
+    activeStepIconColor: '#47BF7E',
     completedStepIconColor: '#22C55E',
     completedProgressBarColor: '#22C55E',
     completedCheckColor: '#ffffff',
@@ -545,7 +545,7 @@ const styles = StyleSheet.create({
     color: '#64748B',
   },
   nextButton: {
-    backgroundColor: '#22C55E',
+    backgroundColor: '#47BF7E',
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 32,
