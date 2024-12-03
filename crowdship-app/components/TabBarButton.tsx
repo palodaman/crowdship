@@ -14,7 +14,7 @@ const TabBarButton = (props: {
   color: string;
   icon: React.ReactNode;
 }) => {
-  const { isFocused, label, routeName, color, icon } = props;
+  const { isFocused, label, icon } = props;
 
   const scale = useSharedValue(0);
 
@@ -72,3 +72,5 @@ const styles = StyleSheet.create({
 });
 
 export default TabBarButton;
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

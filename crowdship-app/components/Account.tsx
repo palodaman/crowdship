@@ -15,8 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 import React from "react";
 import fontStyles from "../styles/fontStyles";
 import { AntDesign } from "@expo/vector-icons";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
-import { useRouter } from 'expo-router';
+import { useRouter } from "expo-router";
 
 interface review {
   ratingid: string;
@@ -254,7 +253,14 @@ export default function Account({ session }: { session: Session }) {
     const currentYear = new Date().getFullYear();
     const joinYear = joinDate.getFullYear();
     const yearsAgo = currentYear - joinYear;
-    return yearsAgo.toString();
+
+    if (yearsAgo < 1) {
+      return `Joined ${joinDate.getFullYear()}`;
+    } else if (yearsAgo === 1) {
+      return "Joined 1 year ago";
+    } else {
+      return `Joined ${yearsAgo} years ago`;
+    }
   };
 
   // Function to handle the image picking and upload
@@ -318,21 +324,24 @@ export default function Account({ session }: { session: Session }) {
     <ScrollView>
       <View>
         <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.feedbackButton} 
+          <TouchableOpacity
+            style={styles.feedbackButton}
             onPress={() => {
               router.push({
                 pathname: "/feedback",
                 params: {
-                  userId: session.user.id
-                }
+                  userId: session.user.id,
+                },
               });
             }}
           >
             <AntDesign name="form" size={24} color="black" />
             <Text style={styles.feedbackText}>Feedback</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => supabase.auth.signOut()}>
+          <TouchableOpacity
+            style={{ marginTop: 10 }}
+            onPress={() => supabase.auth.signOut()}
+          >
             <AntDesign name="logout" size={24} color="black" />
           </TouchableOpacity>
         </View>
@@ -377,18 +386,9 @@ export default function Account({ session }: { session: Session }) {
           )}
 
           <View style={styles.verticalDivider} />
-          {getJoinDateMessage(profile?.created_at) === "0" ? (
-            <Text style={[fontStyles.text, { width: "30%" }]}>
-              Joined {new Date(profile?.created_at).getFullYear()}
-            </Text>
-          ) : (
-            <View style={styles.bioInfo}>
-              <Text style={fontStyles.text}>
-                {getJoinDateMessage(profile?.created_at)}
-              </Text>
-              <Text style={fontStyles.text}>Years Shipping</Text>
-            </View>
-          )}
+          <Text style={[fontStyles.text, { width: "21%" }]}>
+            {getJoinDateMessage(profile?.created_at)}
+          </Text>
         </View>
 
         <Divider style={{ marginBottom: 15 }} />
@@ -516,9 +516,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   feedbackButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 'auto',
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: "auto",
     padding: 5,
   },
   feedbackText: {
@@ -526,3 +526,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

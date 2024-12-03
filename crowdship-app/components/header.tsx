@@ -1,12 +1,10 @@
-import React from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import React from "react";
+import { View, StyleSheet, SafeAreaView } from "react-native";
 
 export default function Header({ children }) {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        {children}
-      </View>
+      <View style={styles.container}>{children}</View>
     </SafeAreaView>
   );
 }
@@ -14,11 +12,13 @@ export default function Header({ children }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 });
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

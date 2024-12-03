@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import React from "react";
-import { AntDesign, Feather, Entypo, FontAwesome } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import TabBarButton from "./TabBarButton";
 
 const TabBar = ({
@@ -108,3 +108,5 @@ const styles = StyleSheet.create({
 });
 
 export default TabBar;
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

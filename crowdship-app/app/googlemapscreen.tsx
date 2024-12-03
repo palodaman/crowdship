@@ -229,3 +229,5 @@ export default function GoogleMapScreen() {
     </View>
   );
 }
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

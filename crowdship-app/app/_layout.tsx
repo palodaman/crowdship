@@ -4,12 +4,20 @@ import TabBar from "../components/TabBar";
 import { useSession } from "../hooks/useSession";
 import Path from "../components/Path";
 import { useRouter } from "expo-router";
+import { Image } from "react-native";
 
 const _layout = () => {
   const session = useSession();
   const router = useRouter();
   const [navbarVisible, setNavbarVisible] = useState(false);
   const [route, setRoute] = useState<string | null>(null);
+
+  const HeaderRightImage = () => (
+    <Image
+      source={require("../assets/logo.png")}
+      style={{ width: 30, height: 30, marginRight: 10 }}
+    />
+  );
 
   useEffect(() => {
     if (route && navbarVisible) {
@@ -52,24 +60,28 @@ const _layout = () => {
             name="index"
             options={{
               title: "Profile",
+              headerRight: () => <HeaderRightImage />,
             }}
           />
           <Tabs.Screen
             name="deliveryrequest"
             options={{
               title: "Send Packages",
+              headerRight: () => <HeaderRightImage />,
             }}
           />
           <Tabs.Screen
             name="googlemapscreen"
             options={{
               title: "Find Deliveries",
+              headerRight: () => <HeaderRightImage />,
             }}
           />
           <Tabs.Screen
             name="deliverydashboard"
             options={{
               title: "Orders",
+              headerRight: () => <HeaderRightImage />,
             }}
           />
         </Tabs>
@@ -81,3 +93,5 @@ const _layout = () => {
 };
 
 export default _layout;
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

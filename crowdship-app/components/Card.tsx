@@ -26,3 +26,4 @@ export default function Card({ children, style = {} }: CardProps) {
     </View>
   );
 }
+

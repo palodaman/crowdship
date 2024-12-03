@@ -226,3 +226,5 @@ const styles = StyleSheet.create({
 });
 
 export default DefaultDeliveryModal;
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

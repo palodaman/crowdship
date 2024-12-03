@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  ScrollView,
   Text,
   StyleSheet,
   Image,
@@ -19,7 +18,8 @@ import { useSession } from "../hooks/useSession";
 import buttonStyles from "../styles/buttonStyles";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
-import Tooltip from 'react-native-walkthrough-tooltip';
+import Tooltip from "react-native-walkthrough-tooltip";
+import fontStyles from "../styles/fontStyles";
 
 const { width } = Dimensions.get("window");
 
@@ -57,10 +57,17 @@ export default function DeliveryRequest() {
       startingAddress.trim() !== "" && destinationAddress.trim() !== ""
     );
     setIsDeliveryDetailsValid(price.trim() !== "" && pickupDateTime !== null);
-  }, [itemDescription, startingAddress, destinationAddress, price, pickupDateTime]);
+  }, [
+    itemDescription,
+    startingAddress,
+    destinationAddress,
+    price,
+    pickupDateTime,
+  ]);
 
   const pickImage = async () => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
       alert("Permission to access camera roll is required!");
       return;
@@ -82,7 +89,8 @@ export default function DeliveryRequest() {
     setIsLoading(true);
     setMessage("");
     try {
-      const { data: userData, error: userError } = await supabase.auth.getUser();
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
       if (userError) throw userError;
 
       const { data, error } = await supabase.from("listings").insert([
@@ -151,7 +159,7 @@ export default function DeliveryRequest() {
     calculatedPrice += mockDistance;
 
     //hardcoding for presentation
-    calculatedPrice = 103.75
+    calculatedPrice = 103.75;
 
     // Round to 2 decimal places
     return calculatedPrice.toFixed(2);
@@ -165,24 +173,18 @@ export default function DeliveryRequest() {
 
   // Custom styling for the progress steps
   const progressStepsStyle = {
-    activeStepIconBorderColor: '#22C55E',
-    activeLabelColor: '#47BF7E',
-    activeStepNumColor: 'white',
-    activeStepIconColor: '#47BF7E',
-    completedStepIconColor: '#22C55E',
-    completedProgressBarColor: '#22C55E',
-    completedCheckColor: '#ffffff',
+    activeStepIconBorderColor: "#22C55E",
+    activeLabelColor: "#47BF7E",
+    activeStepNumColor: "white",
+    activeStepIconColor: "#47BF7E",
+    completedStepIconColor: "#22C55E",
+    completedProgressBarColor: "#22C55E",
+    completedCheckColor: "#ffffff",
     labelFontSize: 14,
-    labelColor: '#94A3B8',
+    labelColor: "#94A3B8",
     activeLabelFontSize: 14,
-    disabledStepIconColor: '#E2E8F0',
-    progressBarColor: '#E2E8F0',
-  };
-
-  const buttonTextStyle = {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    disabledStepIconColor: "#E2E8F0",
+    progressBarColor: "#E2E8F0",
   };
 
   return (
@@ -191,17 +193,23 @@ export default function DeliveryRequest() {
         <ProgressStep
           label="Item Details"
           nextBtnStyle={styles.nextButton}
-          nextBtnTextStyle={buttonTextStyle}
+          nextBtnTextStyle={buttonStyles.buttonText}
           nextBtnDisabled={!isItemDetailsValid}
         >
           <View style={styles.stepContainer}>
-            <Text style={styles.stepTitle}>Item Details</Text>
+            <Text style={fontStyles.title}>Item Details</Text>
             <TouchableOpacity
-              style={[styles.uploadContainer, itemImageUrl && styles.uploadedContainer]}
+              style={[
+                styles.uploadContainer,
+                itemImageUrl && styles.uploadedContainer,
+              ]}
               onPress={pickImage}
             >
               {itemImageUrl ? (
-                <Image source={{ uri: itemImageUrl }} style={styles.itemImage} />
+                <Image
+                  source={{ uri: itemImageUrl }}
+                  style={styles.itemImage}
+                />
               ) : (
                 <View style={styles.uploadPlaceholder}>
                   <AntDesign name="camerao" size={32} color="#94A3B8" />
@@ -210,7 +218,9 @@ export default function DeliveryRequest() {
               )}
             </TouchableOpacity>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Item Description <Text style={styles.mandatory}>*</Text></Text>
+              <Text style={styles.label}>
+                Item Description <Text style={styles.mandatory}>*</Text>
+              </Text>
               <TextInput
                 style={styles.input}
                 placeholder="Enter item description"
@@ -226,14 +236,16 @@ export default function DeliveryRequest() {
           label="Addresses"
           nextBtnStyle={styles.nextButton}
           previousBtnStyle={styles.previousButton}
-          nextBtnTextStyle={buttonTextStyle}
-          previousBtnTextStyle={styles.previousButtonText}
+          nextBtnTextStyle={buttonStyles.buttonText}
+          previousBtnTextStyle={buttonStyles.tertiaryButtonText}
           nextBtnDisabled={!isAddressesValid}
         >
           <View style={styles.stepContainer}>
-            <Text style={styles.stepTitle}>Pickup & Delivery</Text>
+            <Text style={fontStyles.title}>Pickup & Delivery</Text>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Pickup Address <Text style={styles.mandatory}>*</Text></Text>
+              <Text style={styles.label}>
+                Pickup Address <Text style={styles.mandatory}>*</Text>
+              </Text>
               <TextInput
                 style={styles.input}
                 placeholder="Pickup address"
@@ -243,7 +255,9 @@ export default function DeliveryRequest() {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Delivery Address <Text style={styles.mandatory}>*</Text></Text>
+              <Text style={styles.label}>
+                Delivery Address <Text style={styles.mandatory}>*</Text>
+              </Text>
               <TextInput
                 style={styles.input}
                 placeholder="Delivery address"
@@ -259,14 +273,16 @@ export default function DeliveryRequest() {
           label="Details"
           nextBtnStyle={styles.nextButton}
           previousBtnStyle={styles.previousButton}
-          nextBtnTextStyle={buttonTextStyle}
-          previousBtnTextStyle={styles.previousButtonText}
+          nextBtnTextStyle={buttonStyles.buttonText}
+          previousBtnTextStyle={buttonStyles.tertiaryButtonText}
           nextBtnDisabled={!isDeliveryDetailsValid}
         >
           <View style={styles.stepContainer}>
-            <Text style={styles.stepTitle}>Delivery Details</Text>
+            <Text style={fontStyles.title}>Delivery Details</Text>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Price <Text style={styles.mandatory}>*</Text></Text>
+              <Text style={styles.label}>
+                Price <Text style={styles.mandatory}>*</Text>
+              </Text>
               <View style={styles.priceInputContainer}>
                 <TextInput
                   style={[styles.input, styles.priceInput]}
@@ -283,12 +299,19 @@ export default function DeliveryRequest() {
                   onClose={() => setTooltipVisible(false)}
                 >
                   <TouchableOpacity onPress={() => setModalVisible(true)}>
-                    <Feather name="info" size={24} color="#64748B" style={styles.infoIcon} />
+                    <Feather
+                      name="info"
+                      size={24}
+                      color="#64748B"
+                      style={styles.infoIcon}
+                    />
                   </TouchableOpacity>
                 </Tooltip>
               </View>
             </View>
-            <Text style={styles.label}>Schedule Pickup <Text style={styles.mandatory}>*</Text></Text>
+            <Text style={styles.label}>
+              Schedule Pickup <Text style={styles.mandatory}>*</Text>
+            </Text>
             <TouchableOpacity
               style={styles.datePickerButton}
               onPress={showDateTimePicker}
@@ -327,13 +350,17 @@ export default function DeliveryRequest() {
           onSubmit={handleSubmit}
           nextBtnStyle={styles.submitButton}
           previousBtnStyle={styles.previousButton}
-          nextBtnTextStyle={buttonTextStyle}
-          previousBtnTextStyle={styles.previousButtonText}
+          nextBtnTextStyle={buttonStyles.buttonText}
+          previousBtnTextStyle={buttonStyles.tertiaryButtonText}
           finishBtnText="Pay & Submit"
         >
           <View style={styles.stepContainer}>
-            <Text style={styles.paymentText}>Payment powered by Stripe</Text>
-            <Text style={[styles.h1, { paddingTop: 10 }]}>Note: You will only be charged when a delivery is marked as complete</Text>
+            <Text style={fontStyles.title}>Payment</Text>
+            <Text style={fontStyles.h1}>Payment powered by Stripe</Text>
+            <Text style={[fontStyles.text, { paddingTop: 10 }]}>
+              Note: You will only be charged when a delivery is marked as
+              complete
+            </Text>
 
             <View style={styles.cardDetailsContainer}>
               <View style={styles.inputContainer}>
@@ -348,7 +375,7 @@ export default function DeliveryRequest() {
                   placeholderTextColor="#94A3B8"
                 />
               </View>
-              
+
               <View style={styles.rowContainer}>
                 <View style={[styles.inputContainer, styles.halfWidth]}>
                   <Text style={styles.label}>Expiry Date</Text>
@@ -362,7 +389,7 @@ export default function DeliveryRequest() {
                     placeholderTextColor="#94A3B8"
                   />
                 </View>
-                
+
                 <View style={[styles.inputContainer, styles.halfWidth]}>
                   <Text style={styles.label}>CVV</Text>
                   <TextInput
@@ -379,78 +406,87 @@ export default function DeliveryRequest() {
             </View>
 
             {isLoading && (
-              <ActivityIndicator size="large" color="#22C55E" style={styles.loader} />
+              <ActivityIndicator
+                size="large"
+                color="#22C55E"
+                style={styles.loader}
+              />
             )}
             {message !== "" && (
-              <Text style={styles.message}>{message}</Text>
+              <Text style={fontStyles.greenText}>{message}</Text>
             )}
           </View>
         </ProgressStep>
       </ProgressSteps>
 
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => setModalVisible(false)}
-    >
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <TouchableOpacity
-            style={styles.modalCloseButton}
-            onPress={() => setModalVisible(false)}
-          >
-            <AntDesign name="close" size={24} color="#64748B" />
-          </TouchableOpacity>
-          <Text style={styles.modalTitle}>Estimate Delivery Price</Text>
-          <View style={styles.modalInputContainer}>
-            <Text style={styles.modalLabel}>Dimensions (ft)</Text>
-            <View style={styles.dimensionsContainer}>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <AntDesign name="close" size={24} color="#64748B" />
+            </TouchableOpacity>
+            <Text style={[fontStyles.title, { textAlign: "center" }]}>
+              Estimate Delivery Price
+            </Text>
+            <View style={styles.modalInputContainer}>
+              <Text style={[fontStyles.text, { marginBottom: 8 }]}>
+                Dimensions (ft)
+              </Text>
+              <View style={styles.dimensionsContainer}>
+                <TextInput
+                  style={[styles.modalInput, styles.dimensionInput]}
+                  value={length}
+                  onChangeText={setLength}
+                  keyboardType="numeric"
+                  placeholder="L"
+                />
+                <Text style={fontStyles.greyText}>x</Text>
+                <TextInput
+                  style={[styles.modalInput, styles.dimensionInput]}
+                  value={width}
+                  onChangeText={setWidth}
+                  keyboardType="numeric"
+                  placeholder="W"
+                />
+                <Text style={fontStyles.greyText}>x</Text>
+                <TextInput
+                  style={[styles.modalInput, styles.dimensionInput]}
+                  value={height}
+                  onChangeText={setHeight}
+                  keyboardType="numeric"
+                  placeholder="H"
+                />
+              </View>
+            </View>
+            <View style={styles.modalInputContainer}>
+              <Text style={[fontStyles.text, { marginBottom: 8 }]}>
+                Weight (kg)
+              </Text>
               <TextInput
-                style={[styles.modalInput, styles.dimensionInput]}
-                value={length}
-                onChangeText={setLength}
+                style={styles.modalInput}
+                value={weight}
+                onChangeText={setWeight}
                 keyboardType="numeric"
-                placeholder="L"
-              />
-              <Text style={styles.dimensionSeparator}>x</Text>
-              <TextInput
-                style={[styles.modalInput, styles.dimensionInput]}
-                value={width}
-                onChangeText={setWidth}
-                keyboardType="numeric"
-                placeholder="W"
-              />
-              <Text style={styles.dimensionSeparator}>x</Text>
-              <TextInput
-                style={[styles.modalInput, styles.dimensionInput]}
-                value={height}
-                onChangeText={setHeight}
-                keyboardType="numeric"
-                placeholder="H"
+                placeholder="Enter weight"
               />
             </View>
+            <TouchableOpacity
+              style={buttonStyles.primaryButton}
+              onPress={handleEstimate}
+            >
+              <Text style={buttonStyles.buttonText}>Estimate</Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.modalInputContainer}>
-            <Text style={styles.modalLabel}>Weight (kg)</Text>
-            <TextInput
-              style={styles.modalInput}
-              value={weight}
-              onChangeText={setWeight}
-              keyboardType="numeric"
-              placeholder="Enter weight"
-            />
-          </View>
-          <TouchableOpacity
-            style={styles.estimateButton}
-            onPress={handleEstimate}
-          >
-            <Text style={styles.estimateButtonText}>Estimate</Text>
-          </TouchableOpacity>
         </View>
-      </View>
-    </Modal>
-
+      </Modal>
     </View>
   );
 }
@@ -458,84 +494,73 @@ export default function DeliveryRequest() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
   },
   stepContainer: {
     padding: 20,
     paddingBottom: 100,
   },
-  stepTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#1E293B',
-    marginBottom: 24,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
   uploadContainer: {
     width: width - 40,
     height: 200,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: "#F8FAFC",
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#E2E8F0',
-    borderStyle: 'dashed',
-    overflow: 'hidden',
+    borderColor: "#E2E8F0",
+    borderStyle: "dashed",
+    overflow: "hidden",
     marginBottom: 24,
   },
   uploadedContainer: {
-    borderStyle: 'solid',
-    borderColor: '#22C55E',
+    borderStyle: "solid",
+    borderColor: "#22C55E",
   },
   uploadPlaceholder: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   uploadText: {
     marginTop: 12,
     fontSize: 16,
-    color: '#94A3B8',
+    color: "#94A3B8",
   },
   itemImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   inputContainer: {
     marginBottom: 16,
   },
   label: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#1E293B',
+    fontWeight: "500",
+    color: "#1E293B",
     marginBottom: 8,
   },
   mandatory: {
-    color: 'red',
+    color: "red",
   },
   input: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: "#F8FAFC",
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: "#E2E8F0",
     borderRadius: 12,
     padding: 16,
     fontSize: 16,
-    color: '#1E293B',
+    color: "#1E293B",
   },
   textArea: {
     height: 120,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   datePickerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F8FAFC',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F8FAFC",
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: "#E2E8F0",
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
@@ -543,33 +568,32 @@ const styles = StyleSheet.create({
   datePickerButtonText: {
     marginLeft: 12,
     fontSize: 16,
-    color: '#64748B',
+    color: "#64748B",
   },
   nextButton: {
-    backgroundColor: '#47BF7E',
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 32,
+    backgroundColor: "#47BF7E",
+    borderRadius: 10,
+    paddingVertical: 18, // Increase vertical padding
+    paddingHorizontal: 60,
     marginBottom: 100,
     marginRight: -30,
   },
   previousButton: {
-    backgroundColor: '#F8FAFC',
-    borderRadius: 12,
+    backgroundColor: "#white",
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#7F8A94",
+    borderStyle: "solid",
     paddingVertical: 16,
-    paddingHorizontal: 32,
+    paddingHorizontal: 42,
     marginBottom: 100,
     marginLeft: -30,
   },
-  previousButtonText: {
-    color: '#64748B',
-    fontSize: 16,
-    fontWeight: '600',
-  },
   submitButton: {
-    backgroundColor: '#47BF7E',
+    backgroundColor: "#47BF7E",
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 18,
     paddingHorizontal: 20,
     marginBottom: 100,
     marginRight: -30,
@@ -577,131 +601,77 @@ const styles = StyleSheet.create({
   loader: {
     marginTop: 20,
   },
-  message: {
-    marginTop: 20,
-    fontSize: 16,
-    color: '#22C55E',
-    textAlign: 'center',
-  },
-  paymentText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#1E293B',
-    marginTop: 50,
-  },
   priceInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F8FAFC',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F8FAFC",
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: "#E2E8F0",
     borderRadius: 12,
     paddingRight: 10,
   },
   priceInput: {
     flex: 1,
     borderWidth: 0,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   infoIcon: {
     padding: 5,
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 25,
-    alignItems: 'stretch',
-    shadowColor: '#000',
+    alignItems: "stretch",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: '90%',
+    width: "90%",
     maxWidth: 400,
-    position: 'relative',
-  },
-  modalTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#1E293B',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-    fontSize: 16,
-    color: '#64748B',
-  },
-  estimateButton: {
-    backgroundColor: '#47BF7E',
-    borderRadius: 12,
-    padding: 14,
-    alignItems: 'center',
-    marginTop: 10,
-    marginLeft: 50,
-    marginRight: 50,
-  },
-  estimateButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
+    position: "relative",
   },
   closeButton: {
-    backgroundColor: '#22C55E',
+    backgroundColor: "#22C55E",
     borderRadius: 12,
     padding: 14,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
-  },
-  closeButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
   },
   modalInputContainer: {
     marginBottom: 20,
   },
-  modalLabel: {
-    fontSize: 16,
-    color: '#1E293B',
-    marginBottom: 8,
-  },
   modalInput: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: "#F8FAFC",
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: "#E2E8F0",
     borderRadius: 12,
     padding: 12,
     fontSize: 16,
   },
   dimensionsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   dimensionInput: {
     flex: 1,
     marginHorizontal: 4,
   },
-  dimensionSeparator: {
-    fontSize: 16,
-    color: '#64748B',
-  },
   modalCloseButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
-    left: 10,
+    right: 10,
     zIndex: 1,
   },
   cardDetailsContainer: {
@@ -709,11 +679,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   rowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   halfWidth: {
-    width: '48%',
+    width: "48%",
   },
 });
 
+/*This code was developed with the assistance of ChatGPT and Copilot*/

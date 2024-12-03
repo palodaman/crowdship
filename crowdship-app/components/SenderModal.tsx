@@ -144,7 +144,7 @@ const SenderModal: React.FC<SenderModalProps> = ({
             <View style={styles.card}>
               <Feather name="dollar-sign" size={20} color="black" />
               <View style={styles.cardContent}>
-                <Text style={fontStyles.boldedText}>You'll Earn</Text>
+                <Text style={fontStyles.boldedText}>Price</Text>
                 <Text style={fontStyles.greyText}>
                   ${selectedListing.price || "Not available"}
                 </Text>
@@ -272,3 +272,5 @@ const styles = StyleSheet.create({
 });
 
 export default SenderModal;
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

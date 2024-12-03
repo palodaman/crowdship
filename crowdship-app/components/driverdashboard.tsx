@@ -310,3 +310,5 @@ const styles = StyleSheet.create({
 });
 
 export default React.memo(DriverDashboard);
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

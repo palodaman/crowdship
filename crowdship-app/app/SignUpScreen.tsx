@@ -24,7 +24,6 @@ export default function SignUpScreen() {
   const [showOTPInput, setShowOTPInput] = useState(false);
   const [otp, setOtp] = useState("");
   const router = useRouter();
-  const [focusedInput, setFocusedInput] = useState<string | null>(null);
 
   async function signUpWithEmail() {
     setLoading(true);
@@ -215,3 +214,5 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

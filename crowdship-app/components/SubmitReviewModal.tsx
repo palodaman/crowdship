@@ -250,3 +250,5 @@ const styles = StyleSheet.create({
 });
 
 export default SubmitReviewModal;
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

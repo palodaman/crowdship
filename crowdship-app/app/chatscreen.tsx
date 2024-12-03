@@ -1,11 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {  View,Text,TextInput,FlatList,TouchableOpacity, StyleSheet,KeyboardAvoidingView, Platform,SafeAreaView,Image, Button} from 'react-native';
-import { supabase } from '../lib/supabase';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useLocalSearchParams } from 'expo-router';
-import { useRouter } from 'expo-router';
-import { useSession } from '../hooks/useSession';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  Image,
+} from "react-native";
+import { supabase } from "../lib/supabase";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useLocalSearchParams } from "expo-router";
+import { useRouter } from "expo-router";
+import { useSession } from "../hooks/useSession";
 
 type RootStackParamList = {
   ChatScreen: {
@@ -14,7 +25,7 @@ type RootStackParamList = {
   };
 };
 
-type Props = NativeStackScreenProps<RootStackParamList, 'ChatScreen'>;
+type Props = NativeStackScreenProps<RootStackParamList, "ChatScreen">;
 
 const ChatScreen = () => {
   const router = useRouter();
@@ -23,9 +34,11 @@ const ChatScreen = () => {
   const currentUserId = session?.user?.id;
 
   const [messages, setMessages] = useState<any[]>([]);
-  const [newMessage, setNewMessage] = useState<string>('');
+  const [newMessage, setNewMessage] = useState<string>("");
   const flatListRef = useRef<any>(null);
-  const [requesterUsername, setRequesterUsername] = useState<string | null>(null);
+  const [requesterUsername, setRequesterUsername] = useState<string | null>(
+    null
+  );
   const [requesterAvatar, setRequesterAvatar] = useState<string | null>(null);
 
   useEffect(() => {
@@ -36,23 +49,23 @@ const ChatScreen = () => {
 
   const fetchMessages = async () => {
     const { data, error } = await supabase
-      .from('chat_messages')
-      .select('*')
-      .eq('order_id', orderId)
-      .order('created_at', { ascending: true });
+      .from("chat_messages")
+      .select("*")
+      .eq("order_id", orderId)
+      .order("created_at", { ascending: true });
 
     if (data) setMessages(data);
   };
 
   const setupSubscription = () => {
     const subscription = supabase
-      .channel('chat-channel')
+      .channel("chat-channel")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'chat_messages',
+          event: "*",
+          schema: "public",
+          table: "chat_messages",
           filter: `order_id=eq.${orderId}`,
         },
         (payload) => {
@@ -66,22 +79,19 @@ const ChatScreen = () => {
     };
   };
 
-  const sendMessage =  async () => {
+  const sendMessage = async () => {
     console.log("this is the message", newMessage);
     if (!newMessage.trim() || !currentUserId) return;
-    console.log(orderId, 'hello')
-    const { error } = await supabase
-      .from('chat_messages')
-      .insert([
-        {
-          order_id: orderId,
-          sender_id: currentUserId,
-          content: newMessage.trim(),
-        },
-      ]);
+    console.log(orderId, "hello");
+    const { error } = await supabase.from("chat_messages").insert([
+      {
+        order_id: orderId,
+        sender_id: currentUserId,
+        content: newMessage.trim(),
+      },
+    ]);
     if (!error) {
-    
-      setNewMessage('');
+      setNewMessage("");
     }
   };
 
@@ -91,9 +101,9 @@ const ChatScreen = () => {
 
   const fetchRequesterInfo = async () => {
     const { data, error } = await supabase
-      .from('profiles')
-      .select('username, avatar_url')
-      .eq('userid', senderId)
+      .from("profiles")
+      .select("username, avatar_url")
+      .eq("userid", senderId)
       .single();
 
     if (data) {
@@ -105,26 +115,25 @@ const ChatScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={handleBack}
-        >
-          <Icon name="arrow-left" size={24} color="#333" />
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+          <AntDesign name="arrowleft" size={24} color="#333" />
         </TouchableOpacity>
         <View style={styles.headerContent}>
           {requesterAvatar ? (
-            <Image 
-              source={{ uri: requesterAvatar }} 
+            <Image
+              source={{ uri: requesterAvatar }}
               style={styles.avatarImage}
             />
           ) : (
             <View style={styles.avatarPlaceholder}>
-              <Icon name="user" size={24} color="#999" />
+              <AntDesign name="user" size={24} color="#999" />
             </View>
           )}
           <View style={styles.headerText}>
             <Text style={styles.headerTitle}>Chat with Delivery Requester</Text>
-            <Text style={styles.senderName}>{requesterUsername || 'Loading...'}</Text>
+            <Text style={styles.senderName}>
+              {requesterUsername || "Loading..."}
+            </Text>
           </View>
         </View>
       </View>
@@ -135,18 +144,22 @@ const ChatScreen = () => {
         keyExtractor={(item) => item.message_id}
         onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
         renderItem={({ item }) => (
-          <View style={[
-            styles.messageContainer,
-            item.sender_id === currentUserId
-              ? styles.sentMessage 
-              : styles.receivedMessage
-          ]}>
-            <Text style={[
-              styles.messageText,
+          <View
+            style={[
+              styles.messageContainer,
               item.sender_id === currentUserId
-                ? styles.sentMessageText 
-                : styles.receivedMessageText
-            ]}>
+                ? styles.sentMessage
+                : styles.receivedMessage,
+            ]}
+          >
+            <Text
+              style={[
+                styles.messageText,
+                item.sender_id === currentUserId
+                  ? styles.sentMessageText
+                  : styles.receivedMessageText,
+              ]}
+            >
               {item.content}
             </Text>
           </View>
@@ -154,8 +167,8 @@ const ChatScreen = () => {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
       >
         <View style={styles.inputContainer}>
           <TextInput
@@ -165,11 +178,8 @@ const ChatScreen = () => {
             placeholder="Type a message..."
             multiline
           />
-          <TouchableOpacity 
-            style={styles.sendButton}
-            onPress={sendMessage}
-          >
-            <Icon name="send" size={20} color="white" />
+          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+            <Feather name="send" size={20} color="white" />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -180,58 +190,58 @@ const ChatScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
   },
   backButton: {
     padding: 10,
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     // marginLeft: 10,
   },
   messageContainer: {
-    maxWidth: '80%',
+    maxWidth: "80%",
     marginVertical: 5,
     marginHorizontal: 10,
     padding: 12,
     borderRadius: 20,
   },
   sentMessage: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#0084ff',
+    alignSelf: "flex-end",
+    backgroundColor: "#0084ff",
   },
   receivedMessage: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#e9ecef',
+    alignSelf: "flex-start",
+    backgroundColor: "#e9ecef",
   },
   messageText: {
     fontSize: 16,
   },
   sentMessageText: {
-    color: '#fff',
+    color: "#fff",
   },
   receivedMessageText: {
-    color: '#000',
+    color: "#000",
   },
   inputContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 10,
     borderTopWidth: 1,
-    borderTopColor: '#eee',
-    backgroundColor: '#fff',
+    borderTopColor: "#eee",
+    backgroundColor: "#fff",
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 8,
@@ -239,17 +249,17 @@ const styles = StyleSheet.create({
     maxHeight: 100,
   },
   sendButton: {
-    backgroundColor: '#0084ff',
+    backgroundColor: "#47BF7E",
     width: 40,
     height: 40,
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerContent: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginLeft: 10,
   },
   headerText: {
@@ -264,10 +274,12 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#f0f0f0",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
 export default ChatScreen;
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/
