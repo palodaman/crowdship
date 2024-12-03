@@ -183,7 +183,7 @@ const DeliveriesList: React.FC<{ latitude: number; longitude: number }> = ({
                   }
                   <View style={styles.itemDescription}>
                     <Text style={fontStyles.boldedText}>
-                      Item: {item.itemdescription}
+                      Item {item.itemdescription}
                     </Text>
                     <View style={styles.itemPrice}>
                       <Ionicons
@@ -287,3 +287,5 @@ const styles = StyleSheet.create({
 });
 
 export default DeliveriesList;
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

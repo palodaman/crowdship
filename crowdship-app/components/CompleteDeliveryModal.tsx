@@ -216,3 +216,5 @@ const CompleteDeliveryModal: React.FC<CompleteDeliveryModalProps> = ({
 };
 
 export default CompleteDeliveryModal;
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

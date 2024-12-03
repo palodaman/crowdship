@@ -91,3 +91,5 @@ const styles = StyleSheet.create({
 });
 
 export default Snackbar;
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

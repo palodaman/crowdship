@@ -393,3 +393,5 @@ const styles = StyleSheet.create({
 });
 
 export default React.memo(SenderDashboard);
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

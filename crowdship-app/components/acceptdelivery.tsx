@@ -416,3 +416,5 @@ const styles = StyleSheet.create({
 });
 
 export default AcceptDelivery;
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/

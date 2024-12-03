@@ -1,83 +1,86 @@
-import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  TextInput, 
-  TouchableOpacity, 
-  Alert, 
-  SafeAreaView, 
-  Modal, 
-  FlatList 
-} from 'react-native';
-import { supabase } from '../lib/supabase';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import fontStyles from '../styles/fontStyles';
-import { AntDesign } from '@expo/vector-icons';
-import buttonStyles from '../styles/buttonStyles';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  SafeAreaView,
+  Modal,
+  FlatList,
+} from "react-native";
+import { supabase } from "../lib/supabase";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import fontStyles from "../styles/fontStyles";
+import { AntDesign } from "@expo/vector-icons";
+import buttonStyles from "../styles/buttonStyles";
 
 const FeedbackScreen = () => {
   const router = useRouter();
   const { userId } = useLocalSearchParams();
-  const [feedbackType, setFeedbackType] = useState('bug');
-  const [description, setDescription] = useState('');
+  const [feedbackType, setFeedbackType] = useState("bug");
+  const [description, setDescription] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   const feedbackOptions = [
-    { label: 'Bug Report', value: 'bug' },
-    { label: 'Feature Request', value: 'feature_request' },
-    { label: 'General Feedback', value: 'general_feedback' },
-    { label: 'Other', value: 'other' },
+    { label: "Bug Report", value: "bug" },
+    { label: "Feature Request", value: "feature_request" },
+    { label: "General Feedback", value: "general_feedback" },
+    { label: "Other", value: "other" },
   ];
 
   const handleSubmit = async () => {
     try {
       if (!description.trim()) {
-        Alert.alert('Error', 'Please enter a description');
+        Alert.alert("Error", "Please enter a description");
         return;
       }
 
-      const { error } = await supabase
-        .from('feedback')
-        .insert([
-          {
-            user_id: userId,
-            report_type: feedbackType,
-            description: description.trim(),
-            status: 'open',
-          },
-        ]);
+      const { error } = await supabase.from("feedback").insert([
+        {
+          user_id: userId,
+          report_type: feedbackType,
+          description: description.trim(),
+          status: "open",
+        },
+      ]);
 
       if (error) throw error;
 
-      Alert.alert('Success', 'Feedback submitted successfully');
+      Alert.alert("Success", "Feedback submitted successfully");
       router.back();
     } catch (error) {
-      Alert.alert('Error', error.message);
+      Alert.alert("Error", error.message);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
           <AntDesign name="arrowleft" size={24} color="black" />
         </TouchableOpacity>
-        <Text style={[fontStyles.title, styles.headerTitle]}>Submit Feedback</Text>
+        <Text style={[fontStyles.title, styles.headerTitle]}>
+          Submit Feedback
+        </Text>
       </View>
 
       <View style={styles.form}>
-        <Text style={fontStyles.boldedText}>       Type</Text>
+        <Text style={[fontStyles.boldedText, styles.label]}> Type</Text>
         <View style={styles.centeredContainer}>
           <TouchableOpacity
             style={styles.dropdown}
             onPress={() => setModalVisible(true)}
           >
             <Text style={styles.dropdownText}>
-              {feedbackOptions.find(option => option.value === feedbackType)?.label}
+              {
+                feedbackOptions.find((option) => option.value === feedbackType)
+                  ?.label
+              }
             </Text>
             <AntDesign name="down" size={16} color="#333" />
           </TouchableOpacity>
@@ -110,7 +113,7 @@ const FeedbackScreen = () => {
           </View>
         </Modal>
 
-        <Text style={[fontStyles.boldedText, styles.label]}>      Description</Text>
+        <Text style={[fontStyles.boldedText, styles.label]}> Description</Text>
         <View style={styles.centeredContainer}>
           <TextInput
             style={styles.input}
@@ -122,7 +125,7 @@ const FeedbackScreen = () => {
           />
         </View>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={buttonStyles.primaryButton}
           onPress={handleSubmit}
         >
@@ -136,88 +139,81 @@ const FeedbackScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 20,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 30,
   },
   backButton: {
     marginRight: 0,
+    marginLeft: 20,
   },
   headerTitle: {
     flex: 1, // Allow title to take remaining space
-    textAlign: 'center', // Center the title within its flexbox
-    marginTop:15
+    textAlign: "center", // Center the title within its flexbox
+    marginTop: 15,
   },
   form: {
     flex: 1,
   },
   centeredContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   dropdown: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 8,
     padding: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
-    width: '90%',
+    width: "90%",
   },
   dropdownText: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 8,
-    width: '80%',
-    maxHeight: '50%',
+    width: "80%",
+    maxHeight: "50%",
     padding: 15,
   },
   modalItem: {
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: "#ddd",
   },
   modalItemText: {
     fontSize: 16,
   },
   label: {
     marginBottom: 8,
+    marginLeft: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 8,
     padding: 12,
     height: 120,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
     marginBottom: 30,
-    width: '90%',
-  },
-  submitButton: {
-    backgroundColor: '#5DE49B',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  submitButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    width: "90%",
   },
 });
 
 export default FeedbackScreen;
+
+/*This code was developed with the assistance of ChatGPT and Copilot*/
