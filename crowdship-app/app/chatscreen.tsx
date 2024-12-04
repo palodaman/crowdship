@@ -32,19 +32,19 @@ const ChatScreen = () => {
   const { orderId, senderId } = useLocalSearchParams();
   const session = useSession();
   const currentUserId = session?.user?.id;
-
+  const [name, setName] = useState<string | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
   const flatListRef = useRef<any>(null);
-  const [requesterUsername, setRequesterUsername] = useState<string | null>(
+  const [username, setUsername] = useState<string | null>(
     null
   );
-  const [requesterAvatar, setRequesterAvatar] = useState<string | null>(null);
+  const [Avatar, setAvatar] = useState<string | null>(null);
 
   useEffect(() => {
     fetchMessages();
     setupSubscription();
-    fetchRequesterInfo();
+    fetchInfo();
   }, []);
 
   const fetchMessages = async () => {
@@ -99,16 +99,17 @@ const ChatScreen = () => {
     router.back();
   };
 
-  const fetchRequesterInfo = async () => {
+  const fetchInfo = async () => {
     const { data, error } = await supabase
       .from("profiles")
-      .select("username, avatar_url")
+      .select("first_name,username, avatar_url")
       .eq("userid", senderId)
       .single();
 
     if (data) {
-      setRequesterUsername(data.username);
-      setRequesterAvatar(data.avatar_url);
+      setUsername(data.username);
+      setAvatar(data.avatar_url);
+      setName(data.first_name);
     }
   };
 
@@ -119,9 +120,9 @@ const ChatScreen = () => {
           <AntDesign name="arrowleft" size={24} color="#333" />
         </TouchableOpacity>
         <View style={styles.headerContent}>
-          {requesterAvatar ? (
+          {Avatar ? (
             <Image
-              source={{ uri: requesterAvatar }}
+              source={{ uri: Avatar }}
               style={styles.avatarImage}
             />
           ) : (
@@ -130,9 +131,9 @@ const ChatScreen = () => {
             </View>
           )}
           <View style={styles.headerText}>
-            <Text style={styles.headerTitle}>Chat with Delivery Requester</Text>
+            <Text style={styles.headerTitle}>Chat with {name || "Shipper"}</Text>
             <Text style={styles.senderName}>
-              {requesterUsername || "Loading..."}
+              {username || "Loading..."}
             </Text>
           </View>
         </View>

@@ -84,6 +84,20 @@ const _layout = () => {
               headerRight: () => <HeaderRightImage />,
             }}
           />
+          <Tabs.Screen
+          name="feedback"
+            options={{
+              title: "Feedback",
+              headerRight: () => <HeaderRightImage />,
+            }}>
+          </Tabs.Screen>
+          <Tabs.Screen
+          name="chatscreen"
+            options={{
+              title: "Chat",
+              headerRight: () => <HeaderRightImage />,
+            }}>
+          </Tabs.Screen>
         </Tabs>
       )}
 

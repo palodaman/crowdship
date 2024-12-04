@@ -35,7 +35,7 @@ const TabBar = ({
         }
         if (route.name === "deliverydashboard") {
           label = "Orders";
-          icon = <AntDesign name="bars" size={24} color="black" />;
+          icon = <AntDesign name="bars" size={24} color="black"/>;
         }
         if (route.name === "index") {
           label = "Profile";
