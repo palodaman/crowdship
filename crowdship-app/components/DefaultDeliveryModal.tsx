@@ -130,14 +130,14 @@ const DefaultDeliveryModal: React.FC<DefaultDeliveryModalProps> = ({
             </View>
           </View>
 
-          {/* Chat Button */}
-
-          <TouchableOpacity
-            style={buttonStyles.primaryButton}
-            onPress={handleStartDelivery}
-          >
-            <Text style={buttonStyles.buttonText}>Start Delivery</Text>
-          </TouchableOpacity>
+          {selectedListing.status === "CLAIMED" && (
+            <TouchableOpacity
+              style={buttonStyles.primaryButton}
+              onPress={handleStartDelivery}
+            >
+              <Text style={buttonStyles.buttonText}>Start Delivery</Text>
+            </TouchableOpacity>
+          )}
 
           {message && (
             <Text style={[fontStyles.greenText, { marginTop: 10 }]}>
