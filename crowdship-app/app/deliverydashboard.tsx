@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { Button } from "@rneui/themed";
 import SenderDashboard from "../components/senderdashboard";
 import DriverDashboard from "../components/driverdashboard";
@@ -114,37 +114,48 @@ const DeliveryDashboard = () => {
   return (
     <View style={styles.container}>
       <View style={styles.tabs}>
-        <Button
-          style={{
-            paddingRight: 1,
-            backgroundColor:
-              activeTab === "deliveries" ? "#47BF7E" : "#7F8A9480",
-          }}
-          titleStyle={{
-            fontWeight: activeTab === "deliveries" ? "bold" : "normal",
-          }}
-          onPress={() => {
-            setActiveTab("deliveries");
-          }}
-          color="transparent"
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            {
+              backgroundColor:
+                activeTab === "deliveries" ? "#47BF7E" : "#7F8A9480",
+            },
+          ]}
+          onPress={() => setActiveTab("deliveries")}
         >
-          My Deliveries
-        </Button>
-        <Button
-          style={{
-            paddingRight: 1,
-            backgroundColor: activeTab === "packages" ? "#47BF7E" : "#7F8A9480",
-          }}
-          titleStyle={{
-            fontWeight: activeTab === "packages" ? "bold" : "normal",
-          }}
-          onPress={() => {
-            setActiveTab("packages");
-          }}
-          color="transparent"
+          <Text
+            style={[
+              styles.tabText,
+              {
+                fontWeight: activeTab === "deliveries" ? "bold" : "normal",
+              },
+            ]}
+          >
+            My Deliveries
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            {
+              backgroundColor:
+                activeTab === "packages" ? "#47BF7E" : "#7F8A9480",
+            },
+          ]}
+          onPress={() => setActiveTab("packages")}
         >
-          My Packages
-        </Button>
+          <Text
+            style={[
+              styles.tabText,
+              {
+                fontWeight: activeTab === "packages" ? "bold" : "normal",
+              },
+            ]}
+          >
+            My Packages
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.listingsContainer}>
@@ -173,13 +184,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  listingsContainer: {
-    backgroundColor: "white",
-    flex: 1,
-  },
   tabs: {
-    paddingTop: 16,
     flexDirection: "row",
+    width: "100%",
+    borderRadius: 5,
+    backgroundColor: "white",
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 12,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  tabText: {
+    color: "#F2F6F3",
+    fontSize: 16,
+  },
+  listingsContainer: {
+    flex: 1,
   },
 });
 
