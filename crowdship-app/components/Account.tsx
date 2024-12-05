@@ -414,7 +414,7 @@ export default function Account({ session }: { session: Session }) {
           )}
         </View>
 
-        <Text style={[fontStyles.h1, { marginTop: 10 }]}>
+        <Text style={fontStyles.h1}>
           How others find me as a sender?
         </Text>
         {delivererReviews.length === 0 ? (
@@ -473,7 +473,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   buttonContainer: {
-    marginBottom: 50,
+    marginBottom: 25,
   },
   card: {
     backgroundColor: "white",
@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
   star: {
     fontSize: 15,
     color: "#ccc",
-    marginHorizontal: 5,
+    marginHorizontal: 3,
   },
   filledStar: {
     color: "#5DE49B",
