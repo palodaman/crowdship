@@ -4,7 +4,7 @@
 
 #
 
-CrowdShip is a peer-to-peer package delivery platform that connects individuals seeking affordable, reliable delivery with commuters and gig workers already traveling to that destination. By leveraging existing routes, CrowdShip reduces delivery costs and minimizes environmental impact, making it ideal for users needing quick, secure, and budget-friendly out-of-town package delivery. The platform enables senders to post delivery requests and match with trusted, verified commuters, who earn extra income with minimal effort.
+CrowdShip is an inter-island package delivery app that connects individuals seeking affordable, reliable delivery with commuters and gig workers already traveling to that destination. By leveraging existing routes, CrowdShip reduces delivery costs and minimizes environmental impact, making it ideal for users needing quick, secure, and budget-friendly out-of-town package delivery. The platform enables senders to post delivery requests and match with trusted, verified commuters, who earn extra income with minimal effort.
 
 **Product page:** [https://webhome.csc.uvic.ca/~amanpalod/](https://webhome.csc.uvic.ca/~amanpalod/).  
 **Demo video:** [https://www.youtube.com/watch?v=TxOBn6cbAII](https://www.youtube.com/watch?v=TxOBn6cbAII).  
