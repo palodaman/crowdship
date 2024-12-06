@@ -85,6 +85,13 @@ const _layout = () => {
             }}
           />
           <Tabs.Screen
+            name="chats"
+            options={{
+              title: "Chats",
+              headerRight: () => <HeaderRightImage />,
+            }}
+          />
+          <Tabs.Screen
           name="feedback"
             options={{
               title: "Feedback",

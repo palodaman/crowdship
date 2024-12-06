@@ -20,6 +20,7 @@ import { useSession } from "../hooks/useSession";
 
 type RootStackParamList = {
   ChatScreen: {
+    partnerId: string;
     orderId: string;
     senderId: string;
   };

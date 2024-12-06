@@ -41,6 +41,10 @@ const TabBar = ({
           label = "Profile";
           icon = <AntDesign name="user" size={24} color="black" />;
         }
+        if (route.name === "chats") {
+          label = "Chats";
+          icon = <AntDesign name="message1" size={24} color="black" />;
+        }
         // returns null on the tab bar button when signupscreen is the route name passed by expo router props
         if (route.name === "SignUpScreen") {
           return null;
