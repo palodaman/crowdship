@@ -18,7 +18,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useRouter } from "expo-router";
 import { useSession } from "../hooks/useSession";
 import chatService from '../lib/chat.service';
-
+import { useNavigation } from "expo-router";
 type RootStackParamList = {
   ChatScreen: {
     orderId: string;
@@ -29,6 +29,7 @@ type RootStackParamList = {
 type Props = NativeStackScreenProps<RootStackParamList, "ChatScreen">;
 
 const ChatScreen = () => {
+  const navigation = useNavigation(); 
   const router = useRouter();
   const { orderId, senderId } = useLocalSearchParams();
   const session = useSession();
@@ -87,7 +88,8 @@ const ChatScreen = () => {
   };
 
   const handleBack = () => {
-    router.back();
+    // router.back();
+    navigation.navigate("deliverydashboard");
   };
 
   const fetchInfo = async () => {
@@ -133,11 +135,10 @@ const ChatScreen = () => {
       <FlatList
         ref={flatListRef}
         data={messages}
-        keyExtractor={(item) => item.message_id}
+        keyExtractor={(item) => item.id.toString()}
         onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
         renderItem={({ item }) => (
           <View
-            key= {item.id}
             style={[
               styles.messageContainer,
               item.sender_id === currentUserId
