@@ -31,6 +31,30 @@ Below is a brief overview of all the features in our app and their status at the
 | **(14) Payment**                    | Allows drivers to receive payment and allow senders to securely send money.                    | Incomplete            |
 | **(15) Submit Feedback/Bug Report** | Provides users with an option to submit feedback or report bugs directly through the app.      | Complete              |
 
+## Deployment Status
+We attempted to deploy the application, but currently, its functionality is limited. While users can sign in and access the splash screen, navigation beyond that point is not working in the deployed version. 
+
+This issue may stem from one of two causes:
+
+- A recent Expo update, which has been causing issues for many in the development community.
+- A potential problem specific to our deployment process.
+  
+At this time, we are uncertain about the exact cause and are actively investigating the matter. To view the deployed app, follow this [link](https://expo.dev/preview/update?message=Merge%20pull%20request%20%23107%20from%20palodaman%2F95-align-product-page%0A%0A95%20align%20product%20page&updateRuntimeVersion=1.0.0&createdAt=2024-12-06T21%3A43%3A34.777Z&slug=exp&projectId=6b144803-eb7e-4365-8db6-5968bd10ab07&group=130a108e-77c1-495a-8624-4abd95f678b4).
+
+In the meantime, we recommend referring to the [Product Page](https://webhome.csc.uvic.ca/~amanpalod/) or [User Guide](https://docs.google.com/document/d/1lQs_EjnXZZy8dGen3CaqMke09BjaLN4GbLe6EabGFcw/edit?tab=t.0#heading=h.pmwhfur6usos) for more detailed information on the app. Alternatively, you can install and run the app locally to experience its full functionality. We deeply apologize for the inconvenience and appreciate your understanding as we work toward resolving this issue.
+
+For testing purposes, please feel free to use the following test accounts:
+
+**Account 1:**
+
+- email: Omar.Mahdani@outlook.com
+- password: test123
+   
+**Account 2:**
+
+- email: neerajnand911@gmail.com
+- password: 12345678
+
 ## Project Setup
 
 ### Development Prerequisites
@@ -78,6 +102,11 @@ Before you begin, ensure that the following are installed:
    ```bash
     i
    ```
+## Deployment
+We have attempted to deploy the app onto the ExpoGo store. Unfortunately, there are issues with 
+https://expo.dev/preview/update?message=Merge%20pull%20request%20%23107%20from%20palodaman%2F95-align-product-page%0A%0A95%20align%20product%20page&updateRuntimeVersion=1.0.0&createdAt=2024-12-06T21%3A43%3A34.777Z&slug=exp&projectId=6b144803-eb7e-4365-8db6-5968bd10ab07&group=130a108e-77c1-495a-8624-4abd95f678b4
+
+
 
 ## Team Members
 
