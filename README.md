@@ -20,7 +20,7 @@ Below is a brief overview of all the features in our app and their status at the
 | **(3) Authorization**               | Provides users with a way to securely log in using email and password authentication.          | Complete              |
 | **(4) Navigation Bar**              | Navigate between the profile, chat, accept delivery, and request delivery pages.               | Complete              |
 | **(5) Request Delivery Page**       | Allows senders to put their packages out to be delivered.                                      | Complete              |
-| **(6) Chat**                        | Enables communication between the sender and driver.                                           | WIP                   |
+| **(6) Chat**                        | Enables communication between the sender and driver.                                           | Complete              |
 | **(7) Accept Delivery Page**        | Allows drivers to see the deliveries closest to their destination and accept/decline requests. | Complete              |
 | **(8) Profile Page**                | Displays user-specific information that they can update.                                       | Complete              |
 | **(9) Review**                      | Allows drivers and senders to leave reviews on each other.                                     | Complete              |
@@ -37,32 +37,44 @@ Below is a brief overview of all the features in our app and their status at the
 
 Before you begin, ensure that the following are installed:
 
-- IOS simulator
-- XCode with IOS package
-- nvm install 22
+- [XCode with IOS package](https://apps.apple.com/ca/app/xcode/id497799835?mt=12)
+- [Node](https://nodejs.org/en/download/package-manager)
+- [ExpoGo app](https://apps.apple.com/us/app/expo-go/id982107779)
 
 ### Running The App
 
-1. **Clone the repository**
+**1. Clone the repository**
 
    ```bash
    git clone https://github.com/palodaman/crowdship.git
    cd crowdship-app
    ```
 
-2. **Install dependencies**
+**2. Install dependencies**
 
    ```bash
    npm install
    ```
 
-3. **Launch the app**:
+**3. Launch the app**:
 
    ```bash
     npm run start
    ```
+   Once you launch the app, you can either run is using the ExpoGo app **or** on a simulator.
 
-4. **Run the app in IOS**:
+**Run the app on your phone (Expo Go - IOS Only)**:
+
+1. Scan the QR code displayed in the terminal.
+2. Follow the notification from the Expo Go app to open the project.
+3. Start using the app!
+
+**Note:**
+   - UVic wifi may be too slow and the connection request may time out
+   - Make sure that any firewalls are disabled on your computer
+   - Ensure that your phone and computer are on the same network
+
+**Run the app in IOS simulator**:
    ```bash
     i
    ```
