@@ -54,7 +54,10 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
   fetchAllShipments,
   loading,
 }) => {
+
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+  
   const [renderAcceptDelivery, setRenderModal] = useState<boolean>(false);
   const [renderEditDelivery, setRenderEditDelivery] = useState<boolean>(false);
   const [transactionComplete, setTransactionComplete] = useState("inactive");
@@ -92,10 +95,13 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
     }
   };
 
-  const handlePress = (item: Listing, edit: boolean) => {
+  const handlePress = async (item: Listing, edit: boolean) => {
     setSelectedListing(item);
     setRenderModal(true);
     setRenderEditDelivery(edit);
+    const data = await fetchOrderDetails(item);
+    setSelectedOrder(data);
+
 
     if (item.status === "INACTIVE") {
       setTransactionComplete("inactive");
@@ -310,6 +316,7 @@ const SenderDashboard: React.FC<SenderDashboardProps> = ({
                 ) : (
                   <SenderModal
                     selectedListing={selectedListing}
+                    selectedOrder={selectedOrder}
                     setRenderModal={setRenderModal}
                     transactionComplete={transactionComplete}
                     setEditMode={setEditMode}

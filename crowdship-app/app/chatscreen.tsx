@@ -17,6 +17,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useLocalSearchParams } from "expo-router";
 import { useRouter } from "expo-router";
 import { useSession } from "../hooks/useSession";
+import chatService from '../lib/chat.service';
 
 type RootStackParamList = {
   ChatScreen: {
@@ -40,58 +41,48 @@ const ChatScreen = () => {
     null
   );
   const [Avatar, setAvatar] = useState<string | null>(null);
+  const [chatSessionId, setChatSessionId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchMessages();
-    setupSubscription();
-    fetchInfo();
-  }, []);
+    if (currentUserId && senderId) {
+      initializeChat();
+    }
+  }, [currentUserId, senderId]);
 
-  const fetchMessages = async () => {
-    const { data, error } = await supabase
-      .from("chat_messages")
-      .select("*")
-      .eq("order_id", orderId)
-      .order("created_at", { ascending: true });
-
-    if (data) setMessages(data);
+  const initializeChat = async () => {
+    try {
+      setUsername("");
+      setName("");
+      setMessages([]);
+      setAvatar("");
+      const session = await chatService.createOrGetChatSession(currentUserId!, senderId);
+      await fetchInfo();
+      setChatSessionId(session.id);
+      await fetchMessages(session.id);
+      
+    } catch (error) {
+      console.error("Error initializing chat:", error);
+    }
   };
 
-  const setupSubscription = () => {
-    const subscription = supabase
-      .channel("chat-channel")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "chat_messages",
-          filter: `order_id=eq.${orderId}`,
-        },
-        (payload) => {
-          fetchMessages();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      subscription.unsubscribe();
-    };
+  const fetchMessages = async (sessionId: string) => {
+    try {
+      const messages = await chatService.getChatMessages(sessionId);
+      setMessages(messages);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
   };
 
   const sendMessage = async () => {
-    console.log("this is the message", newMessage);
-    if (!newMessage.trim() || !currentUserId) return;
-    console.log(orderId, "hello");
-    const { error } = await supabase.from("chat_messages").insert([
-      {
-        order_id: orderId,
-        sender_id: currentUserId,
-        content: newMessage.trim(),
-      },
-    ]);
-    if (!error) {
+    if (!newMessage.trim() || !currentUserId || !chatSessionId) return;
+    
+    try {
+      await chatService.sendMessage(currentUserId, chatSessionId, newMessage.trim());
       setNewMessage("");
+      fetchMessages(chatSessionId)
+    } catch (error) {
+      console.error("Error sending message:", error);
     }
   };
 
@@ -146,6 +137,7 @@ const ChatScreen = () => {
         onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
         renderItem={({ item }) => (
           <View
+            key= {item.id}
             style={[
               styles.messageContainer,
               item.sender_id === currentUserId
@@ -161,7 +153,7 @@ const ChatScreen = () => {
                   : styles.receivedMessageText,
               ]}
             >
-              {item.content}
+              {item.message_text}
             </Text>
           </View>
         )}
@@ -283,4 +275,4 @@ const styles = StyleSheet.create({
 
 export default ChatScreen;
 
-/*This code was developed with the assistance of ChatGPT and Copilot*/
+/*This code was developed without the assistance of ChatGPT and Copilot*/

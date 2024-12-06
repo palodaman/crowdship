@@ -33,6 +33,7 @@ interface Listing {
 
 interface SenderModalProps {
   selectedListing: Listing;
+  selectedOrder: any;
   setRenderModal: React.Dispatch<React.SetStateAction<boolean>>;
   transactionComplete: string;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,6 +41,7 @@ interface SenderModalProps {
 
 const SenderModal: React.FC<SenderModalProps> = ({
   selectedListing,
+  selectedOrder,
   setRenderModal,
   transactionComplete,
   setEditMode,
@@ -78,6 +80,7 @@ const SenderModal: React.FC<SenderModalProps> = ({
 
   console.log("renderEditDelivery", renderEditDelivery);
   console.log("transactionComplete", transactionComplete);
+  console.log(selectedOrder, 'asldkfj;alksdf;lkajsdf;lkjasdf')
   function utcToZonedTime(arg0: Date, arg1: string): string | number | Date {
     throw new Error("Function not implemented.");
   }
@@ -176,9 +179,8 @@ const SenderModal: React.FC<SenderModalProps> = ({
                     setRenderModal(false); //close the modal
                     router.push({
                       pathname: "/chatscreen",
-                      params: {
-                        orderId: selectedListing.listingid,
-                        senderId: selectedListing.senderid,
+                      params: {                       
+                        senderId: selectedOrder.delivererid,
                       },
                     });
                   }
