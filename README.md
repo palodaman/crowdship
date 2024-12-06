@@ -102,11 +102,6 @@ Before you begin, ensure that the following are installed:
    ```bash
     i
    ```
-## Deployment
-We have attempted to deploy the app onto the ExpoGo store. Unfortunately, there are issues with 
-https://expo.dev/preview/update?message=Merge%20pull%20request%20%23107%20from%20palodaman%2F95-align-product-page%0A%0A95%20align%20product%20page&updateRuntimeVersion=1.0.0&createdAt=2024-12-06T21%3A43%3A34.777Z&slug=exp&projectId=6b144803-eb7e-4365-8db6-5968bd10ab07&group=130a108e-77c1-495a-8624-4abd95f678b4
-
-
 
 ## Team Members
 
