@@ -39,7 +39,7 @@ This issue may stem from one of two causes:
 - A recent Expo update, which has been causing issues for many in the development community.
 - A potential problem specific to our deployment process.
   
-At this time, we are uncertain about the exact cause and are actively investigating the matter. To view the deployed app, follow this [link](https://expo.dev/preview/update?message=Merge%20pull%20request%20%23107%20from%20palodaman%2F95-align-product-page%0A%0A95%20align%20product%20page&updateRuntimeVersion=1.0.0&createdAt=2024-12-06T21%3A43%3A34.777Z&slug=exp&projectId=6b144803-eb7e-4365-8db6-5968bd10ab07&group=130a108e-77c1-495a-8624-4abd95f678b4).
+At this time, we are uncertain about the exact cause and are actively investigating the matter. To view the deployed app, download the [ExpoGo](https://apps.apple.com/us/app/expo-go/id982107779) app on your phone, then scan the QR code in this [link](https://expo.dev/preview/update?message=Merge%20pull%20request%20%23107%20from%20palodaman%2F95-align-product-page%0A%0A95%20align%20product%20page&updateRuntimeVersion=1.0.0&createdAt=2024-12-06T21%3A43%3A34.777Z&slug=exp&projectId=6b144803-eb7e-4365-8db6-5968bd10ab07&group=130a108e-77c1-495a-8624-4abd95f678b4).
 
 In the meantime, we recommend referring to the [Product Page](https://webhome.csc.uvic.ca/~amanpalod/) or [User Guide](https://docs.google.com/document/d/1lQs_EjnXZZy8dGen3CaqMke09BjaLN4GbLe6EabGFcw/edit?tab=t.0#heading=h.pmwhfur6usos) for more detailed information on the app. Alternatively, you can install and run the app locally to experience its full functionality. We deeply apologize for the inconvenience and appreciate your understanding as we work toward resolving this issue.
 
