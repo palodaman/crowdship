@@ -1,24 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  Image,
-} from "react-native";
+import {View,Text,TextInput,FlatList,TouchableOpacity,StyleSheet,KeyboardAvoidingView,Platform,SafeAreaView,Image} from "react-native";
 import { supabase } from "../lib/supabase";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useLocalSearchParams } from "expo-router";
 import { useRouter } from "expo-router";
 import { useSession } from "../hooks/useSession";
-import chatService from '../lib/chat.service';
+import chatService from "../lib/chat.service";
 import { useNavigation } from "expo-router";
+import dayjs from "dayjs";
+
 type RootStackParamList = {
   ChatScreen: {
     orderId: string;
@@ -29,7 +20,7 @@ type RootStackParamList = {
 type Props = NativeStackScreenProps<RootStackParamList, "ChatScreen">;
 
 const ChatScreen = () => {
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
   const router = useRouter();
   const { orderId, senderId } = useLocalSearchParams();
   const session = useSession();
@@ -38,9 +29,7 @@ const ChatScreen = () => {
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
   const flatListRef = useRef<any>(null);
-  const [username, setUsername] = useState<string | null>(
-    null
-  );
+  const [username, setUsername] = useState<string | null>(null);
   const [Avatar, setAvatar] = useState<string | null>(null);
   const [chatSessionId, setChatSessionId] = useState<string | null>(null);
 
@@ -60,7 +49,6 @@ const ChatScreen = () => {
       await fetchInfo();
       setChatSessionId(session.id);
       await fetchMessages(session.id);
-      
     } catch (error) {
       console.error("Error initializing chat:", error);
     }
@@ -77,18 +65,17 @@ const ChatScreen = () => {
 
   const sendMessage = async () => {
     if (!newMessage.trim() || !currentUserId || !chatSessionId) return;
-    
+
     try {
       await chatService.sendMessage(currentUserId, chatSessionId, newMessage.trim());
       setNewMessage("");
-      fetchMessages(chatSessionId)
+      fetchMessages(chatSessionId);
     } catch (error) {
       console.error("Error sending message:", error);
     }
   };
 
   const handleBack = () => {
-    // router.back();
     navigation.navigate("deliverydashboard");
   };
 
@@ -106,6 +93,46 @@ const ChatScreen = () => {
     }
   };
 
+  const renderMessage = ({ item, index }: { item: any; index: number }) => {
+    const messageTime = dayjs(item.created_at).format("h:mm A");
+    const currentDate = dayjs(item.created_at).format("MMM D, YYYY");
+  
+    //check fror new day?
+    const isNewDay =
+      index === 0 || dayjs(messages[index - 1]?.created_at).format("MMM D, YYYY") !== currentDate;
+  
+    return (
+      <View>
+        {isNewDay && (
+          <View style={styles.dateSeparator}>
+            <Text style={styles.dateText}>{currentDate}</Text>
+          </View>
+        )}
+        <View
+          style={[
+            styles.messageContainer,
+            item.sender_id === currentUserId
+              ? styles.sentMessage
+              : styles.receivedMessage,
+          ]}
+        >
+          <Text
+            style={[
+              styles.messageText,
+              item.sender_id === currentUserId
+                ? styles.sentMessageText
+                : styles.receivedMessageText,
+            ]}
+          >
+            <Text style={styles.messageTime}>{messageTime} </Text>
+            {item.message_text}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+  
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -114,10 +141,7 @@ const ChatScreen = () => {
         </TouchableOpacity>
         <View style={styles.headerContent}>
           {Avatar ? (
-            <Image
-              source={{ uri: Avatar }}
-              style={styles.avatarImage}
-            />
+            <Image source={{ uri: Avatar }} style={styles.avatarImage} />
           ) : (
             <View style={styles.avatarPlaceholder}>
               <AntDesign name="user" size={24} color="#999" />
@@ -125,9 +149,7 @@ const ChatScreen = () => {
           )}
           <View style={styles.headerText}>
             <Text style={styles.headerTitle}>Chat with {name || "Shipper"}</Text>
-            <Text style={styles.senderName}>
-              {username || "Loading..."}
-            </Text>
+            <Text style={styles.senderName}>{username || "Loading..."}</Text>
           </View>
         </View>
       </View>
@@ -137,27 +159,7 @@ const ChatScreen = () => {
         data={messages}
         keyExtractor={(item) => item.id.toString()}
         onContentSizeChange={() => flatListRef.current?.scrollToEnd()}
-        renderItem={({ item }) => (
-          <View
-            style={[
-              styles.messageContainer,
-              item.sender_id === currentUserId
-                ? styles.sentMessage
-                : styles.receivedMessage,
-            ]}
-          >
-            <Text
-              style={[
-                styles.messageText,
-                item.sender_id === currentUserId
-                  ? styles.sentMessageText
-                  : styles.receivedMessageText,
-              ]}
-            >
-              {item.message_text}
-            </Text>
-          </View>
-        )}
+        renderItem={renderMessage}
       />
 
       <KeyboardAvoidingView
@@ -199,7 +201,18 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    // marginLeft: 10,
+  },
+  dateSeparator: {
+    alignSelf: "center",
+    marginVertical: 10,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  dateText: {
+    fontSize: 14,
+    color: "#555",
   },
   messageContainer: {
     maxWidth: "80%",
@@ -214,16 +227,22 @@ const styles = StyleSheet.create({
   },
   receivedMessage: {
     alignSelf: "flex-start",
-    backgroundColor: "#e9ecef",
+    backgroundColor: "#949494",
   },
   messageText: {
     fontSize: 16,
+    lineHeight: 22,
+    flexWrap: "wrap",
   },
   sentMessageText: {
     color: "#fff",
   },
   receivedMessageText: {
-    color: "#000",
+    color: "#fff",
+  },
+  messageTime: {
+    fontSize: 12,
+    color: "#ccc",
   },
   inputContainer: {
     flexDirection: "row",
@@ -275,5 +294,3 @@ const styles = StyleSheet.create({
 });
 
 export default ChatScreen;
-
-/*This code was developed without the assistance of ChatGPT and Copilot*/
