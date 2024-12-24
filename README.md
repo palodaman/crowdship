@@ -47,7 +47,7 @@ For testing purposes, please feel free to use the following test accounts:
 
 **Account 1:**
 
-- email: Omar.Mahdani@outlook.com
+- email: omar.madhani@outlook.com
 - password: test123
    
 **Account 2:**
